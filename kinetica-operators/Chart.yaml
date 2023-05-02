@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kinetica-operators
 description: A Helm chart to install operators to manage KineticaDB and Workbench
-
+icon: https://www.kinetica.com/wp-content/uploads/2016/08/kinetica_logo_on_indigo2x.png
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives

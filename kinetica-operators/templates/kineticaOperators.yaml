@@ -11,7 +11,7 @@
 {{- end}}
 
 {{- /* validate common values  environment and providers */ -}}
-{{- $allowedEnvironments := list "onPrem" "saas" "offer" }}
+{{- $allowedEnvironments := list "onPrem" "saas" "marketPlace" }}
 {{- $allowedOnPremProviders := list "kind" "eks" "aks" "okd"  }}
 {{- $allowedSaasEnvironments := list "eks"  }}
 {{- $allowedMarketPlaceEnvironments := list "aks" "eks" }}
@@ -152,18 +152,17 @@
 {{- if $dbOperator.install }}
   {{- include "kinetica-operators.dbOperatorInstallation" $data }}
 ---
+  {{- include "kinetica-operators.cacheStorageClass" $data }}
+---
+  {{- include "kinetica-operators.dbPersistStorageClass" $data }}
+---
+  {{- include "kinetica-operators.dbProcsStorageClass" $data }}
+---
 {{- end }}
 
 {{- if $wbOperator.install }}
   {{- include "kinetica-operators.wbOperatorInstallation" $data }}
 ---
+  {{- include "kinetica-operators.wbPersistStorageClass" $data }}
 {{- end}}
----
-{{- include "kinetica-operators.cacheStorageClass" $data }}
----
-{{- include "kinetica-operators.dbPersistStorageClass" $data }}
----
-{{- include "kinetica-operators.dbProcsStorageClass" $data }}
----
-{{- include "kinetica-operators.wbPersistStorageClass" $data }}
 ---
