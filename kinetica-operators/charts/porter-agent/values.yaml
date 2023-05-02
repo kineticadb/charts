@@ -1,0 +1,52 @@
+porterAgent:
+  name: porter  
+  image:
+    repository: docker.io/kineticadevcloud/porter-agent
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  
+  serviceAccount:
+    installation:
+      # Specifies whether a service account should be created
+      create: true
+      labels: { }
+      # Annotations to add to the service account
+      annotations: { }
+      # The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: ""
+    agent:
+      # Specifies whether a service account should be created
+      create: true
+      labels: { }
+      # Annotations to add to the service account
+      annotations: { }
+      # The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: ""
+  rbac:
+    create: true
+
+  secret:
+    env:
+      # Specifies whether a secret should be created
+      create: true
+      # The name of the secret to use.
+      # If not set and create is true, a name is generated using the name template
+      name: ""
+      # The type of Secret to create
+      type: "Opaque"
+      # Microsoft Azure Specific settings
+      azure:
+        AZURE_STORAGE_CONNECTION_STRING: '""'
+        AZURE_CLIENT_SECRET: '""'
+        AZURE_CLIENT_ID: '""'
+        AZURE_TENANT_ID: '""'
+    config:
+      # The name of the secret to use.
+      # If not set and create is true, a name is generated using the name template
+      name: ""
+      # The type of Secret to create
+      type: "Opaque"
+  

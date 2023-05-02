@@ -1,0 +1,17 @@
+environment: onPrem
+provider: kind
+dbOperator:
+  install: true
+  image:
+    repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-operator"
+    tag: "v7.1.9.5-ds-34"
+
+  
+    
+wbOperator:
+  install: true
+  image:
+  #   repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-operator"
+    tag: "v7.1.9-0.ga1-3-g53e137a"
+  
+
