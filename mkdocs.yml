@@ -1,0 +1,136 @@
+site_name: Kinetica DB Operator Helm Charts
+site_author: Kinetica
+site_description: >-
+  Kinetica DB Kubernetes Operator Helm Charts
+# Repository
+repo_name: kineticadb/charts
+repo_url: https://github.com/kineticadb/charts
+edit_uri: ""
+
+# Copyright
+copyright: Copyright &copy; 2016 - 2023 Kinetica DB Inc.
+
+theme:
+  name: material
+  # Default values, taken from mkdocs_theme.yml
+  language: en
+  features:
+    - content.code.copy
+    - content.code.annotate
+    # - content.tabs.link
+    # - header.autohide
+    # - navigation.expand
+    - navigation.indexes
+    # - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    # - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.png
+  icon:
+    repo: fontawesome/brands/github
+
+# Plugins
+plugins:
+  - search
+#  - redirects:
+#      redirect_maps:
+#        changelog/insiders.md: insiders/changelog.md
+#        upgrading.md: upgrade.md
+#        sponsorship.md: insiders/index.md
+  - minify:
+      minify_html: true
+#  - git-revision-date-localized:
+#      type: timeago
+#      locale: en
+#      fallback_to_build_date: true
+#      exclude:
+#        - index.md
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+#  - pymdownx.emoji:
+#      emoji_index: !!python/name:materialx.emoji.twemoji
+#      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+#      pygments_lang_class: true
+  - pymdownx.highlight:
+      line_spans: __span
+      auto_title: true
+      anchor_linenums: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+#  - pymdownx.magiclink:
+#      repo_url_shorthand: true
+#      user: squidfunk
+#      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.pathconverter
+  - pymdownx.saneheaders
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+#  - pymdownx.superfences:
+#      custom_fences:
+#        - name: mermaid
+#          class: mermaid-experimental
+#          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+  - Overview:
+    - Overview: index.md
+    - Operators: Operators/kinetica-operators.md
+    - Database CR: Database/database.md
+    - Workbench CR: Workbench/workbench.md
+  - Helm Chart Layout:
+    - Operators: Operators/kinetica-operators.md
+    - Database CR: Database/database.md
+    - Workbench CR: Workbench/workbench.md
+
+
