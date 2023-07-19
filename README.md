@@ -1,9 +1,7 @@
 
-# How to create a Helm Release
+# Kinetica DB Deployment 
 
-After making changes to the Helm chart, you can create a new release by running the following command:
+## Documentation
 
-```bash
-helm package kinetica-operators
-helm repo index --url https://kineticadb.github.io/charts/ .
-```
+Detailed documentation can be found at https://kineticadb.github.io/charts/
+
