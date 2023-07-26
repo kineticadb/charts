@@ -1,6 +1,14 @@
 # Kinetica DB Operator Helm Charts
 
-To install all the required operators in a single command perform the following: -
+
+## Add Kinetica Helm Repoistory
+To add the Kinetica Helm repoistory to Helm 3:-
+
+```shell
+helm repo add kinetica-operators https://kineticadb.github.io/charts
+```
+
+## Perform a Helm installation of the Kinetica Operatoes
 
 ```shell
 helm install -n kinetica-system \
