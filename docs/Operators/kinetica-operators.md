@@ -6,6 +6,7 @@ To add the Kinetica Helm repoistory to Helm 3:-
 
 ```shell
 helm repo add kinetica-operators https://kineticadb.github.io/charts
+helm repo update
 ```
 
 ## Perform a Helm installation of the Kinetica Operatoes
