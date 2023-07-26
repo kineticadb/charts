@@ -1,7 +1,7 @@
 # Kinetica DB Operator Helm Charts
 
 
-## Add Kinetica Helm Repoistory
+## Add Kinetica Helm Repository
 To add the Kinetica Helm repoistory to Helm 3:-
 
 ```shell
@@ -9,7 +9,7 @@ helm repo add kinetica-operators https://kineticadb.github.io/charts
 helm repo update
 ```
 
-## Perform a Helm installation of the Kinetica Operatoes
+## Perform a Helm installation of the Kinetica Operators
 
 ```shell
 helm install -n kinetica-system \
@@ -158,6 +158,13 @@ Example Helm `values.yaml` for different Cloud Providers/On-Prem installations: 
         ```bash
         kubectl get sc
         ```
+
+The next steps are to create
+
+* a DB Cluster with the Operator [see](../Database/database.md)
+* a Workbench instance [see](../Workbench/workbench.md)
+
+------
 
 ## Components
 
