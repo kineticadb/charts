@@ -12,10 +12,11 @@
 
 {{- /* validate common values  environment and providers */ -}}
 {{- $allowedEnvironments := list "onPrem" "saas" "marketPlace" }}
-{{- $allowedOnPremProviders := list "kind" "eks" "aks" "okd"  }}
+{{- $allowedOnPremProviders := list "k3s" "kind" "eks" "aks" "okd"  }}
 {{- $allowedSaasEnvironments := list "eks"  }}
 {{- $allowedMarketPlaceEnvironments := list "aks" "eks" }}
-{{- $defaultStorageClass := "standard" }}
+{{- /* If $values.defaultStorageClass is provided, lets use that otherwise use standard */ -}}
+{{- $defaultStorageClass := $values.defaultStorageClass | default "standard" }}
 {{- $defaultStorageProvisioner := "rancher.io/local-path" }}
 {{- $defaultWbOperatorEnvironment := "local" }}
 {{- $defaultDbOperatorEnvironment := "local" }}

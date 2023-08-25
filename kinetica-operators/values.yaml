@@ -1,5 +1,6 @@
 environment: onPrem
 provider: kind
+defaultStorageClass: standard
 dbOperator:
   install: true
   image:
