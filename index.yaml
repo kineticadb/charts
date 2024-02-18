@@ -3,7 +3,7 @@ entries:
   kinetica-operators:
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-08-25T10:30:52.376895934+05:30"
+    created: "2024-02-18T14:51:10.613743384+05:30"
     dependencies:
     - name: porter-operator
       repository: ""
@@ -17,11 +17,51 @@ entries:
     name: kinetica-operators
     type: application
     urls:
-    - https://kineticadb.github.io/charts/kinetica-operators-0.1.1.tgz
+    - https://kineticadb.github.io/charts/docs/kinetica-operators-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v2
+    appVersion: 0.1.1
+    created: "2024-02-18T14:51:10.617494227+05:30"
+    dependencies:
+    - name: porter-operator
+      repository: ""
+      version: 0.2.0
+    - name: porter-agent
+      repository: ""
+      version: 0.38.10
+    description: A Helm chart to install operators to manage KineticaDB and Workbench
+    digest: 151322b00a324e6a4fee2291cc75aef4c82db07dc1a9af9a1e8e34a74bc47a9f
+    icon: https://www.kinetica.com/wp-content/uploads/2016/08/kinetica_logo_on_indigo2x.png
+    name: kinetica-operators
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/site/kinetica-operators-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-02-18T14:51:10.609253944+05:30"
+    dependencies:
+    - name: openldap
+      repository: ""
+    - condition: certManager.install
+      name: cert-manager
+      repository: ""
+    - condition: ingressNginx.install
+      name: ingress-nginx
+      repository: ""
+    - condition: gpuOperator.install
+      name: gpu-operator
+      repository: ""
+    description: A Helm chart for Kubernetes
+    digest: 977c7fd679677df96956b628438623aa9f7de54321c295ad02fb5e1b333e2880
+    name: kinetica-operators
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/kinetica-operators-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-08-25T10:30:52.377599743+05:30"
+    created: "2024-02-18T14:51:10.611651865+05:30"
     dependencies:
     - name: porter-operator
       repository: ""
@@ -37,4 +77,22 @@ entries:
     urls:
     - https://kineticadb.github.io/charts/docs/kinetica-operators-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-25T10:30:52.376134469+05:30"
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2024-02-18T14:51:10.615636906+05:30"
+    dependencies:
+    - name: porter-operator
+      repository: ""
+      version: 0.2.0
+    - name: porter-agent
+      repository: ""
+      version: 0.38.10
+    description: A Helm chart to install operators to manage KineticaDB and Workbench
+    digest: 3a92d5c66cc2f26af4df046cfd1c13ca744fbf3880af9600b5c1908a100919ab
+    icon: https://www.kinetica.com/wp-content/uploads/2016/08/kinetica_logo_on_indigo2x.png
+    name: kinetica-operators
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/site/kinetica-operators-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-02-18T14:51:10.574267833+05:30"
