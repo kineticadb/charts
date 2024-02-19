@@ -1,0 +1,217 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
+  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
+  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
+  name:  {{ template "openldap.fullname" . }}
+  labels:
+    app: {{ template "openldap.name" . }}
+    chart: {{ template "openldap.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.extraLabels }}
+{{ toYaml .Values.extraLabels | indent 4 }}
+{{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+{{- if .Values.strategy }}
+  strategy:
+{{ toYaml .Values.strategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "openldap.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap-env: {{ include (print $.Template.BasePath "/configmap-env.yaml") . | sha256sum }}
+{{- if .Values.customLdifFiles}}
+        checksum/configmap-customldif: {{ include (print $.Template.BasePath "/configmap-customldif.yaml") . | sha256sum }}
+{{- end }}
+{{- if .Values.podAnnotations}}
+{{ toYaml .Values.podAnnotations | indent 8}}
+{{- end }}
+      labels:
+        app: {{ template "openldap.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+      {{- if .Values.initContainers }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+        - name: init-ldap-org-name
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ template "openldap.fullname" . }}-env
+          command:
+            - sh
+            - -c
+            - |
+              sed -i "s/o=\"example\"/o=\"${LDAP_ORGANISATION}\"/" /opt/bitnami/scripts/libopenldap.sh
+              sed -i "/^export LDAP_USERS/d" /opt/bitnami/scripts/libopenldap.sh
+              sed -i "/^export LDAP_PASSWORDS/d" /opt/bitnami/scripts/libopenldap.sh
+              cp -Lr /opt/bitnami/scripts/* /scripts/
+
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+        - name: init-tls-secret
+          image: {{ include "openldap.initTLSSecretImage" . }}
+          imagePullPolicy: {{ .Values.initTLSSecret.image.pullPolicy | quote }}
+          command:
+            - sh
+            - -c
+            - |
+              {{- if and .Values.initTLSSecret.tls_enabled .Values.initTLSSecret.secret }}
+              {{- else }}
+              openssl req -x509 -newkey rsa:4096 -nodes -subj '/CN={{ .Values.global.ldapDomain }}' -keyout /tmp-certs/tls.key -out /tmp-certs/tls.crt -days 365
+              chmod 777  /tmp-certs/*
+              {{- end }}
+              cp -Lr /tmp-certs/* /certs
+              [ -e /certs/ca.crt ] || cp -a /certs/tls.crt /certs/ca.crt
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.initTLSSecret.resources }}
+          resources: {{- toYaml .Values.initTLSSecret.resources | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: certs
+              mountPath: "/certs"
+            - name: secret-certs
+              mountPath: "/tmp-certs"
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: ldap-port
+              containerPort: {{ .Values.global.ldapPort }}
+            {{- if .Values.global.enableTls }}
+            - name: ssl-ldap-port
+              containerPort: {{ .Values.global.sslLdapPort }}
+            {{- end }}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            {{- if .Values.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ template "openldap.fullname" . }}-env
+            - secretRef:
+                name: {{ template "openldap.secretName" . }}
+            {{- if .Values.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/openldap/
+            - name: certs
+              mountPath: /opt/bitnami/openldap/certs
+            - name: scripts
+              mountPath: /opt/bitnami/scripts/
+
+{{- if or (.Values.customLdifFiles) (.Values.customLdifCm) }}
+            - name: custom-ldif-files
+              mountPath: /ldifs/
+{{- end }}
+            
+
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: ldap-port
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: ldap-port
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: ldap-port
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          {{- else if .Values.customStartupProbe }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customStartupProbe "context" $) | nindent 12 }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "openldap.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
+        {{- if .Values.customLdifFiles }}
+        - name: custom-ldif-files
+          configMap:
+            name: {{ template "openldap.fullname" . }}-customldif
+        {{- else if .Values.customLdifCm }}
+        - name: custom-ldif-files
+          configMap:
+            name: {{ .Values.customLdifCm }}
+        {{- end }}
+       
+        {{- if .Values.customSchemaFiles }}
+        - name: custom-schema-files
+          configMap:
+            name: {{ template "openldap.fullname" . }}-customschema
+        {{- end }}
+        - name: scripts
+          emptyDir: {}
+        - name: certs
+          emptyDir:
+            medium: Memory
+        {{- if .Values.initTLSSecret.tls_enabled }}
+        - name: secret-certs
+          secret:
+            secretName: {{ .Values.initTLSSecret.secret }}
+        {{- else }}
+        - name: secret-certs
+          emptyDir:
+            medium: Memory
+        {{- end }}
+

@@ -61,4 +61,25 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{- define "kinetica-operators.db.image" }}
+    {{- with . }}
+        {{- $rep := .repository -}}
+        {{- $tag := .tag -}}
+        {{- $registry := "docker.io" -}}
+        {{- $repository := $rep -}}
+        {{- $registryList := splitList "/" $rep -}}
+        {{- if ge (len $registryList) 2 }}
+            {{- $registryPieces := splitList "." (index $registryList 0) -}}
+            {{- if gt (len $registryPieces) 1 }}
+                {{- $registry = index $registryList 0 -}}
+                {{- $repository = join "/" (slice $registryList 1) -}}
+            {{ end -}}
+        {{ end -}}
+
+registry: "{{ $registry }}"
+repository: "{{ $repository }}"
+tag: "{{ $tag }}"
+    {{ end -}}
+{{ end -}}
+
 

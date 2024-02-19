@@ -1,0 +1,19 @@
+config_production_js.tmpl: |
+  window.WORKBENCH_ENV = {
+    REACT_APP_URL: 'http{{if .Spec.LetsEncrypt.Enabled }}s{{end}}://{{ .Spec.FQDN }}/workbench',
+    REACT_APP_CONTEXT: 'workbench',
+    REACT_APP_API_URL: 'http{{if .Spec.LetsEncrypt.Enabled }}s{{end}}://{{ .Spec.FQDN }}',
+    REACT_APP_GRAPHQL_URL: 'http{{if .Spec.LetsEncrypt.Enabled }}s{{end}}://{{ .Spec.FQDN }}/graphql',
+    API_URL: 'http{{if .Spec.LetsEncrypt.Enabled }}s{{end}}://{{ .Spec.FQDN }}',
+    USER_CREATE_TYPE: 'external_user',
+    K8S_STATUS_POLL_INTERVAL: 10000,
+    K8S_BACKUPS_POLL_INTERVAL: 10000,
+    K8S_EXTERNAL_USERNAME_PREFIX: '',
+    EXECUTE_SQL_LIMIT: {{.Spec.ExecuteSqlLimit}},
+    USER_IDLE_TIMEOUT: {{.Spec.UserIdleTimeout}},
+    INTERCOM_APP_ID: 'ucm1jxpa',
+    SEGMENT_API_KEY: 'faZJGnKjzhDKja1139YvTMw53BJ16Wvw',
+    CUSTOMER_INFO_JSON: '{{.Spec.DeploymentInfo}}',
+    FREE_SAAS: {{.Spec.FreeSaaS}},
+    DEDICATED_SAAS: {{.Spec.DedicatedSaaS}},
+  };

@@ -1,0 +1,302 @@
+
+# environment refers to either of "onPrem" "saas" "marketPlace"
+# "saas" "marketPlace" are used by Kinetica only
+# for a customer trying to install the chart on his own wherever, it should be onPrem
+environment: "marketPlace"
+# onPrem Providers: "k3s" "kind" "eks" "aks" 
+# saas Providers: eks
+# marketPlace Providers: aks eks
+provider: eks
+
+# clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
+# its used in the monitoring related configmaps
+clusterName: "cluster0-02b29224cfa7"
+clusterRegion: "eu-west-1"
+
+kubeRbacProxy:
+    image:
+      repository: "quay.io/brancz/kube-rbac-proxy"
+      tag: "v0.14.2"
+
+kubeStateMetrics:
+  install: false
+  image:
+    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
+    tag: "v2.10.1"
+otelCollector:
+  install: true
+  image:
+    repository: "otel/opentelemetry-collector-contrib"
+    tag: "0.89.0"
+
+cloudwatchAgent:
+  image:
+    repository: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent"
+    tag: "1.247350.0b251814"
+fluentBit:
+  image:
+    repository: "public.ecr.aws/aws-observability/aws-for-fluent-bit"
+    tag: "2.25.0"
+
+
+wbOperator:
+  install: true
+  image:
+    repository: "REPLACEMEREGISTRY/workbench-operator"
+    tag: "REPLACEMETAG-operator"
+    digest: ""
+dbOperator:
+  install: true
+  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
+  aadpodidbinding: ""
+  image:
+    repository: "REPLACEMEREGISTRY/kinetica-k8s-operator"
+    tag: "REPLACEMETAG-operator"
+    digest: ""
+
+nodeSelector:
+  app.kinetica.com/pool: infra
+tolerations: []
+affinity: {}
+
+certManager:
+  install: true
+"cert-manager":
+  installCRDs: 'true'
+  namespace: kinetica-system
+  nodeSelector:
+    'app.kinetica.com/pool': 'infra'
+  webhook:
+    nodeSelector:
+      'app.kinetica.com/pool': 'infra'
+  cainjector:
+    nodeSelector:
+      'app.kinetica.com/pool': 'infra'
+  startupapicheck:
+    nodeSelector:
+      'app.kinetica.com/pool': 'infra'
+  
+ingressNginx:
+  install: true
+"ingress-nginx":
+  defaultBackend:
+    enabled: true
+    image:
+      repository: docker.io/kineticadevcloud/kinetica-default-backend
+      tag: v0.0.1
+      digest: ""
+    nodeSelector:
+      access: public
+    extraEnvs:
+      - name: DEBUG
+        value: "false"
+  controller:
+    nodeSelector:
+      access: public
+    allowSnippetAnnotations: true
+    service:
+      annotations:
+        'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
+        'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': tcp
+        'service.beta.kubernetes.io/aws-load-balancer-type': nlb
+    admissionWebhooks:
+      patch:
+        nodeSelector:
+          access: public
+gpuOperator:
+  install: false
+  "gpu-operator":
+    mig:
+      strategy: single
+    driver:
+      enabled: true
+      version: "535.54.03"
+
+    toolkit:
+      enabled: true
+openldap:
+  namespace: "gpudb"
+  fullnameOverride: "openldap"
+  global:
+    ldapPort: 1389
+  initContainers:
+      - name: openldap-create-directory-structure
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
+          ]
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami
+  env:
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+    LDAP_ENABLE_TLS: "no"
+  affinity: {}
+  podAntiAffinity: {}
+  nodeSelector:
+    'app.kinetica.com/pool': 'infra'
+  persistence:
+    enabled: true
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    storageClass: "gp2"
+db:
+  # do you want to provision a database
+  create: true
+  name: kinetica-eks-sample
+  namespace: gpudb
+  debug: false
+  autoSuspend:
+    enabled: false
+  # provide a boolean to say whether its payasyougo or not
+  payAsYouGo: false
+  
+  awsConfig:
+    clusterName: "cluster0-02b29224cfa7"
+    marketplaceApp:
+      productCode: "3an8pb6mkca98s15xadbbckwi"
+      publicKeyVersion: 1
+  
+  
+  hostManagerMonitor:
+    image:
+      repository: docker.io/kineticadevcloud/kinetica-k8s-monitor
+      tag: v7.2.0-beta11
+  # you may use nginx if you want the operator to create the nginx records
+  # if you want to manage your own ingress controller/gateway api, provide "none"
+  # TODO: As of now, if you want the operator to create nginx records, do the following
+  # 1. first install nginx sub chart by providing the release namespace as nginx
+  # helm -n nginx install nginx charts/kinetica-operators/charts/ingress-nginx --values values
+  # you can refer to the correct ingress-ngix values in the corresponding values file in the operators values files
+  # This is needed now as the operator as of now, looks for its nginx in the nginx namespace
+  # if you enable ingress-nginx and install the operators, it will install all in the kinetica-system namespace
+  ingressController: nginx
+  ldap:
+    baseDN: dc=kinetica,dc=com
+    bindDN: cn=admin,dc=kinetica,dc=com
+    host: openldap
+    isInLocalK8S: true
+    isLDAPS: false
+    namespace: gpudb
+    port: 1389
+  supportingImages:
+        busybox:
+          image:
+            repository: docker.io/busybox
+            tag: 1.29.2
+        socat:
+          image:
+            repository: docker.io/alpine/socat
+            tag: 1.7.4.1-r2
+  stats:
+    isEnabled: false
+  gadmin:
+    isEnabled: true
+  reveal:
+    isEnabled: true
+  gpudbCluster:
+    # this applies if you have labelled node pools for compute
+    hasPools: true
+    clusterSize:
+      tshirtSize: XS
+      tshirtType: SmallCPU
+    ranksPerNode: 1
+    replicas: 1
+    # provide an fqdn if you want to use a custom fqdn
+    fqdn: "4ukvzgx.cloud.kinetica.com"
+    letsEncrypt:
+      enabled: true
+  
+      # only allowed values are production and production
+      environment: "staging"
+    # you may either use "payg" or a valid license
+    license: "HLahocmUFYRG-qQpmbHZ9C9Zw-K6PhUggTmfxv-6iTissiJMUiN-3QQTIoNu4mwl1kmAUzx3f8m26rvyhM86"
+    gpuAcceleration: false
+    image:
+      cuda:
+        image:
+          repository: docker.io/kinetica/kinetica-k8s-cuda
+          tag: v7.1.9.23-ga
+      standard:
+        image:
+          repository: kineticadevcloud/kinetica-k8s-cpu-avx512
+          tag:  v7.2.0-beta11
+    metricsRegistryRepositoryTag:
+      image:
+        repository: amazon/aws-for-fluent-bit
+        tag: 2.25.0
+    config:
+      postgresProxy:
+         enablePostgresProxy: true
+      kifs:
+        enable: true
+        mountPoint: /gpudb/kifs
+      procs:
+        enable: true
+      textSearch:
+        enableTextSearch: false
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        
+        persistTier:
+          default:
+            limit: "2Ti"
+            provisioner: "kubernetes.io/aws-ebs"            
+            volumeClaim:
+              spec:
+                storageClassName: gp2
+           
+        diskCacheTier:
+          default:
+            limit: 128Gi
+            provisioner: "kubernetes.io/aws-ebs"
+            volumeClaim:
+              spec:
+                storageClassName: gp2
+           
+        coldStorageTier:
+          coldStorageType: s3
+          coldStorageS3:
+            basePath: "gpudb/cold-storage/"
+            bucketName: cluster0-02b29224cfa7-cold
+
+dbAdminUser:
+    create: true
+    # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
+    name: "kadmin"
+    # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
+    password: "Kinetica1234!"
+dbWorkbench:
+  create: true
+  deploymentInfo:
+    "application_id": "arn:aws:cloudformation:eu-west-1:798457485286:stack/lucid-devbyol-03/6d98fe80-c65f-11ee-b10b-02b29224cfa7"
+    "userFirstname": "John"
+    "userLastname": "Cyriac"
+    "customer_email": "jcyriac.ctr@kinetica.com"
+    "name": "byolDev"
+    "product": "3an8pb6mkca98s15xadbbckwi"
+    "tshirtSize": "XS"
+    "tshirtType": "SmallCPU"
+    "awsApplicationLog": "https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fcontainerinsights$252Fcluster0-02b29224cfa7$252Fapplication"
+
+    
+    
+  fqdn: "4ukvzgx.cloud.kinetica.com"
+  letsEncrypt:
+    enabled: true
+    environment: "staging"
+    
+  image:
+    repository:  registry.harbor.kinetica.com/kineticadevcloud/workbench
+    tag: release-v7.2.0-master-149a9137
+
+  
+  

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kinetica-operators
-description: A Helm chart to install operators to manage KineticaDB and Workbench
-icon: https://www.kinetica.com/wp-content/uploads/2016/08/kinetica_logo_on_indigo2x.png
+description: A Helm chart for deploying Kinetica Operators
+
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
@@ -15,16 +15,18 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.1
+version: 0.1.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "0.1.1"
+appVersion: "0.1.0"
 dependencies: 
-  - name: porter-operator
-    version: 0.2.0
-  - name: porter-agent
-    version: 0.38.10
-
+  - name: openldap
+  - name: cert-manager
+    condition: certManager.install
+  - name: ingress-nginx
+    condition: ingressNginx.install
+  - name: gpu-operator
+    condition: gpuOperator.install

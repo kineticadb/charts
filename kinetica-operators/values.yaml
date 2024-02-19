@@ -1,18 +1,153 @@
-environment: onPrem
-provider: kind
-defaultStorageClass: standard
-dbOperator:
+
+# environment refers to either of "onPrem" "saas" "marketPlace"
+# "saas" "marketPlace" are used by Kinetica only
+# for a customer trying to install the chart on his own wherever, it should be onPrem
+environment: ""
+# onPrem Providers: "k3s" "kind" "eks" "aks" 
+# saas Providers: eks
+# marketPlace Providers: aks eks
+provider: ""
+
+# clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
+# clusterName alone is used if you are using dedicated-saas eks, this value is used to create a named StorageClass
+# its used in the monitoring related configmaps
+clusterName: ""
+clusterRegion: ""
+letsEncryptEmail: devops@kinetica.com
+kubeRbacProxy:
+    image:
+      repository: "quay.io/brancz/kube-rbac-proxy"
+      tag: "v0.14.2"
+
+kubeStateMetrics:
+  install: false
+  image:
+    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
+    tag: "v2.10.1"
+otelCollector:
   install: true
   image:
-    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
-    tag: "v7.1.9-7.rc3"
+    repository: "otel/opentelemetry-collector-contrib"
+    tag: "0.89.0"
 
-  
-    
+# cloudwatchAgent:
+#   image:
+#     repository: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent"
+#     tag: "1.247350.0b251814"
+# fluentBit:
+#   image:
+#     repository: "public.ecr.aws/aws-observability/aws-for-fluent-bit"
+#     tag: "2.25.0"
+
+
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kineticastagingcloud/workbench-operator"
-    tag: "v7.1.9-7.rc3"
+    repository: "REPLACEMEREGISTRY/workbench-operator"
+    tag: "REPLACEMETAG-operator"
+    digest: ""
+dbOperator:
+  install: true
+  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
+  aadpodidbinding: ""
+  image:
+    repository: "REPLACEMEREGISTRY/kinetica-k8s-operator"
+    tag: "REPLACEMETAG-operator"
+    digest: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+certManager:
+  install: true
+"cert-manager":
+  installCRDs: 'true'
+  namespace: kinetica-system
+  nodeSelector: {}
+  webhook:
+    nodeSelector: {}
+  cainjector:
+    nodeSelector: {}
+  startupapicheck:
+    nodeSelector: {}
+
+  
+ingressNginx:
+  install: true
+"ingress-nginx":
+  fullnameOverride: "ingress-nginx"
+  tcp: {}
+  defaultBackend:
+    enabled: true
+    image:
+      repository: docker.io/kineticadevcloud/kinetica-default-backend
+      tag: v0.0.1
+      digest: ""
+    nodeSelector: {}      
+    extraEnvs:
+      - name: DEBUG
+        value: "false"
+  controller:
+    nodeSelector: {}
+    allowSnippetAnnotations: true
+    service:
+      annotations:
+        'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
+        'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': tcp
+        'service.beta.kubernetes.io/aws-load-balancer-type': nlb
+    admissionWebhooks:
+      patch:
+        nodeSelector: {}
+
+gpuOperator:
+  install: false
+  "gpu-operator":
+    mig:
+      strategy: single
+    driver:
+      enabled: true
+    toolkit:
+      enabled: true
+openldap:
+  namespace: "gpudb"
+  fullnameOverride: "openldap"
+  global:
+    ldapPort: 1389
+  initContainers:
+      - name: openldap-create-directory-structure
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
+          ]
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami
+  env:
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+    LDAP_ENABLE_TLS: "no"
+  affinity: {}
+  podAntiAffinity: {}
+  nodeSelector: {}
+  persistence:
+    enabled: false
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    storageClass: ""
+db:
+  create: false
+dbAdminUser:
+    create: false
+dbWorkbench:
+  create: false
   
 
+  
+  

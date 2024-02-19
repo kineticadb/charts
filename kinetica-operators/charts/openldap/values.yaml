@@ -1,0 +1,190 @@
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  #imagePullSecrets: [""]
+  ## ldapDomain , can be explicit (e.g dc=toto,c=ca) or domain based (e.g example.com)
+  ldapDomain: "kinetica.com"
+  # Specifies an existing secret to be used for admin and config user passwords. The expected key are LDAP_ADMIN_PASSWORD and LDAP_CONFIG_ADMIN_PASSWORD.
+  # existingSecret: ""
+  ## Default Passwords to use, stored as a secret. Not used if existingSecret is set.
+  adminUser: "admin"
+  adminPassword: Not@SecurePassw0rd
+  configUserEnabled: true
+  configUser: "admin"
+  configPassword: Not@SecurePassw0rd
+  ldapPort: 389
+  sslLdapPort: 636
+  enableTls: false
+replicaCount: 1
+
+# Define deployment strategy - IMPORTANT: use rollingUpdate: null when use Recreate strategy.
+# It prevents from merging with existing map keys which are forbidden.
+strategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 1
+  #   maxUnavailable: 0
+  #
+  # or
+  #
+  # type: Recreate
+  # rollingUpdate: null
+image:
+  # From repository https://hub.docker.com/r/bitnami/openldap/
+  repository: bitnami/openldap
+  tag: 2.6.3
+  pullPolicy: Always
+  pullSecrets: []
+
+# Spcifies an existing secret to be used for admin and config user passwords
+existingSecret: ""
+
+# settings for enabling TLS
+tls:
+  enabled: false
+  secret: ""  # The name of a kubernetes.io/tls type secret to use for TLS
+  CA:
+    enabled: false
+    secret: ""  # The name of a generic secret to use for custom CA certificate (ca.crt)
+## Add additional labels to all resources
+extraLabels: {}
+## Add additional annotations to pods
+podAnnotations: {}
+service:
+  annotations: {}
+
+  ldapPort: 389
+  sslLdapPort: 636  # Only used if tls.enabled is true
+  ## List of IP addresses at which the service is available
+  ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+  ##
+  externalIPs: []
+
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  type: ClusterIP
+
+# Default configuration for openldap as environment variables. These get injected directly in the container.
+# Use the env variables from https://github.com/osixia/docker-openldap#beginner-guide
+env:
+  LDAP_ORGANISATION: "Kinetica DB Inc"
+  LDAP_DOMAIN: "kinetica.com"
+  LDAP_TLS_ENFORCE: "false"
+  LDAPTLS_REQCERT: "never"  
+  LDAP_SKIP_DEFAULT_TREE: "no"
+
+# Default Passwords to use, stored as a secret. If unset, passwords are auto-generated.
+# You can override these at install time with
+# helm install openldap --set openldap.adminPassword=<passwd>,openldap.configPassword=<passwd>
+# adminPassword: admin
+# configPassword: config
+
+# Custom openldap configuration files used to override default settings
+# customLdifFiles:
+  # 01-default-users.ldif: |-
+    # Predefine users here
+
+## Persist data to a persistent volume
+persistence:
+  enabled: false
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+   # existingClaim: ""  
+  size: 1Mi
+  storageClass: "local-path"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 10
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 10
+startupProbe:
+  enabled: true
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 30
+initResources: {}
+ # requests:
+ #   cpu: "100m"
+ #   memory: "128Mi"
+ # limits:
+ #   cpu: "100m"
+ #   memory: "128Mi"
+
+nodeSelector: {}
+  
+
+tolerations: []
+
+affinity: {}
+containerSecurityContext:
+  enabled: false
+  runAsUser: 1001
+  runAsNonRoot: true
+initTLSSecret:
+  tls_enabled: false
+  ##  openssl image
+  ## @param initTlsSecret.image.registry openssl image registry
+  ## @param initTlsSecret.image.repository openssl image name
+  ## @param initTlsSecret.image.tag openssl image tag
+  ##
+  image:
+    registry: docker.io
+    repository: alpine/openssl
+    tag: latest
+    ## @param image.pullPolicy openssl image pull policy
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+    ##
+    pullPolicy: IfNotPresent
+  # The name of a kubernetes.io/tls type secret to use for TLS
+  secret: "" 
+  ## init-tls-secret container's resource requests and limits
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## @param initTlsSecret.resources.limits The resources limits for the init container
+  ## @param initTlsSecret.resources.requests The requested resources for the init container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##   cpu: 500m
+    ##   memory: 1Gi
+    limits: {}
+    requests: {}
+## test container details
+test:
+  enabled: false
+  image:
+    repository: dduportal/bats
+    tag: 0.4.0
+
+

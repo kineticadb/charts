@@ -1,0 +1,160 @@
+
+{{- $values := .Values -}}
+{{- $template := .Template }}
+{{- $chart := .Chart -}}
+{{- $release := .Release -}}
+{{- $files := .Files }}
+{{- $capabilities := .Capabilities -}}
+{{- $global := .Values.global }}
+{{- $defaultDbOperatorEnvironment := ""}}
+{{- if ne (kindOf $global) "map" }}
+  {{- $global = dict "namespace"  .Release.Namespace }}  
+{{- end}}
+
+{{- /* validate common values  environment and providers */ -}}
+{{- $allowedEnvironments := list "onPrem" "saas" "marketPlace" }}
+{{- $allowedOnPremProviders := list "k3s" "kind" "eks" "aks" "okd" "other" }}
+{{- $allowedSaasProviders := list "eks"  }}
+{{- $allowedMarketPlaceProviders := list "aks" "eks" }}
+
+
+
+{{- if not (has $values.environment $allowedEnvironments) }}
+  {{- fail (printf "%s - %s - %s - " "Not an allowed environment" $values.environment "Allowed are " ($allowedEnvironments  | join "/")) }}
+{{- end }}
+
+{{- if eq $values.environment "onPrem"}}
+  {{- if not (has $values.provider $allowedOnPremProviders) }}
+    {{- fail (printf "%s - %s - %s - " "Not an allowed provider" $values.provider "Allowed are " ($allowedOnPremProviders|join "/")) }}
+  {{- end }}  
+{{- end}}
+
+{{- if eq $values.environment "saas"}}
+  {{- if not (has $values.provider $allowedSaasProviders) }}
+    {{- fail (printf "%s - %s - %s - " "Not an allowed provider" $values.provider "Allowed are " ($allowedSaasProviders|join "/")) }}
+  {{- end }}  
+  {{- $defaultDbOperatorEnvironment = "saas-eks" }}
+{{- end}}
+
+{{- if eq $values.environment "marketPlace"}}
+  {{- if not (has $values.provider $allowedMarketPlaceProviders) }}
+    {{- fail (printf "%s - %s - %s - " "Not an allowed provider" $values.provider "Allowed are " ($allowedMarketPlaceProviders|join "/")) }}
+  {{- end }}
+  {{- if eq $values.provider "aks" }}
+    {{- $defaultDbOperatorEnvironment = $values.provider }}
+    {{- $defaultWbOperatorEnvironment = $values.provider }}
+  {{- end }}
+  {{- if eq $values.provider "eks" }}
+   {{- $defaultDbOperatorEnvironment = $values.provider }}
+  {{- end }}
+{{- end}}
+
+
+
+{{- $dbOperator := $values.dbOperator }}
+{{- $wbOperator := $values.wbOperator }}
+
+{{- /* validate dbOperator values */ -}}
+{{- if not (eq (kindOf $dbOperator) "map")}}
+  {{- fail "No Configuration found for .Values.dbOperator" }}
+{{- end }}
+
+
+{{- /* validate wbOperator values */ -}}
+{{- if not (eq (kindOf $wbOperator) "map")}}
+  {{- fail "No Configuration found for .Values.wbOperator" }}
+{{- end }}
+
+
+{{- if $values.certManager.install }}
+  {{- $webhook := (dict "url" dict) }}
+  {{- $values = merge (dict "webhook" $webhook) $values }}
+{{- end }}
+
+{{- /* create the final values */ -}}
+{{- $values = merge (dict "global" $global) $values}}
+  
+{{- $values = merge (dict "dbOperator" $dbOperator) (dict "wbOperator" $wbOperator) $values}}
+{{- $data := merge (dict "Files" $files) (dict "Values" $values) (dict "Capabilities" $capabilities) (dict "Chart" $chart) (dict "Release" $release) (dict "Template" $template)}}
+---
+
+{{- if and (not $dbOperator.install) $wbOperator.install }}
+  {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
+{{- end }}
+---
+{{- if $dbOperator.install }}
+  {{- include "kinetica-operators.all-dboperator-conf" $data }}
+  {{- if and (eq $values.environment "marketPlace") (eq $values.provider "eks") }}
+      {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
+      {{- include "kinetica-operators.eks-dboperator-operator" $data }}
+      {{- include "kinetica-operators.eks-dboperator-monitoring" $data }}
+  {{- else if and (eq $values.environment "marketPlace") (eq $values.provider "aks") }}
+      {{- include "kinetica-operators.aks-dboperator-namespaces" $data }}
+      {{- include "kinetica-operators.aks-dboperator-operator" $data }}
+      {{- include "kinetica-operators.aks-dboperator-monitoring" $data }}      
+  {{- else if and (eq $values.environment "saas") (eq $values.provider "eks") }}
+      {{- include "kinetica-operators.saas-eks-dboperator-namespaces" $data }}
+      {{- include "kinetica-operators.saas-eks-dboperator-operator" $data }}
+      {{- include "kinetica-operators.saas-eks-dboperator-monitoring" $data }}
+  {{- else }}
+      {{- include "kinetica-operators.local-dboperator-namespaces" $data }}
+      {{- include "kinetica-operators.local-dboperator-operator" $data -}}
+      {{- include "kinetica-operators.local-dboperator-monitoring" $data }}      
+  {{- end }}
+{{- end }}
+ 
+---
+
+{{- if $wbOperator.install }}
+  {{- include "kinetica-operators.all-wboperator-conf" $data }}
+  {{- include "kinetica-operators.all-wboperator-baseRbac" $data }}
+  {{- include "kinetica-operators.all-wboperator-rbac" $data }}
+  {{- include "kinetica-operators.all-wboperator-operator" $data }}
+{{- end}}
+---
+{{- if ($values.db.create) }}
+  {{- include "kinetica-operators.db" $data}}
+  {{- if $values.dbAdminUser.create }}
+    {{- include "kinetica-operators.db-admin-user" $data}}
+  {{- end }}
+  {{- if $values.dbWorkbench.create }}
+    {{- include "kinetica-operators.db-workbench" $data}}
+  {{- end }}
+  {{- if eq (kindOf $values.db.gpudbCluster) "map" }}
+    {{- if eq (kindOf $values.db.gpudbCluster.letsEncrypt) "map" }}
+    {{- if kindOf $values.db.gpudbCluster.letsEncrypt.enabled }}
+      {{- if eq $values.db.gpudbCluster.letsEncrypt.environment "production" }}    
+        {{- include "kinetica-operators.all-dboperator-productionIssuer" $data}}
+      {{- else }}
+        {{- include "kinetica-operators.all-dboperator-stagingIssuer" $data}}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end}}
+{{- end }}
+---
+{{- if eq $defaultDbOperatorEnvironment "saas-eks"}}
+{{- include "kinetica-operators.all-dboperator-productionIssuer" $data}}
+---
+{{- include "kinetica-operators.all-dboperator-stagingIssuer" $data}}
+---
+{{- $requiredSc := printf "%s-storageclass" $values.clusterName }}
+
+{{- if not (lookup "storage.k8s.io/v1" "StorageClass" "" $requiredSc) }}
+
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: {{ $requiredSc}}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+    "helm.sh/resource-policy": keep
+allowVolumeExpansion: true
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+parameters:
+  type: gp3
+{{- end }}
+{{- end }}
+---

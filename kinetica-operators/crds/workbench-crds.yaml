@@ -1,0 +1,280 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.0
+  creationTimestamp:
+  name: workbenches.workbench.com.kinetica
+spec:
+  group: workbench.com.kinetica
+  names:
+    kind: Workbench
+    listKind: WorkbenchList
+    plural: workbenches
+    shortNames:
+    - wb
+    singular: workbench
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.fqdn
+      name: FQDN
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Workbench is the Schema for the workbenches API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WorkbenchSpec defines the desired state of Workbench
+            properties:
+              dedicatedSaaS:
+                default: false
+                description: Identify if DedicatedSaaS environment or not.
+                type: boolean
+              deploymentInfo:
+                description: DeploymentInfo corresponds to various details related
+                  to the deployment
+                type: string
+              executeSqlLimit:
+                default: 10000
+                description: The maximum number of rows that a SQL query is allowed
+                  to return
+                type: integer
+              fqdn:
+                description: The fully qualified domain name of the cluster.  Used
+                  on the Ingress records for any exposed services.
+                type: string
+              freeSaaS:
+                default: false
+                description: Identify if FreeSaaS environment or not.
+                type: boolean
+              image:
+                default: kinetica/workbench:latest
+                description: Image corresponds to the workbench image
+                type: string
+              ingressController:
+                default: nginx
+                description: Specify the type of ingress controller to use on the
+                  Workbench
+                type: string
+              letsEncrypt:
+                default:
+                  enabled: true
+                  environment: staging
+                description: The Ingress Endpoint that GAdmin will be running on.
+                properties:
+                  enabled:
+                    default: false
+                    description: Enable LetsEncrypt for Certificate generation.
+                    type: boolean
+                  environment:
+                    default: staging
+                    description: LetsEncryptEnvironment
+                    enum:
+                    - staging
+                    - production
+                    type: string
+                type: object
+              storageClass:
+                description: Specify the storage class to use on the Workbench stateful
+                  set
+                type: string
+              userIdleTimeout:
+                default: 60
+                description: The number of minutes that a user connection remains
+                  alive without activity
+                type: integer
+            required:
+            - fqdn
+            type: object
+          status:
+            description: WorkbenchStatus defines the observed state of Workbench
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ''
+    plural: ''
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.0
+  creationTimestamp:
+  name: workbenchoperatorupgrades.workbench.com.kinetica
+spec:
+  group: workbench.com.kinetica
+  names:
+    kind: WorkbenchOperatorUpgrade
+    listKind: WorkbenchOperatorUpgradeList
+    plural: workbenchoperatorupgrades
+    shortNames:
+    - wou
+    singular: workbenchoperatorupgrade
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: WorkbenchOperatorUpgrade is the Schema for the workbenchoperatorupgrades
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WorkbenchOperatorUpgradeSpec defines the desired state of
+              WorkbenchOperatorUpgrade
+            properties:
+              upgradeToVersion:
+                description: The UpgradeToVersion field of WorkbenchOperatorUpgrade
+                  contains the version of the image that components will be upgraded
+                  to
+                type: string
+            required:
+            - upgradeToVersion
+            type: object
+          status:
+            description: WorkbenchOperatorUpgradeStatus defines the observed state
+              of WorkbenchOperatorUpgrade
+            properties:
+              phase:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file Phase is the current state of the upgrade'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ''
+    plural: ''
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.0
+  creationTimestamp:
+  name: workbenchupgrades.workbench.com.kinetica
+spec:
+  group: workbench.com.kinetica
+  names:
+    kind: WorkbenchUpgrade
+    listKind: WorkbenchUpgradeList
+    plural: workbenchupgrades
+    shortNames:
+    - wbu
+    singular: workbenchupgrade
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: WorkbenchUpgrade is the Schema for the workbenchupgrades API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: WorkbenchUpgradeSpec defines the desired state of WorkbenchUpgrade
+            properties:
+              upgradeToVersion:
+                description: The UpgradeToVersion field of WorkbenchUpgrade contains
+                  the version of the image that components will be upgraded to
+                type: string
+              workbenchName:
+                description: The WorkbenchName field of WorkbenchUpgrade contains
+                  the Kinetica Cluster Object name that will be upgraded
+                type: string
+              workbenchNamespace:
+                description: The WorkbenchNamespace field of the WorkbenchUpgrade
+                  contains the namespace where the Kinetica Cluster object is located
+                type: string
+            required:
+            - upgradeToVersion
+            - workbenchName
+            type: object
+          status:
+            description: WorkbenchUpgradeStatus defines the observed state of WorkbenchUpgrade
+            properties:
+              phase:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file Phase is the current state of the upgrade'
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ''
+    plural: ''
+  conditions: []
+  storedVersions: []
