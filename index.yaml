@@ -2,26 +2,8 @@ apiVersion: v1
 entries:
   kinetica-operators:
   - apiVersion: v2
-    appVersion: 0.1.1
-    created: "2024-02-19T14:42:03.960345614+05:30"
-    dependencies:
-    - name: porter-operator
-      repository: ""
-      version: 0.2.0
-    - name: porter-agent
-      repository: ""
-      version: 0.38.10
-    description: A Helm chart to install operators to manage KineticaDB and Workbench
-    digest: 151322b00a324e6a4fee2291cc75aef4c82db07dc1a9af9a1e8e34a74bc47a9f
-    icon: https://www.kinetica.com/wp-content/uploads/2016/08/kinetica_logo_on_indigo2x.png
-    name: kinetica-operators
-    type: application
-    urls:
-    - https://kineticadb.github.io/charts/site/kinetica-operators-0.1.1.tgz
-    version: 0.1.1
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2024-02-19T14:42:03.943300505+05:30"
+    appVersion: 0.1.0
+    created: "2024-02-19T14:49:00.194499284+05:30"
     dependencies:
     - name: openldap
       repository: ""
@@ -35,32 +17,11 @@ entries:
       name: gpu-operator
       repository: ""
     description: A Helm chart for Kubernetes
-    digest: add886553223669b89b70c6f9010e8b304dac6d8c19cad9b22380021ae8b71ce
+    digest: 0c558a65d125f187b6082c249afafc12b9b590611ce7363f732ec159921eea96
     name: kinetica-operators
     type: application
     urls:
     - https://kineticadb.github.io/charts/kinetica-operators-0.1.0.tgz
     version: 0.1.0
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2024-02-19T14:42:03.959610401+05:30"
-    dependencies:
-    - name: openldap
-      repository: ""
-    - condition: certManager.install
-      name: cert-manager
-      repository: ""
-    - condition: ingressNginx.install
-      name: ingress-nginx
-      repository: ""
-    - condition: gpuOperator.install
-      name: gpu-operator
-      repository: ""
-    description: A Helm chart for Kubernetes
-    digest: 977c7fd679677df96956b628438623aa9f7de54321c295ad02fb5e1b333e2880
-    name: kinetica-operators
-    type: application
-    urls:
-    - https://kineticadb.github.io/charts/site/kinetica-operators-0.1.0.tgz
-    version: 0.1.0
-generated: "2024-02-19T14:42:03.92454221+05:30"
+  
+generated: "2024-02-19T14:49:00.179138947+05:30"
