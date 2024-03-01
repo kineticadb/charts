@@ -1,0 +1,39 @@
+filter-gpudb-fluent-bit.conf: |-
+  [FILTER]
+      Name  stdout
+      Match *
+fluent-bit.conf: |-
+  [SERVICE]
+      Flush          1
+      Daemon         Off
+      Log_Level      info
+  #    Parsers_File   parsers.conf
+
+  @INCLUDE input-gpudb-fluent-bit.conf
+  @INCLUDE filter-gpudb-fluent-bit.conf
+  @INCLUDE output-otel-fluent-bit.conf
+input-gpudb-fluent-bit.conf: |-
+  [INPUT]
+      Name           tcp
+      Listen         0.0.0.0
+      Port           5170
+      Chunk_Size     32
+      Buffer_Size    64
+      Format         json
+      Mem_Buf_Limit  5MB
+output-otel-fluent-bit.conf: |-
+  [OUTPUT]
+      Name                 opentelemetry
+      Match                *
+      Host                 otel-collector.kinetica-system.svc.cluster.local
+      Port                 4318
+      Metrics_uri          /v1/metrics
+      Logs_uri             /v1/logs
+      Traces_uri           /v1/traces
+      Log_response_payload True
+      Tls                  Off
+      Tls.verify           Off
+      # add user-defined labels
+      add_label            app fluent-bit
+      #add_label            label_env dedicated-saas-prod
+      #add_label            cluster cluster-157832e7

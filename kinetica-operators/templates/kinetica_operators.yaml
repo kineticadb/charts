@@ -88,18 +88,22 @@
       {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
       {{- include "kinetica-operators.eks-dboperator-operator" $data }}
       {{- include "kinetica-operators.eks-dboperator-monitoring" $data }}
+      {{- include "kinetica-operators.eks-dboperator-metering" $data }}
   {{- else if and (eq $values.environment "marketPlace") (eq $values.provider "aks") }}
       {{- include "kinetica-operators.aks-dboperator-namespaces" $data }}
       {{- include "kinetica-operators.aks-dboperator-operator" $data }}
-      {{- include "kinetica-operators.aks-dboperator-monitoring" $data }}      
+      {{- include "kinetica-operators.aks-dboperator-monitoring" $data }}   
+      {{- include "kinetica-operators.aks-dboperator-metering" $data }}    
   {{- else if and (eq $values.environment "saas") (eq $values.provider "eks") }}
       {{- include "kinetica-operators.saas-eks-dboperator-namespaces" $data }}
       {{- include "kinetica-operators.saas-eks-dboperator-operator" $data }}
       {{- include "kinetica-operators.saas-eks-dboperator-monitoring" $data }}
+      {{- include "kinetica-operators.saas-eks-dboperator-metering" $data }}
   {{- else }}
       {{- include "kinetica-operators.local-dboperator-namespaces" $data }}
       {{- include "kinetica-operators.local-dboperator-operator" $data -}}
-      {{- include "kinetica-operators.local-dboperator-monitoring" $data }}      
+      {{- include "kinetica-operators.local-dboperator-monitoring" $data }}
+      {{- include "kinetica-operators.local-dboperator-metering" $data }}       
   {{- end }}
 {{- end }}
  

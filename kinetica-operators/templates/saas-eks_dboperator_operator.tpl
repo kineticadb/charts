@@ -1820,7 +1820,7 @@ spec:
           -}}{{- else }}{{- .Values.dbOperator.image.registry -}}/{{- .Values.dbOperator.image.image
           -}}{{- end -}}{{- if (.Values.dbOperator.image.digest) -}} @{{- .Values.dbOperator.image.digest
           -}}{{- else -}}:{{- .Values.dbOperator.image.tag -}}{{- end -}}'
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: manager
         resources:
           limits:

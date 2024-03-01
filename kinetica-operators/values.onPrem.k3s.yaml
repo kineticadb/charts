@@ -8,77 +8,14 @@ environment: "onPrem"
 # marketPlace Providers: aks eks
 provider: k3s
 
-# clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
-# its used in the monitoring related configmaps
-clusterName: ""
-clusterRegion: ""
-
-kubeRbacProxy:
-    image:
-      repository: "quay.io/brancz/kube-rbac-proxy"
-      tag: "v0.14.2"
-
-kubeStateMetrics:
-  install: false
-  image:
-    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
-    tag: "v2.10.1"
-otelCollector:
-  install: true
-  image:
-    repository: "otel/opentelemetry-collector-contrib"
-    tag: "0.89.0"
-# cloudwatchAgent and fluentBit are used only when environment is marketPlace and provider is eks
-cloudwatchAgent:
-  image:
-    repository: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent"
-    tag: "1.247350.0b251814"
-fluentBit:
-  image:
-    repository: "public.ecr.aws/aws-observability/aws-for-fluent-bit"
-    tag: "2.25.0"
-
-
-wbOperator:
-  install: true
-  image:
-    repository: "REPLACEMEREGISTRY/workbench-operator"
-    tag: "REPLACEMETAG-operator"
-    digest: ""
-dbOperator:
-  install: true
-  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
-  aadpodidbinding: ""
-  image:
-    repository: "REPLACEMEREGISTRY/kinetica-k8s-operator"
-    tag: "REPLACEMETAG-operator"
-    digest: ""
 
 nodeSelector: {}
 tolerations: []
 affinity: {}
 
-gpuOperator:
-  install: false
-certManager:
-  install: true
-"cert-manager":
-  installCRDs: 'true' 
-  namespace: kinetica-system
-
 ingressNginx:
   install: true
 "ingress-nginx":
-  defaultBackend:
-    enabled: true
-    image:
-      repository: docker.io/kineticadevcloud/kinetica-default-backend
-      tag: v0.0.1
-      digest: ""
-    nodeSelector: {}
-    extraEnvs:
-      - name: DEBUG
-        value: "false"
   controller:
     kind: DaemonSet
     allowSnippetAnnotations: true
@@ -95,14 +32,7 @@ ingressNginx:
         enabled: false
     config:
       use-forwarded-headers: "true"
-    admissionWebhooks:
-      enabled: true
-      patch:
-        enabled: true  
-        image:
-          repository: k8s.gcr.io/ingress-nginx/kube-webhook-certgen
-          tag: v1.1.1
-          digest: ""
+    
 openldap:
   namespace: "gpudb"
   fullnameOverride: "openldap"
@@ -119,103 +49,14 @@ openldap:
     accessMode: "ReadWriteOnce"
     size: 1Mi
     storageClass: "local-path"
+
 db:
-  # do you want to provision a database
   create: true
   name: kinetica-k3s-sample
-  namespace: gpudb
-  debug: false
-  autoSuspend:
-    enabled: false
-  # provide a boolean to say whether its payasyougo or not
-  payAsYouGo: true
-  # for environment onPrem, provide the following
-  deploymentType:
-    type: on_prem
-    region: on_prem_local
-  # awsConfig is applicable only for marketplace on aws
-  awsConfig:
-    clusterName: ""
-    marketplaceApp:
-      productCode: ""
-      publicKeyVersion: 1
-  # azureConfig is applicable only for marketplace on azure
-  azureConfig:
-    managedApp:
-      planId: ""
-      resourceUri: ""
-    appInsights:
-      key: ""
-  
-  hostManagerMonitor:
-    image:
-      repository: docker.io/kineticadevcloud/kinetica-k8s-monitor
-      tag: v7.1.9-23.base-1
-  # you may use nginx if you want the operator to create the nginx records
-  # if you want to manage your own ingress controller/gateway api, provide "none"
-  # TODO: As of now, if you want the operator to create nginx records, do the following
-  # 1. first install nginx sub chart by providing the release namespace as nginx
-  # helm -n nginx install nginx charts/kinetica-operators/charts/ingress-nginx --values values
-  # you can refer to the correct ingress-ngix values in the corresponding values file in the operators values files
-  # This is needed now as the operator as of now, looks for its nginx in the nginx namespace
-  # if you enable ingress-nginx and install the operators, it will install all in the kinetica-system namespace
-  ingressController: nginx
-  supportingImages:
-        busybox:
-          image:
-            repository: docker.io/busybox
-            tag: 1.29.2
-        socat:
-          image:
-            repository: docker.io/alpine/socat
-            tag: 1.7.4.1-r2
-  stats:
-    isEnabled: false
-  gadmin:
-    isEnabled: true
-  reveal:
-    isEnabled: true
   gpudbCluster:
-    # this applies if you have labelled node pools for compute
-    hasPools: false
-    clusterSize:
-      tshirtSize: XS
-      tshirtType: SmallCPU
-    ranksPerNode: 1
-    replicas: 1
-    # provide an fqdn if you want to use a custom fqdn
-    fqdn: "local.kinetica"
-    letsEncrypt:
-      enabled: false
-  
-      # only allowed values are staging and production
-      environment: "staging"
-    # you may either use "payg" or a valid license
-    license: "payg"
-    gpuAcceleration: false
-    image:
-      cuda:
-        image:
-          repository: docker.io/kinetica/kinetica-k8s-cuda
-          tag: v7.1.9.23-ga
-      standard:
-        image:
-          repository: docker.io/kinetica/kinetica-k8s-cpu
-          tag:  v7.1.9.23-ga
-    metricsRegistryRepositoryTag:
-      image:
-        repository: amazon/aws-for-fluent-bit
-        tag: 2.25.0
+    # You need a license key. Please contact support@kinetica.com
+    license: ""
     config:
-      postgresProxy:
-         enablePostgresProxy: true
-      kifs:
-        enable: true
-        mountPoint: /gpudb/kifs
-      procs:
-        enable: true
-      textSearch:
-        enableTextSearch: true
       tieredStorage:
         globalTier:
           colocateDisks: true
@@ -226,37 +67,10 @@ db:
             volumeClaim:
               spec:
                 storageClassName: "local-path"
-        diskCacheTier:
-          default:
-            limit: 1Gi
-            provisioner: "rancher.io/local-path"
-            volumeClaim:
-              spec:
-                storageClassName: "local-path"
-        coldStorageTier:
-          coldStorageType: "disk"
-          coldStorageDisk:
-            provisioner: "rancher.io/local-path"
-            volumeClaim:
-              spec:
-                storageClassName: "local-path"
+        
 
 dbAdminUser:
-    create: true
-    # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
-    name: "kadmin"
-    # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
-    password: "Kinetica1234!"
+  create: true
 dbWorkbench:
   create: true
-  deploymentInfo: '{}'
-  fqdn: "local.kinetica"
-  letsEncrypt:
-    enabled: false
-    environment: "staging"
-    
-  image:
-    repository: docker.io/kinetica/workbench
-    tag: v7.1.9.23-ga
-
   

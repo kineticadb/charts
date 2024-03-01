@@ -10,8 +10,8 @@ provider: eks
 
 # clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
 # its used in the monitoring related configmaps
-clusterName: "cluster0-02b29224cfa7"
-clusterRegion: "eu-west-1"
+clusterName: ""
+clusterRegion: ""
 
 kubeRbacProxy:
     image:
@@ -39,20 +39,6 @@ fluentBit:
     tag: "2.25.0"
 
 
-wbOperator:
-  install: true
-  image:
-    repository: "REPLACEMEREGISTRY/workbench-operator"
-    tag: "REPLACEMETAG-operator"
-    digest: ""
-dbOperator:
-  install: true
-  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
-  aadpodidbinding: ""
-  image:
-    repository: "REPLACEMEREGISTRY/kinetica-k8s-operator"
-    tag: "REPLACEMETAG-operator"
-    digest: ""
 
 nodeSelector:
   app.kinetica.com/pool: infra
@@ -156,7 +142,7 @@ db:
   autoSuspend:
     enabled: false
   # provide a boolean to say whether its payasyougo or not
-  payAsYouGo: false
+  payAsYouGo: true
   
   awsConfig:
     clusterName: "cluster0-02b29224cfa7"
@@ -216,8 +202,8 @@ db:
   
       # only allowed values are production and production
       environment: "staging"
-    # you may either use "payg" or a valid license
-    license: "HLahocmUFYRG-qQpmbHZ9C9Zw-K6PhUggTmfxv-6iTissiJMUiN-3QQTIoNu4mwl1kmAUzx3f8m26rvyhM86"
+
+    license: "payg"
     gpuAcceleration: false
     image:
       cuda:
@@ -266,7 +252,7 @@ db:
           coldStorageType: s3
           coldStorageS3:
             basePath: "gpudb/cold-storage/"
-            bucketName: cluster0-02b29224cfa7-cold
+            bucketName: ""
 
 dbAdminUser:
     create: true
@@ -277,19 +263,19 @@ dbAdminUser:
 dbWorkbench:
   create: true
   deploymentInfo:
-    "application_id": "arn:aws:cloudformation:eu-west-1:798457485286:stack/lucid-devbyol-03/6d98fe80-c65f-11ee-b10b-02b29224cfa7"
-    "userFirstname": "John"
-    "userLastname": "Cyriac"
-    "customer_email": "jcyriac.ctr@kinetica.com"
+    "application_id": ""
+    "userFirstname": ""
+    "userLastname": ""
+    "customer_email": ""
     "name": "byolDev"
     "product": "3an8pb6mkca98s15xadbbckwi"
     "tshirtSize": "XS"
     "tshirtType": "SmallCPU"
-    "awsApplicationLog": "https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logsV2:log-groups/log-group/$252Faws$252Fcontainerinsights$252Fcluster0-02b29224cfa7$252Fapplication"
+    "awsApplicationLog": ""
 
     
     
-  fqdn: "4ukvzgx.cloud.kinetica.com"
+  fqdn: ""
   letsEncrypt:
     enabled: true
     environment: "staging"

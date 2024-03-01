@@ -10,24 +10,9 @@ provider: eks
 
 # clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
 # its used in the monitoring related configmaps
-clusterName: "cluster0-02d131d66165"
-clusterRegion: "eu-west-1"
+clusterName: ""
+clusterRegion: ""
 
-kubeRbacProxy:
-    image:
-      repository: "quay.io/brancz/kube-rbac-proxy"
-      tag: "v0.14.2"
-
-kubeStateMetrics:
-  install: false
-  image:
-    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
-    tag: "v2.10.1"
-otelCollector:
-  install: true
-  image:
-    repository: "otel/opentelemetry-collector-contrib"
-    tag: "0.89.0"
 
 cloudwatchAgent:
   image:
@@ -39,20 +24,6 @@ fluentBit:
     tag: "2.25.0"
 
 
-wbOperator:
-  install: true
-  image:
-    repository: "REPLACEMEREGISTRY/workbench-operator"
-    tag: "REPLACEMETAG-operator"
-    digest: ""
-dbOperator:
-  install: true
-  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
-  aadpodidbinding: ""
-  image:
-    repository: "REPLACEMEREGISTRY/kinetica-k8s-operator"
-    tag: "REPLACEMETAG-operator"
-    digest: ""
 
 nodeSelector:
   app.kinetica.com/pool: infra
@@ -156,7 +127,7 @@ db:
   autoSuspend:
     enabled: false
   # provide a boolean to say whether its payasyougo or not
-  payAsYouGo: false
+  payAsYouGo: true
   
   awsConfig:
     clusterName: "cluster0-02d131d66165"
@@ -216,8 +187,7 @@ db:
   
       # only allowed values are production and production
       environment: "staging"
-    # you may either use "payg" or a valid license
-    license: "HLahocmUFYRG-qQpmbHZ9C9Zw-K6PhUggTmfxv-6iTissiJMUiN-3QQTIoNu4mwl1kmAUzx3f8m26rvyhM86"
+    
     gpuAcceleration: true
     image:
       cuda:

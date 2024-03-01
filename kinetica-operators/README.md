@@ -1,12 +1,11 @@
 
 # Trying Kinetica
 
-Pull the kinetica-operators oci chart and prepare for install
+Pull the kinetica-operators and prepare for install
 
 ```bash
-helm pull oci://registry.harbor.kinetica.com/kinetica-k8s/kinetica-operators --version 0.1.0
-mkdir charts
-mv kinetica-operators kinetica-operators-0.1.0.tgz charts/
+helm repo add kinetica-operators https://kineticadb.github.io/charts
+helm repo update
 ```
 
 If you are on a local machine which is not having a domain name, you add the following entry to your /etc/hosts file or equivalent.
@@ -58,6 +57,14 @@ As you can see it is trying to create an ingress pointing towards local.kinetica
 
 ```bash
 helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values charts/kinetica-operators/values.onPrem.k3s.yaml
+```
+
+##### K3s - Install the kinetica-operators chart (GPU Capable Machine)
+
+If you wish to try out the GPU capabilities, you can use the following values file, provided you are in a nvidia gpu capable machine.
+
+```bash
+helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values charts/kinetica-operators/values.onPrem.k3s.gpu.yaml
 ```
 
 You should be able to access the workbench at [http://local.kinetica](http://local.kinetica)
