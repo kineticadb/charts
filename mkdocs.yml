@@ -125,12 +125,13 @@ markdown_extensions:
 nav:
   - Overview:
     - Overview: index.md
-    - Operators: Operators/kinetica-operators.md
+    - On-Prem K3s: Operators/k3s.md
+    - On-Prem KiND: Operators/kind.md
     - Database CR: Database/database.md
     - Workbench CR: Workbench/workbench.md
-  - Helm Chart Layout:
-    - Operators: Operators/kinetica-operators.md
-    - Database CR: Database/database.md
-    - Workbench CR: Workbench/workbench.md
+  # - Helm Chart Layout:
+  #   - Operators: Operators/kinetica-operators.md
+  #   - Database CR: Database/database.md
+  #   - Workbench CR: Workbench/workbench.md
 
 

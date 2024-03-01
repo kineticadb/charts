@@ -1,51 +1,32 @@
-# Kinetica DB Cluster Operator Deployment
+# Overview
 
-Helm Charts and kubectl `.yaml` files are provided to support the deployment of the Kinetica Database 
-Kubernetes Operator(s). There are two Kinetica operators that will be deployed: -
+This repository provides the helm chart for deploying the Kubernetes Operators for Database and Workbench. Once the operators are installed, you should be able to use the Kinetica Database and Workbench CRDs to deploy and manage Kinetica clusters and workbenches.
 
-* [Kinetica Database Operator](#kinetica-database-operator)
-* [Kinetica Workbench Operator](#kinetica-workbench-operator)
 
-## Kinetica Database Operator
-The Kinetica Database Operator manages the full lifecycle of the Database including: - 
+## Add Kinetica Helm Repository
 
-* Deployment
-* Management (Pause/Suspend)
-* Upgrading
-* Backup
-* Restore
-* Deletion
-* User Creation
-* User Deletion
-* User Grants
-* User Schema
+To add the Kinetica Helm repoistory to Helm 3:-
 
-both on [supported on-premise Kubernetes distributions](#supported-on-premise-kubernetes-distributions) and 
-[supported cloud platforms](#supported-cloud-platforms).
+```shell
+helm repo add kinetica-operators https://kineticadb.github.io/charts
+helm repo update
+```
 
-## Kinetica Workbench Operator
-The Kinetica Workbench Operator manages the lifecycle of the Kinetica Workbench deployment. 
-Each Kinetica DB has a corresponding Workbench associated.
+Installation values will depend on the target kubernetes platform you are using.
 
-## Helm Charts
+This chart provides out of the box support for trying out in K3s and Kind clusters. For k3s, you should be able to use either the GPU and CPU version of the databases. In these platforms, a non production configuration of the Kinetica Database and Workbench is also deployed for you to get started. However, you should be able to change the k3s values file to deploy in other platforms as well. For fine grained configuration of the Database or the Workbench, refer to the [Database](Database/database.md) and [Workbench](Workbench/workbench.md) documentation.
 
-Information on the [Helm Charts](Operators/kinetica-operators.md)
+We use the same chart for our [SaaS](https://cloud.kinetica.com/) and [AWS Marketplace offerings](https://www.kinetica.com/blog/getting-started-with-kinetica-on-aws/). If you want to try out in SaaS or AWS Marketplace, follow those links, you need not use this chart directly.
 
-## Supported On-Premise Kubernetes Distributions
+Current version of the chart supports kubernetes version 1.25 and above.
 
-* KinD - Kubernetes Versions >= 1.22.x
-* Kubeadm - Kubernetes Versions >= 1.22.x
 
-## Supported Cloud Platforms
-Currently the Kinetica DB Operator supports deployment on: -
 
-* [Microsoft Azure](#microsoft-azure)
-* [Amazon AWS](#amazon-aws)
+## k3s (k3s.io)
 
-### Microsoft Azure
+Refer to  [Kinetica on K3s](Operators/k3s.md)
 
-The operator runs as part of an Azure Marketplace offering.
+## Kind (kubernetes in docker kind.sigs.k8s.io)
 
-### Amazon AWS
+Refer to  [Kinetica on Kind](Operators/kind.md)
 
-The operator runs as part of an AWS Marketplace offering.
