@@ -7,6 +7,9 @@ metadata:
   name: workbench
   namespace: {{.Values.db.namespace}}
 spec:
+  {{- if eq (kindOf .Values.dbWorkbench.nodeSelector) "map" }}
+  nodeSelector: {{ toYaml .Values.dbWorkbench.nodeSelector | nindent 8 }}
+  {{- end }}
   fqdn: {{ .Values.dbWorkbench.fqdn | default "localhost" }}
   deploymentInfo: {{ .Values.dbWorkbench.deploymentInfo | toJson| squote  }}
   {{- if eq (kindOf .Values.dbWorkbench.letsEncrypt) "map" }}

@@ -1,4 +1,4 @@
-otel-collector-config: |-
+otel-collector-config: |
   receivers:
     # Make sure to add the otlp receiver.
     # This will open up the receiver on port 4317
@@ -7,6 +7,11 @@ otel-collector-config: |-
         grpc:
           endpoint: "0.0.0.0:4317"
         http:
+          endpoint: "0.0.0.0:4318"
+    syslog:
+      tcp:
+        listen_address: "0.0.0.0:9601"
+      protocol: rfc5424
   processors:
   extensions:
     health_check: {}
@@ -30,3 +35,8 @@ otel-collector-config: |-
         receivers: [otlp]
         processors: []
         exporters: [prometheus, logging]
+
+      logs:
+        receivers: [syslog]
+        processors: []
+        exporters: [logging]

@@ -40,16 +40,16 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kineticastagingcloud/workbench-operator"
-    tag: "v7.2.0-2.rc-2-operator"
+    repository: "registry.harbor.kinetica.com/kineticadevcloud/workbench-operator"
+    tag: "v7.2.0-2.dev-3-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
-    tag: "v7.2.0-2.rc-2-operator"
+    repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-operator"
+    tag: "v7.2.0-2.dev-3-operator"
     digest: ""
 
 nodeSelector: {}
@@ -111,6 +111,7 @@ gpuOperator:
       enabled: true
     toolkit:
       enabled: true
+
 openldap:
   namespace: "gpudb"
   fullnameOverride: "openldap"
@@ -172,8 +173,8 @@ db:
   
   hostManagerMonitor:
     image:
-      repository: "docker.io/kineticastagingcloud/kinetica-k8s-monitor"
-      tag: "v7.2.0-2.rc-2"
+      repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-monitor"
+      tag: "v7.2.0-2.dev-3"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -194,12 +195,12 @@ db:
   supportingImages:
         busybox:
           image:
-            repository: "docker.io/kineticastagingcloud/busybox"
-            tag: "v7.2.0-2.rc-2"
+            repository: "registry.harbor.kinetica.com/kineticadevcloud/busybox"
+            tag: "v7.2.0-2.dev-3"
         socat:
           image:
-            repository: "docker.io/kineticastagingcloud/socat"
-            tag: "v7.2.0-2.rc-2"
+            repository: "registry.harbor.kinetica.com/kineticadevcloud/socat"
+            tag: "v7.2.0-2.dev-3"
   stats:
     isEnabled: false
   gadmin:
@@ -226,17 +227,17 @@ db:
     image:
       cuda:
         image:
-          repository: "docker.io/kineticastagingcloud/kinetica-k8s-gpu"
-          tag: "v7.2.0-2.rc-2-amd64"
+          repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-gpu"
+          tag: "v7.2.0-2.dev-3-amd64"
       standard:
         image:
-          # you should be able to use docker.io/kineticastagingcloud/kinetica-k8s-cpu-avx512:v7.2.0-2.rc-2-amd64 also
-          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cpu"
-          tag:  "v7.2.0-2.rc-2"
+          # you should be able to use registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-cpu-avx512:v7.2.0-2.dev-3-amd64 also
+          repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-cpu"
+          tag:  "v7.2.0-2.dev-3"
     metricsRegistryRepositoryTag:
       image:
-        repository: "docker.io/kineticastagingcloud/fluent-bit"
-        tag: "v7.2.0-2.rc-2"
+        repository: "registry.harbor.kinetica.com/kineticadevcloud/fluent-bit"
+        tag: "v7.2.0-2.dev-3"
     config:
       postgresProxy:
          enablePostgresProxy: true
@@ -272,10 +273,12 @@ dbWorkbench:
   letsEncrypt:
     enabled: false
     environment: "staging"
+
+  nodeSelector: {}
     
   image:
-    repository: "docker.io/kineticastagingcloud/workbench"
-    tag: "v7.2.0-2.rc-2"
+    repository: "registry.harbor.kinetica.com/kineticadevcloud/workbench"
+    tag: "v7.2.0-2.dev-3"
   
 
   

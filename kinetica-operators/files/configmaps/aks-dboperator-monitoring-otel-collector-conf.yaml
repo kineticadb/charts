@@ -7,6 +7,11 @@ otel-collector-config: |
         grpc:
           endpoint: "0.0.0.0:4317"
         http:
+          endpoint: "0.0.0.0:4318"
+    syslog:
+      tcp:
+        listen_address: "0.0.0.0:9601"
+      protocol: rfc5424
   processors:
   extensions:
     health_check: {}
@@ -29,4 +34,9 @@ otel-collector-config: |
       metrics:
         receivers: [otlp]
         processors: []
-        exporters: [prometheus]
+        exporters: [prometheus, logging]
+
+      logs:
+        receivers: [syslog]
+        processors: []
+        exporters: [logging]
