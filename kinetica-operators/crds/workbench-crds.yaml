@@ -925,8 +925,6 @@ spec:
               nodeSelector:
                 additionalProperties:
                   type: string
-                default:
-                  app.kinetica.com/pool: compute
                 description: NodeSelector - NodeSelector to be applied to the DB Pods
                 type: object
               storageClass:
