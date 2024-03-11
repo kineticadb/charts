@@ -7,7 +7,7 @@
    
     {{- if not .Values.db.payAsYouGo }}
         {{- if or (not .Values.db.gpudbCluster.license) (eq .Values.db.gpudbCluster.license "payg") }}
-            {{- fail "License Key is needed for BYOL" }}
+            {{- fail "License Key is needed for BYOL, use --set db.gpudbCluster.license=your_license_key" }}
         {{- end }}
     {{- end }}
 apiVersion: app.kinetica.com/v1
@@ -179,20 +179,20 @@ spec:
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.persistTier) "map" }}
         persistTier:
           default:
-            provisioner: {{ .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.provisioner }}
+            provisioner: {{ default .Values.storageProvisioner .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.provisioner }}
             limit: {{ .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.limit }}
             volumeClaim:
               spec:
-                storageClassName: {{ .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.storageClassName }}
+                storageClassName: {{ default .Values.global.defaultStorageClass .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.storageClassName }}
         {{- end }}
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier) "map" }}
         diskCacheTier:
           default:
-            provisioner: {{ .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier.default.provisioner }}
+            provisioner: {{ default .Values.storageProvisioner .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier.default.provisioner }}
             limit: {{ .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier.default.limit }}
             volumeClaim:
               spec:
-                storageClassName: {{ .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier.default.volumeClaim.spec.storageClassName }}
+                storageClassName: {{ default .Values.global.defaultStorageClass .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier.default.volumeClaim.spec.storageClassName }}
         {{- end }}
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier) "map" }}
         coldStorageTier:
@@ -213,10 +213,10 @@ spec:
           {{- if eq .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageType "disk" }}
           coldStorageDisk:
             basePath: "/opt/gpudb/cold"
-            provisioner: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageDisk.provisioner }}
+            provisioner: {{ default .Values.storageProvisioner .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageDisk.provisioner }}
             volumeClaim:
               spec:
-                storageClassName: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageDisk.volumeClaim.spec.storageClassName }}
+                storageClassName: {{ default .Values.global.defaultStorageClass .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageDisk.volumeClaim.spec.storageClassName }}
           {{- end }}
         {{- end }}
       {{- end }}

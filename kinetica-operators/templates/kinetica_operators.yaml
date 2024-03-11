@@ -71,6 +71,23 @@
   {{- $values = merge (dict "webhook" $webhook) $values }}
 {{- end }}
 
+{{- if $values.openldap.persistence.enabled }}
+  {{- if not $values.openldap.persistence.storageClass }}  
+    {{- if not $global.defaultStorageClass }}
+      {{- fail "No default storage class found- --set global.defaultStorageClass=yourstorageclass" }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- if $global.defaultStorageClass }}
+  {{- /* this part can run only when you install, just doing template you wont see it */ -}}
+  {{- $defaultStorageClassObject := (lookup "storage.k8s.io/v1" "StorageClass" "" $global.defaultStorageClass) }}
+  {{- if $defaultStorageClassObject -}}
+    {{- $storageProvisioner := $defaultStorageClassObject.provisioner }}
+    {{- $values = merge (dict "storageProvisioner" $storageProvisioner) $values}}  
+  {{- end }}
+{{- end }}
+
+
 {{- /* create the final values */ -}}
 {{- $values = merge (dict "global" $global) $values}}
   
@@ -152,7 +169,6 @@ metadata:
   name: {{ $requiredSc}}
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
-    "helm.sh/resource-policy": keep
 allowVolumeExpansion: true
 provisioner: ebs.csi.aws.com
 volumeBindingMode: WaitForFirstConsumer

@@ -127,6 +127,7 @@ nav:
     - Overview: index.md
     - On-Prem K3s: Operators/k3s.md
     - On-Prem KiND: Operators/kind.md
+    - Other K8s: Operators/k8s.md
     - Database CR: Database/database.md
     - Workbench CR: Workbench/workbench.md
   # - Helm Chart Layout:

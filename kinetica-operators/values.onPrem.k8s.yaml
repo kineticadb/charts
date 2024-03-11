@@ -1,0 +1,65 @@
+
+# environment refers to either of "onPrem" "saas" "marketPlace"
+# "saas" "marketPlace" are used by Kinetica only
+# for a customer trying to install the chart on his own wherever, it should be onPrem
+environment: "onPrem"
+# onPrem Providers: "k3s" "kind" "eks" "aks" "other"
+# saas Providers: eks
+# marketPlace Providers: aks eks
+provider: other
+
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+ingressNginx:
+  install: true
+"ingress-nginx":
+  controller:
+    kind: Deployment
+    allowSnippetAnnotations: "true"    
+    config:
+      use-forwarded-headers: "true"
+    
+openldap:
+  namespace: "gpudb"
+  fullnameOverride: "openldap"
+  env:
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+  affinity: {}
+  podAntiAffinity: {}
+  persistence:
+    enabled: true
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: 1Mi
+    storageClass: ""
+
+db:
+  create: true
+  name: kinetica-k8s-sample
+  gpudbCluster:
+    # You need a license key. Please contact support@kinetica.com
+    license: ""
+    config:
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: ""
+            provisioner: ""
+            volumeClaim:
+              spec:
+                storageClassName: ""
+        
+
+dbAdminUser:
+  create: true
+dbWorkbench:
+  create: true
+  

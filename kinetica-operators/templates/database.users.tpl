@@ -5,7 +5,7 @@
 ---
 apiVersion: v1
 stringData:
-  password: {{ required "Password for Admin User is required" .Values.dbAdminUser.password }}
+  password: {{ required "Password for Admin User is required, use --set dbAdminUser.password=your_password" .Values.dbAdminUser.password }}
 kind: Secret
 metadata: 
   name: admin-pwd

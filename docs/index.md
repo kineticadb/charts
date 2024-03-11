@@ -30,3 +30,7 @@ Refer to  [Kinetica on K3s](Operators/k3s.md)
 
 Refer to  [Kinetica on Kind](Operators/kind.md)
 
+## K8s - Any flavour (kubernetes.io)
+
+Refer to  [Kinetica on K8s](Operators/k8s.md)
+

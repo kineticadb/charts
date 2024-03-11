@@ -25,5 +25,7 @@ spec:
 {{- else }}
   storageClassName: "{{ .Values.persistence.storageClass }}"
 {{- end }}
+{{- else if .Values.global.defaultStorageClass }}
+  storageClassName: "{{ .Values.global.defaultStorageClass }}"  
 {{- end }}
 {{- end }}
