@@ -23,7 +23,11 @@ As you can see it is trying to create an ingress pointing towards local.kinetica
 
 
 ```bash
-helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values charts/kinetica-operators/values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values charts/kinetica-operators/values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+
+# if you want to try out a development version,
+helm search repo kinetica-operators --devel --versions
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values charts/kinetica-operators/values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
 ```
 
 You should be able to access the workbench at [http://local.kinetica](http://local.kinetica)

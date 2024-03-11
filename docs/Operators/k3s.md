@@ -33,7 +33,13 @@ If you are on a local machine which is not having a domain name, you add the fol
 
 
 ```bash
-helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values charts/kinetica-operators/values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values charts/kinetica-operators/values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+
+# if you want to try out a development version,
+helm search repo kinetica-operators --devel --versions
+
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values charts/kinetica-operators/values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
+
 ```
 
 ##### K3s - Install the kinetica-operators chart (GPU Capable Machine)
