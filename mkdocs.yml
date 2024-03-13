@@ -8,7 +8,7 @@ repo_url: https://github.com/kineticadb/charts
 edit_uri: ""
 
 # Copyright
-copyright: Copyright &copy; 2016 - 2023 Kinetica DB Inc.
+copyright: Copyright &copy; 2016 - 2024 Kinetica DB Inc.
 
 theme:
   name: material

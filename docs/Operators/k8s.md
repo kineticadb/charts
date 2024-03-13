@@ -1,34 +1,74 @@
 
 # Overview
+For managed Kubernetes solutions (AKS, EKS, GKE) or other on-prem K8s flavors, follow this generic guide to install the Kinetica Operators, Database and Workbench. A product license key will be required for install. Please contact [Kinetica Support](support@kinetica.com) to request a trial key.
 
-If you are on a kubernetes flavour other than Kind or K3s, you may follow this generic guide to install the Kinetica Operators.
-
-You will need a license key for this to work. Please contact [Kinetica Support](support@kinetica.com).
-
-
+## Preparation and prerequisites
+Installation requires **Helm3** and access to an on-prem or CSP managed Kubernetes cluster. **kubectl** is optional but highly recommended. The context for the desired target cluster must be selected from your `~/.kube/config` file or set via the `KUBECONFIG` environment variable. Check to see if you have the correct context with,
+```
+kubectl config current-context
+```
+and that you can access this cluster correctly with,
+```
+kubectl get nodes
+```
+If you do not see a list of nodes for your K8s cluster the helm installation will not work. Please check your Kubernetes installation or access credentials (kubeconfig).
 
 ## Install the kinetica-operators chart
+This chart will install the Kinetica K8s operators together with a default configured database and workbench UI.
 
-This is trying to install the operators and a simple db with workbench installation.
+If you are installing into a managed Kubernetes environment and the NGINX ingress controller that is installed as part of this install creates a LoadBalancer service, you may need to associate the LoadBalancer with the domain you plan to use.
 
-If you are in a managed Kubernetes environment, and your nginx ingress controller which is installed along with this install creates a LoadBalancer service, you may need to make sure you associate the LoadBalancer to the domain you are using.
-
-If you are on a local machine which is not having a domain name, you add the following entry to your /etc/hosts file or equivalent. By default, the default chart configuration is pointing to local.kinetica.
-
-```text
-127.0.0.1 local.kinetica
+Alternatively, if you are installing on a local machine which does not have a domain name, you can add the following entry to your `/etc/hosts` file or equivalent:
 ```
+127.0.0.1  local.kinetica
+```
+Note that the default chart configuration points to `local.kinetica` but this is configurable.
 
+### 1. Add the Kinetica chart repository
+Add the repo locally as *kinetica-operators*:
 ```bash
-https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k8s.yaml
-
-helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k8s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --set global.defaultStorageClass="your_default_storage_class"
-
-# if you want to try out a development version,
-helm search repo kinetica-operators --devel --versions
-helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k8s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --set global.defaultStorageClass="your_default_storage_class" --devel --version 7.2.0-2.rc-2
-
+helm repo add kinetica-operators https://kineticadb.github.io/charts
 ```
 
+### 2. Obtain the default Helm values file
+For the generic Kubernetes install use the following values file without modification. Advanced users with specific requirements may need to adjust parameters in this file.
+```bash
+wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k8s.yaml
+```
 
+### 3. Determine the following prior to the chart install
+(a) Obtain a LICENSE-KEY as described in the introduction above.
+(b) Choose a PASSWORD for the initial administrator user (Note: the default in the chart for this user is `kadmin` but this is configurable). Non-ASCII characters and typographical symbols in the password must be escaped with a "\". For example, `--set dbAdminUser.password="MyPassword\!"`
+(c) As storage class name varies between K8s flavor and/or there can be multiple, this must be prescribed in the chart installation. Obtain DEFAULT-STORAGE-CLASS name with the command:
+```bash
+kubectl get sc -o name 
+```
+use the name found after the /, For example, in `"storageclass.storage.k8s.io/TheName"` use "TheName" as the parameter.
 
+### 4. Install the helm chart
+Run the following Helm install command after substituting values from section 3 above:
+```bash
+helm -n kinetica-system install \
+kinetica-operators kinetica-operators/kinetica-operators \
+--create-namespace \
+--values values.onPrem.k8s.yaml \
+--set db.gpudbCluster.license="LICENSE-KEY" \
+--set dbAdminUser.password="PASSWORD" \
+--set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
+```
+
+### 5. Check installation progress
+After a few moments, follow the progression of the main database pod startup with:
+```
+kubectl -n gpudb get po gpudb-0 -w
+```
+until it reaches `"gpudb-0  3/3  Running"` at which point the database should be ready and all other software installed in the cluster. You may have to run this command in a different terminal if the `helm` command from step 4 has not yet returned to the system prompt. Once running, you can quit this kubectl watch command using *ctrl-c*.
+
+### 6. Accessing the Kinetica installation
+
+## (Optional) Install a development chart version
+Find all alternative chart versions with:
+```
+helm search repo kinetica-operators --devel --versions
+```
+Then append `--devel --version [CHART-DEVEL-VERSION]` to the end of the Helm install command in section 4 above.
