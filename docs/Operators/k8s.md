@@ -11,7 +11,7 @@ You will need a license key for this to work. Please contact [Kinetica Support](
 
 This is trying to install the operators and a simple db with workbench installation.
 
-If you are in a managed Kubernetes environment, and your nginx ingress controller which is installed along with this install creates a LoadBalancer service, you may need to make sure you associate the LoadBalancer to the domain you are using. If you are on a local machine which is not having a domain name, you add the following entry to your /etc/hosts file or equivalent.
+If you are in a managed Kubernetes environment, and your nginx ingress controller which is installed along with this install creates a LoadBalancer service, you may need to make sure you associate the LoadBalancer to the domain you are using.
 
 If you are on a local machine which is not having a domain name, you add the following entry to your /etc/hosts file or equivalent. By default, the default chart configuration is pointing to local.kinetica.
 
@@ -20,11 +20,13 @@ If you are on a local machine which is not having a domain name, you add the fol
 ```
 
 ```bash
-helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values charts/kinetica-operators/values.onPrem.k8s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --set global.defaultStorageClass="your_default_storage_class"
+https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k8s.yaml
+
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k8s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --set global.defaultStorageClass="your_default_storage_class"
 
 # if you want to try out a development version,
 helm search repo kinetica-operators --devel --versions
-helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values charts/kinetica-operators/values.onPrem.k8s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --set global.defaultStorageClass="your_default_storage_class" --devel --version 7.2.0-2.rc-2
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k8s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --set global.defaultStorageClass="your_default_storage_class" --devel --version 7.2.0-2.rc-2
 
 ```
 

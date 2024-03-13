@@ -10,6 +10,12 @@ To add the Kinetica Helm repoistory to Helm 3:-
 ```shell
 helm repo add kinetica-operators https://kineticadb.github.io/charts
 helm repo update
+
+# if you get a 404 error on the .tgz file, you may do the following
+# you could get this if you had previously added the repo and the chart has been updated in development
+helm repo remove kinetica-operators
+helm repo add kinetica-operators https://kineticadb.github.io/charts
+
 ```
 
 Installation values will depend on the target kubernetes platform you are using.
