@@ -9938,7 +9938,7 @@ spec:
                           maxLODLevel: 8
                           maxVectorTileZoomLevel: 8
                           minVectorTileZoomLevel: 1
-                          openGLAntialiasingLevel: 4
+                          openGLAntialiasingLevel: 0
                           pointRenderThreshold: 100000
                           renderingPrecisionThreshold: 30
                           symbolResolution: 100
