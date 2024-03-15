@@ -2,8 +2,30 @@ apiVersion: v1
 entries:
   kinetica-operators:
   - apiVersion: v2
+    appVersion: v7.2.0-2.rc-5
+    created: "2024-03-15T02:08:54.62089188Z"
+    dependencies:
+    - name: openldap
+      repository: ""
+    - condition: certManager.install
+      name: cert-manager
+      repository: ""
+    - condition: ingressNginx.install
+      name: ingress-nginx
+      repository: ""
+    - condition: gpuOperator.install
+      name: gpu-operator
+      repository: ""
+    description: A Helm chart for deploying Kinetica Operators
+    digest: 46dc46572b5b4a8646b9c338dcb7c79065e257e36cc9d1286c270c03b8a9d001
+    name: kinetica-operators
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/kinetica-operators-7.2.0-2.rc-5.tgz
+    version: 7.2.0-2.rc-5
+  - apiVersion: v2
     appVersion: v7.2.0-2.rc-2
-    created: "2024-03-14T15:54:12.478430897Z"
+    created: "2024-03-15T02:08:54.835097759Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -25,7 +47,7 @@ entries:
     version: 7.2.0-2.rc-2
   - apiVersion: v2
     appVersion: v7.2.0-2.dev-3
-    created: "2024-03-14T15:54:12.423075262Z"
+    created: "2024-03-15T02:08:54.787381682Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -47,7 +69,7 @@ entries:
     version: 7.2.0-2.dev-3
   - apiVersion: v2
     appVersion: v7.2.0-2.dev-5
-    created: "2024-03-14T15:54:12.308499177Z"
+    created: "2024-03-15T02:08:54.736082144Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -65,11 +87,11 @@ entries:
     name: kinetica-operators
     type: application
     urls:
-    - https://kineticadb.github.io/charts/kinetica-operators-7.2.0-2.de-5.tgz
+    - https://kineticadb.github.io/charts/docs/kinetica-operators-7.2.0-2.de-5.tgz
     version: 7.2.0-2.de-5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-03-14T15:54:12.364314462Z"
+    created: "2024-03-15T02:08:54.67810704Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -89,4 +111,4 @@ entries:
     urls:
     - https://kineticadb.github.io/charts/docs/kinetica-operators-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-14T15:54:12.253343514Z"
+generated: "2024-03-15T02:08:54.564859283Z"
