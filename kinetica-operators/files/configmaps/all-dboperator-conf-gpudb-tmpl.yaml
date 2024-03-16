@@ -1159,7 +1159,7 @@ gpudb_conf.tmpl: |
   # to TBB on initialization.  Generally speaking,
   # 'max_tbb_threads_per_rank' - "1" TBB workers will be created.  Use "-1" for no
   # limit.
-  max_tbb_threads_per_rank = {{ .Cluster.Spec.GPUDBCluster.Config.Processes.MaxTbbThreadsPerRank }}
+  max_tbb_threads_per_rank = {{ if .Cluster.Spec.GPUDBCluster.Config.Processes.MaxTbbThreadsPerRank }}{{ .Cluster.Spec.GPUDBCluster.Config.Processes.MaxTbbThreadsPerRank }}{{ else }}-1{{ end }}
 
   # Set the number of TOMs (data container shards) per rank
   toms_per_rank = {{ .Cluster.Spec.GPUDBCluster.Config.Processes.TomsPerRank }}
@@ -1293,8 +1293,9 @@ gpudb_conf.tmpl: |
   # Example:
   #
   ## on_startup_script = /bin/ks arg1 arg2 ...
-  on_startup_script =
+  #on_startup_script =
   {{ if .Cluster.Spec.GPUDBCluster.Config.General.OnStartupScript }}on_startup_script = {{ .Cluster.Spec.GPUDBCluster.Config.General.OnStartupScript }}{{ else }}on_startup_script = {{ end }}
+
 
   # Enable predicate-equi-join filter plan type
   enable_predicate_equi_join = {{ .Cluster.Spec.GPUDBCluster.Config.General.EnablePredicateEquiJoin }}
@@ -1445,21 +1446,18 @@ gpudb_conf.tmpl: |
   # Time-to-live (TTL) is the number of minutes before a video will expire and be
   # removed, or -1 to disable.
   #video_default_ttl = -1
-  #video_default_ttl =
-  {{ if .Cluster.Spec.GPUDBCluster.Config.Video.DefaultTTL }}{{ .Cluster.Spec.GPUDBCluster.Config.Video.DefaultTTL.IntVal }}{{ else }}video_default_ttl = -1{{ end }}
+  video_default_ttl = {{ if .Cluster.Spec.GPUDBCluster.Config.Video.DefaultTTL }}{{ .Cluster.Spec.GPUDBCluster.Config.Video.DefaultTTL.IntVal }}{{ else }}-1{{ end }}
 
   # The maximum number of videos to allow on the system. Set to 0 to disable video
   # rendering.  Set to -1 to allow an unlimited number of videos.
   #video_max_count = -1
-  #video_max_count =
-  {{ if .Cluster.Spec.GPUDBCluster.Config.Video.MaxCount }}{{ .Cluster.Spec.GPUDBCluster.Config.Video.MaxCount.IntVal }}{{ else }}video_max_count = -1{{ end }}
+  video_max_count = {{ if .Cluster.Spec.GPUDBCluster.Config.Video.MaxCount }}{{ .Cluster.Spec.GPUDBCluster.Config.Video.MaxCount.IntVal }}{{ else }}-1{{ end }}
 
 
   # Directory where video files should be temporarily stored while rendering.
   # Only accessed by rank 0.
   #video_temp_directory = ${gaia.temp_directory}/gpudb-temp-videos
-  #video_temp_directory =
-  {{ if .Cluster.Spec.GPUDBCluster.Config.Video.TmpDir }}{{ .Cluster.Spec.GPUDBCluster.Config.Video.TmpDir }}{{ else }}video_temp_directory ={{ end }}
+  video_temp_directory = {{ if .Cluster.Spec.GPUDBCluster.Config.Video.TmpDir }}{{ .Cluster.Spec.GPUDBCluster.Config.Video.TmpDir }}{{ else }}${gaia.temp_directory}/gpudb-temp-videos{{ end }}
 
 
   # ==============================================================================

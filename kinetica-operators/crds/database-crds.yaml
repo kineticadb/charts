@@ -4263,6 +4263,7 @@ spec:
                           initTablesNumThreadsPerTom: 8
                           kernelOmpThreads: 3
                           maxHttpThreads: 512
+                          maxTbbThreadsPerRank: '-1'
                           minHttpThreads: 8
                           smOmpThreads: 2
                           subtaskConcurrentyLimit: '-1'
@@ -4300,6 +4301,7 @@ spec:
                             anyOf:
                             - type: integer
                             - type: string
+                            default: '-1'
                             description: Set the maximum number of threads (both workers
                               and masters) to be passed to TBB on initialization.  Generally
                               speaking, 'max_tbb_threads_per_rank' - "1" TBB workers
