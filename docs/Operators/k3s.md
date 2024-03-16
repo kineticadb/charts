@@ -3,7 +3,7 @@
 
 Kinetica Operators can be installed in any on-prem kubernetes cluster. This document provides instructions to install the operators in k3s. If you are on another distribution, you should be able to change the values file to suit your environment.
 
-You will need a license key for this to work. Please contact [Kinetica Support](support@kinetica.com).
+You will need a license key for this to work. Please contact [Kinetica Support](mailto:support@kinetica.com).
 
 ## Kinetica on k3s (k3s.io)
 

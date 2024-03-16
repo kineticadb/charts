@@ -2,7 +2,7 @@
 
 This installation in a kind cluster is for trying out the operators and the database in a non production environment. This method currently only supports installing a CPU version of the database.
 
-You will need a license key for this to work. Please contact [Kinetica Support](support@kinetica.com).
+You will need a license key for this to work. Please contact [Kinetica Support](mailto:support@kinetica.com).
 
 ## Kind (kubernetes in docker kind.sigs.k8s.io)
 
