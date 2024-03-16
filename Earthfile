@@ -1,6 +1,4 @@
 VERSION --try 0.7
-#ARG --global REGISTRY=registry.harbor.kinetica.com/kineticadevcloud
-ARG --global REGISTRY=kineticadevcloud
 
 ARG --global PACKAGE_NAME=kinetica-operators
 
