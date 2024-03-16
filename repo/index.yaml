@@ -3,7 +3,29 @@ entries:
   kinetica-operators:
   - apiVersion: v2
     appVersion: v7.2.0-2.rc-5
-    created: "2024-03-16T02:55:37.799871119Z"
+    created: "2024-03-16T02:33:48.054527967Z"
+    dependencies:
+    - name: openldap
+      repository: ""
+    - condition: certManager.install
+      name: cert-manager
+      repository: ""
+    - condition: ingressNginx.install
+      name: ingress-nginx
+      repository: ""
+    - condition: gpuOperator.install
+      name: gpu-operator
+      repository: ""
+    description: A Helm chart for deploying Kinetica Operators
+    digest: 0b8c3abc82cf2de82f59de6081f00d519835cdb05cf308e89d6d8adc85098d0d
+    name: kinetica-operators
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/kinetica-operators-v7.2.0-jh.tgz
+    version: v7.2.0-jh
+  - apiVersion: v2
+    appVersion: v7.2.0-2.rc-5
+    created: "2024-03-16T02:33:48.031154143Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -25,7 +47,7 @@ entries:
     version: 7.2.0-2.rc-5
   - apiVersion: v2
     appVersion: v7.2.0-2.rc-2
-    created: "2024-03-16T02:55:37.771563796Z"
+    created: "2024-03-16T02:33:48.00595844Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -47,7 +69,7 @@ entries:
     version: 7.2.0-2.rc-2
   - apiVersion: v2
     appVersion: v7.2.0-2.dev-3
-    created: "2024-03-16T02:55:37.747074509Z"
+    created: "2024-03-16T02:33:47.983999475Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -69,7 +91,7 @@ entries:
     version: 7.2.0-2.dev-3
   - apiVersion: v2
     appVersion: v7.2.0-2.dev-5
-    created: "2024-03-16T02:55:37.718566525Z"
+    created: "2024-03-16T02:33:47.960200682Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -91,7 +113,7 @@ entries:
     version: 7.2.0-2.de-5
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-03-16T02:55:37.690054256Z"
+    created: "2024-03-16T02:33:47.935777783Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -111,4 +133,4 @@ entries:
     urls:
     - https://kineticadb.github.io/charts/kinetica-operators-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-16T02:55:37.660883911Z"
+generated: "2024-03-16T02:33:47.897524895Z"
