@@ -6,6 +6,7 @@ ARG --global PACKAGE_NAME=kinetica-operators
 
 FROM busybox:latest
 
+# internal - used to create a new helm chart release package
 build-helm-package:
   ARG --required VERSION
   FROM alpine/helm:3.14.1
@@ -29,11 +30,13 @@ build-helm-index:
   
   SAVE ARTIFACT index.yaml
 
+# local-helm-index recreates the entire docs/index.yaml from scratch - WARNING that this will force reset all created timestamps
 local-helm-index:
   BUILD +build-helm-index
   LOCALLY
   COPY  (+build-helm-index/index.yaml) ./docs/.
 
+# used internally to add a new package to the existing index without resetting all the timestamps
 add-package-to-helm-image:
   FROM alpine/helm:3.14.1
   ARG --required VERSION
@@ -47,6 +50,7 @@ add-package-to-helm-image:
 
   SAVE ARTIFACT index.yaml
 
+# local-helm-package builds a new helm chart release with with version VERSION and adds it to the local index.yaml (non-destructively)
 local-helm-package:
   ARG --required VERSION
   BUILD +build-helm-package
@@ -55,6 +59,7 @@ local-helm-package:
   BUILD +add-package-to-helm-image
   COPY  (+add-package-to-helm-image/index.yaml) ./docs/.
 
+# publish pushes the local docs folder to the github pages link - will republish both the docs themselves as well as the helm chart repo
 publish:
   FROM python:3.12
   RUN mkdir ~/.ssh && chmod 600 ~/.ssh && ssh-keyscan -H github.com >> ~/.ssh/known_hosts

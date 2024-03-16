@@ -13,3 +13,9 @@ You can also just re-index the helm chart repo and repush with...
 earthly --push local-helm-index
 earthly --push +publish
 ```
+
+For additional information, run...
+
+```bash
+earthly doc
+```
