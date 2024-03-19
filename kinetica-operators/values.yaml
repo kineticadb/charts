@@ -42,7 +42,7 @@ wbOperator:
   install: true
   image:
     repository: "registry.harbor.kinetica.com/kineticadevcloud/workbench-operator"
-    tag: "v7.2.0-3.dev-1-operator"
+    tag: "v7.2.0-3.dev-2-operator"
     digest: ""
 dbOperator:
   install: true
@@ -50,7 +50,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-operator"
-    tag: "v7.2.0-3.dev-1-operator"
+    tag: "v7.2.0-3.dev-2-operator"
     digest: ""
 
 nodeSelector: {}
@@ -175,7 +175,7 @@ db:
   hostManagerMonitor:
     image:
       repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-monitor"
-      tag: "v7.2.0-3.dev-1"
+      tag: "v7.2.0-3.dev-2"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -197,11 +197,11 @@ db:
         busybox:
           image:
             repository: "registry.harbor.kinetica.com/kineticadevcloud/busybox"
-            tag: "v7.2.0-3.dev-1"
+            tag: "v7.2.0-3.dev-2"
         socat:
           image:
             repository: "registry.harbor.kinetica.com/kineticadevcloud/socat"
-            tag: "v7.2.0-3.dev-1"
+            tag: "v7.2.0-3.dev-2"
   stats:
     isEnabled: false
   gadmin:
@@ -229,16 +229,16 @@ db:
       cuda:
         image:
           repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-gpu"
-          tag: "v7.2.0-3.dev-1-amd64"
+          tag: "v7.2.0-3.dev-2-amd64"
       standard:
         image:
-          # you should be able to use registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-cpu-avx512:v7.2.0-3.dev-1-amd64 also
+          # you should be able to use registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-cpu-avx512:v7.2.0-3.dev-2-amd64 also
           repository: "registry.harbor.kinetica.com/kineticadevcloud/kinetica-k8s-cpu"
-          tag:  "v7.2.0-3.dev-1"
+          tag:  "v7.2.0-3.dev-2"
     metricsRegistryRepositoryTag:
       image:
         repository: "registry.harbor.kinetica.com/kineticadevcloud/fluent-bit"
-        tag: "v7.2.0-3.dev-1"
+        tag: "v7.2.0-3.dev-2"
     config:
       postgresProxy:
          enablePostgresProxy: true
@@ -279,7 +279,7 @@ dbWorkbench:
     
   image:
     repository: "registry.harbor.kinetica.com/kineticadevcloud/workbench"
-    tag: "v7.2.0-3.dev-1"
+    tag: "v7.2.0-3.dev-2"
   
 
   

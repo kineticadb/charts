@@ -13540,6 +13540,7 @@ spec:
                     enum:
                     - none
                     - compute
+                    - compute-gpu
                     - infra
                     - public
                     type: string
