@@ -6,10 +6,10 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: '1'

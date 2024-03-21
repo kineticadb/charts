@@ -15,6 +15,12 @@ kind: KineticaCluster
 metadata:
   name: {{  .Values.db.name }}
   namespace: {{ default "gpudb" .Values.db.namespace }}
+  labels:
+    "app.kubernetes.io/name": "kinetica-operators"
+    "app.kubernetes.io/managed-by": "Helm"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
+    
 spec:
   {{- if eq (kindOf .Values.db.autoSuspend) "map" }}
   autoSuspend: 

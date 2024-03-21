@@ -7,10 +7,10 @@ metadata:
   name: workbench-operator-leader-election-role
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - ''
@@ -46,10 +46,10 @@ metadata:
   creationTimestamp:
   name: workbench-operator-manager-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - ''
@@ -441,10 +441,10 @@ kind: ClusterRole
 metadata:
   name: workbench-operator-metrics-reader
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - nonResourceURLs:
   - /metrics
@@ -457,10 +457,10 @@ kind: ClusterRole
 metadata:
   name: workbench-operator-proxy-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -482,10 +482,10 @@ metadata:
   name: workbench-operator-leader-election-rolebinding
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -501,10 +501,10 @@ kind: ClusterRoleBinding
 metadata:
   name: workbench-operator-manager-rolebinding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -520,10 +520,10 @@ kind: ClusterRoleBinding
 metadata:
   name: workbench-operator-proxy-rolebinding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -538,10 +538,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
   name: workbench-operator-controller-manager-metrics-service
   namespace: kinetica-system

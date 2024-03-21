@@ -6,10 +6,10 @@ kind: ClusterRole
 metadata:
   name: workbench-reader-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - workbench.com.kinetica
@@ -28,10 +28,10 @@ kind: ClusterRole
 metadata:
   name: workbench-secret-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - ''
@@ -52,10 +52,10 @@ kind: ClusterRole
 metadata:
   name: workbench-upgrades-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - workbench.com.kinetica
@@ -77,10 +77,10 @@ kind: ClusterRole
 metadata:
   name: workbench-velero-restores-reader-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - velero.io
@@ -97,10 +97,10 @@ kind: ClusterRoleBinding
 metadata:
   name: workbench-reader-role-binding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -116,10 +116,10 @@ kind: ClusterRoleBinding
 metadata:
   name: workbench-secret-role-binding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -135,10 +135,10 @@ kind: ClusterRoleBinding
 metadata:
   name: workbench-upgrades-role-binding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -154,10 +154,10 @@ kind: ClusterRoleBinding
 metadata:
   name: workbench-velero-restores-reader-role-binding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

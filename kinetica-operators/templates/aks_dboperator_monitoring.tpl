@@ -7,12 +7,11 @@ automountServiceAccountToken: false
 kind: ServiceAccount
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
   namespace: kinetica-system
@@ -25,10 +24,10 @@ metadata:
   name: opentelemetry-collector
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 
 ---
 {{- if .Values.kubeStateMetrics.install }}
@@ -36,12 +35,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
 rules:
@@ -154,11 +152,10 @@ kind: ClusterRole
 metadata:
   name: otel-collector-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - '*'
@@ -174,12 +171,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
 roleRef:
@@ -199,11 +195,10 @@ kind: ClusterRoleBinding
 metadata:
   name: otel-collector-role-binding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -220,12 +215,12 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: opentelemetry
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    component: otel-collector-conf
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app: opentelemetry
+    component: otel-collector-conf
   name: otel-collector-conf
   namespace: kinetica-system
 data:
@@ -239,10 +234,10 @@ metadata:
   name: container-azm-ms-agentconfig
   namespace: kube-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 data:
   {{ (.Files.Glob "files/configmaps/aks-dboperator-monitoring-container-azm-ms-agentconfig.yaml").AsConfig }}
 
@@ -252,12 +247,11 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
   namespace: kinetica-system
@@ -280,12 +274,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: opentelemetry
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    component: otel-collector
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app: opentelemetry
+    component: otel-collector
   name: otel-collector
   namespace: kinetica-system
 spec:
@@ -329,12 +323,11 @@ metadata:
     prometheus.io/port: '8080'
     prometheus.io/scrape: 'true'
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
   namespace: kinetica-system
@@ -405,12 +398,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: opentelemetry
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    component: otel-collector
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app: opentelemetry
+    component: otel-collector
   name: otel-collector
   namespace: kinetica-system
 spec:

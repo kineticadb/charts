@@ -7,10 +7,10 @@ metadata:
   name: kineticaoperator-kineticacluster-operator
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -19,10 +19,10 @@ metadata:
   name: kineticaoperator-leader-election-role
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - ''
@@ -57,10 +57,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticacluster-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -87,10 +87,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticacluster-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -113,10 +113,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusteradmin-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -143,10 +143,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusteradmin-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -169,10 +169,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterbackup-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -199,10 +199,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterbackup-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -225,10 +225,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterelasticity-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -255,10 +255,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterelasticity-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -281,10 +281,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterresourcegroup-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -311,10 +311,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterresourcegroup-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -337,10 +337,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterrestore-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -367,10 +367,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterrestore-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -393,10 +393,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterschedule-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -423,10 +423,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterschedule-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -449,10 +449,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterschema-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -479,10 +479,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterschema-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -505,10 +505,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterupgrade-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -535,10 +535,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaclusterupgrade-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -561,10 +561,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticagrant-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -591,10 +591,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticagrant-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -617,10 +617,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaoperatorupgrade-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -647,10 +647,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticaoperatorupgrade-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -673,10 +673,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticareleaseversion-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -703,10 +703,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticareleaseversion-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -729,10 +729,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticarole-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -759,10 +759,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticarole-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -785,10 +785,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticauser-editor-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -815,10 +815,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-kineticauser-viewer-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -842,10 +842,10 @@ metadata:
   creationTimestamp:
   name: kineticaoperator-manager-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - ''
@@ -1614,10 +1614,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-metrics-reader
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - nonResourceURLs:
   - /metrics
@@ -1630,10 +1630,10 @@ kind: ClusterRole
 metadata:
   name: kineticaoperator-proxy-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - authentication.k8s.io
@@ -1655,10 +1655,10 @@ metadata:
   name: kineticaoperator-leader-election-rolebinding
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1674,10 +1674,10 @@ kind: ClusterRoleBinding
 metadata:
   name: kineticaoperator-manager-rolebinding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1693,10 +1693,10 @@ kind: ClusterRoleBinding
 metadata:
   name: kineticaoperator-proxy-rolebinding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1713,10 +1713,10 @@ metadata:
   name: kineticaoperator-config-map
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 data:
   {{ (.Files.Glob "files/configmaps/local-dboperator-operator-kineticaoperator-config-map.yaml").AsConfig }}
 
@@ -1725,10 +1725,10 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
   name: kineticaoperator-controller-manager-metrics-service
   namespace: kinetica-system
@@ -1745,14 +1745,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app.kubernetes.io/name: kineticaoperator-controller-manager
+    app.kubernetes.io/managed-by: Porter
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
     app.kinetica.com/pool: infra
     app.kubernetes.io/component: db-operator
-    app.kubernetes.io/managed-by: Porter
-    app.kubernetes.io/name: kineticaoperator-controller-manager
     app.kubernetes.io/part-of: kinetica
     component: kineticaoperator-controller-manager
     control-plane: controller-manager

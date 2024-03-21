@@ -5,10 +5,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: cwagent
   name: cwagent-prometheus
   namespace: amazon-cloudwatch
@@ -18,10 +18,10 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: fluent-bit
   name: fluent-bit
   namespace: amazon-cloudwatch
@@ -33,12 +33,11 @@ automountServiceAccountToken: false
 kind: ServiceAccount
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
   namespace: kinetica-system
@@ -51,20 +50,20 @@ metadata:
   name: opentelemetry-collector
   namespace: kinetica-system
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: cwagent
   name: cwagent-prometheus-role
 rules:
@@ -107,10 +106,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: fluent-bit
   name: fluent-bit-role
 rules:
@@ -135,12 +134,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
 rules:
@@ -253,11 +251,10 @@ kind: ClusterRole
 metadata:
   name: otel-collector-role
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - '*'
@@ -272,10 +269,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: cwagent
   name: cwagent-prometheus-role-binding
 roleRef:
@@ -292,10 +289,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: fluent-bit
   name: fluent-bit-role-binding
 roleRef:
@@ -313,12 +310,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
 roleRef:
@@ -338,11 +334,10 @@ kind: ClusterRoleBinding
 metadata:
   name: otel-collector-role-binding
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -358,10 +353,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: fluent-bit
   name: fluent-bit-cluster-info
   namespace: amazon-cloudwatch
@@ -373,10 +368,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: fluent-bit
   name: fluent-bit-config
   namespace: amazon-cloudwatch
@@ -388,10 +383,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: cwagent
   name: prometheus-config
   namespace: amazon-cloudwatch
@@ -403,10 +398,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: cwagent
   name: prometheus-cwagentconfig
   namespace: amazon-cloudwatch
@@ -419,12 +414,12 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: opentelemetry
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    component: otel-collector-conf
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app: opentelemetry
+    component: otel-collector-conf
   name: otel-collector-conf
   namespace: kinetica-system
 data:
@@ -437,12 +432,11 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
   namespace: kinetica-system
@@ -465,12 +459,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: opentelemetry
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    component: otel-collector
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app: opentelemetry
+    component: otel-collector
   name: otel-collector
   namespace: kinetica-system
 spec:
@@ -514,12 +508,11 @@ metadata:
     prometheus.io/port: '8080'
     prometheus.io/scrape: 'true'
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    app.kubernetes.io/component: exporter
     app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
   namespace: kinetica-system
@@ -590,12 +583,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: opentelemetry
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
-    component: otel-collector
     app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app: opentelemetry
+    component: otel-collector
   name: otel-collector
   namespace: kinetica-system
 spec:
@@ -678,10 +671,10 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: cwagent
   name: cloudwatch-agent
   namespace: amazon-cloudwatch
@@ -778,10 +771,10 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     k8s-app: fluent-bit
     kubernetes.io/cluster-service: 'true'
     version: v1

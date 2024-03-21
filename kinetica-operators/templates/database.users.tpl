@@ -10,6 +10,11 @@ kind: Secret
 metadata: 
   name: admin-pwd
   namespace: {{ .Values.db.namespace }}
+  labels:
+    "app.kubernetes.io/name": "kinetica-operators"
+    "app.kubernetes.io/managed-by": "Helm"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 type: Opaque
 ---
 apiVersion: app.kinetica.com/v1
@@ -17,6 +22,11 @@ kind: KineticaUser
 metadata:
   name: {{ .Values.dbAdminUser.name }}
   namespace: {{ .Values.db.namespace }}
+  labels:
+    "app.kubernetes.io/name": "kinetica-operators"
+    "app.kubernetes.io/managed-by": "Helm"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 spec:
   ringName: {{ .Values.db.name }}
   uid: {{ .Values.dbAdminUser.name }}
@@ -34,6 +44,11 @@ kind: KineticaGrant
 metadata:
   name: global-admin-system-admin
   namespace: {{ .Values.db.namespace }}
+  labels:
+    "app.kubernetes.io/name": "kinetica-operators"
+    "app.kubernetes.io/managed-by": "Helm"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 spec:
   ringName: {{ .Values.db.name }}
   addGrantPermissionRequest:
@@ -52,12 +67,35 @@ spec:
     role: global_admins
     member: {{ .Values.dbAdminUser.name }}
 ---
-
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-delete-script
+  namespace: {{ .Values.db.namespace }}
+data:
+  delete-script.sh: |  
+    #!/bin/bash
+    ku="$(kubectl -n "{{ .Values.db.namespace }}" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
+    if [ -n "$ku" ]; then
+      op="$(kubectl -n "{{ .Release.Namespace }}" get deployments kineticaoperator-controller-manager -o name 2>/dev/null)"
+      if [ -n "$op" ]; then
+        kubectl -n "{{ .Release.Namespace }}" scale "$op" --replicas=0
+      fi
+      kubectl -n "{{ .Values.db.namespace }}" patch "$ku" -p '{"metadata":{"finalizers":null}}' --type=merge
+      kubectl -n "{{ .Values.db.namespace }}" delete KineticaUser "{{ .Values.dbAdminUser.name }}"
+    fi
+    exit 0
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-pre-delete-job
   namespace: {{ .Values.db.namespace }}
+  labels:
+    "app.kubernetes.io/name": "kinetica-operators"
+    "app.kubernetes.io/managed-by": "Helm"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
   annotations:
     "helm.sh/hook": pre-delete
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -65,10 +103,17 @@ metadata:
 spec:
   template:
     spec:
+      volumes:
+      - name: script-volume
+        configMap:
+          name: {{ .Release.Name }}-delete-script
       containers:
       - name: kubectl
-        image: bitnami/kubectl:latest  
-        command: ["kubectl"]
-        args: ["-n", "{{ .Values.db.namespace }}","delete", "KineticaUser", "{{ .Values.dbAdminUser.name }}" ,"--ignore-not-found=true"] 
+        image: {{ default "bitnami/kubectl:1.29.3"  .Values.kubectlImage }}  
+        command: ["/bin/bash"]
+        args: ["/mnt/scripts/delete-script.sh"]
+        volumeMounts:
+        - name: script-volume
+          mountPath: /mnt/scripts
       restartPolicy: Never
 {{- end }}

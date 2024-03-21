@@ -11479,7 +11479,6 @@ spec:
                         requests:
                           cpu: 250m
                           memory: 1Gi
-                          storage: 10Gi
                       storagePath: /opt/gpudb/kagent/stats/storage/alertmanager/
                       webConfigFile: /opt/gpudb/kagent/stats/alertmanager/alertmanager-web-config.yml
                     description: AlertManager - AlertManager specific configuration.
@@ -12887,7 +12886,6 @@ spec:
                         requests:
                           cpu: 250m
                           memory: 1Gi
-                          storage: 10Gi
                       storage: /opt/gpudb/kagent/stats/storage/loki-storage
                     description: Loki - Loki specific configuration.
                     properties:
@@ -14277,11 +14275,6 @@ spec:
                       & Grafana or have a separate PV for each.   Default: true'
                     type: boolean
                   sharedPVResources:
-                    default:
-                      limits:
-                        storage: 100Gi
-                      requests:
-                        storage: 10Gi
                     description: Resource block specifically for use with SharedPV
                       = true to set storage `requests` & `limits`
                     properties:

@@ -6,6 +6,11 @@ kind: Workbench
 metadata:
   name: workbench
   namespace: {{.Values.db.namespace}}
+  labels:
+    "app.kubernetes.io/name": "kinetica-operators"
+    "app.kubernetes.io/managed-by": "Helm"
+    "app.kubernetes.io/instance": "{{ .Release.Name }}"
+    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 spec:
   {{- if eq (kindOf .Values.dbWorkbench.nodeSelector) "map" }}
   nodeSelector: {{ toYaml .Values.dbWorkbench.nodeSelector | nindent 8 }}

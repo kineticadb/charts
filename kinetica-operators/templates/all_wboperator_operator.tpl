@@ -5,10 +5,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: kinetica-operators
-    heritage: Helm
-    release: '{{ .Release.Name }}'
-    chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
   name: workbench-operator-controller-manager
   namespace: kinetica-system
