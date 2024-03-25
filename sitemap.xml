@@ -6,7 +6,32 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.kinetica.com/Advanced/</loc>
+         <lastmod>2024-03-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.kinetica.com/Advanced/advanced_topics/</loc>
+         <lastmod>2024-03-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/Advanced/alternative_charts/</loc>
+         <lastmod>2024-03-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/Advanced/ingress_configuration/</loc>
+         <lastmod>2024-03-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/Advanced/ingress_nginx_config/</loc>
+         <lastmod>2024-03-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/Advanced/nginx_ingress_config/</loc>
          <lastmod>2024-03-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
