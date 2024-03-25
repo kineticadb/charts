@@ -1,7 +1,9 @@
-site_name: Kinetica DB Operator Helm Charts
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+site_name: Kinetica for Kubernetes
 site_author: Kinetica
 site_description: >-
-  Kinetica DB Kubernetes Operator Helm Charts
+  Kinetica for Kubernetes
+site_url: https://www.kinetica.com
 # Repository
 repo_name: kineticadb/charts
 repo_url: https://github.com/kineticadb/charts
@@ -11,25 +13,30 @@ edit_uri: ""
 copyright: Copyright &copy; 2016 - 2024 Kinetica DB Inc.
 
 theme:
+  logo: assets/kinetica_logo.png
+  favicon: assets/favicon.ico
   name: material
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
+    - announce.dismiss
+    - content.tooltips
     - content.code.copy
     - content.code.annotate
-    # - content.tabs.link
-    # - header.autohide
-    # - navigation.expand
+    - header.autohide
+    - navigation.expand
+    - navigation.footer
     - navigation.indexes
-    # - navigation.instant
+    - navigation.instant
+    - navigation.instant.progress
     - navigation.sections
-    - navigation.tabs
-    # - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
     - search.highlight
     - search.share
     - search.suggest
+    #   - navigation.tabs
+    #  - navigation.tabs.sticky
     # - toc.integrate
   palette:
     - scheme: default
@@ -47,12 +54,20 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  favicon: assets/favicon.png
   icon:
     repo: fontawesome/brands/github
 
 # Plugins
 plugins:
+  - glightbox
+  - blog:
+      post_date_format: medium
+      categories_allowed:
+        - Helm
+        - Kubernetes
+        - Kinetica DB
+        - Kinetica Workbench
+        - Kinetica
   - search
 #  - redirects:
 #      redirect_maps:
@@ -67,6 +82,15 @@ plugins:
 #      fallback_to_build_date: true
 #      exclude:
 #        - index.md
+  - mike:
+      # These fields are all optional; the defaults are as below...
+      alias_type: symlink
+      redirect_template: null
+      deploy_prefix: ''
+      canonical_version: null
+      version_selector: true
+      css_dir: css
+      javascript_dir: js
 
 # Extensions
 markdown_extensions:
@@ -86,13 +110,12 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.critic
   - pymdownx.details
-#  - pymdownx.emoji:
-#      emoji_index: !!python/name:materialx.emoji.twemoji
-#      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
-#      pygments_lang_class: true
   - pymdownx.highlight:
       line_spans: __span
       auto_title: true
@@ -100,20 +123,17 @@ markdown_extensions:
       use_pygments: true
   - pymdownx.inlinehilite
   - pymdownx.keys
-#  - pymdownx.magiclink:
-#      repo_url_shorthand: true
-#      user: squidfunk
-#      repo: mkdocs-material
   - pymdownx.mark
   - pymdownx.pathconverter
   - pymdownx.saneheaders
   - pymdownx.smartsymbols
-  - pymdownx.snippets
-  - pymdownx.superfences
-#  - pymdownx.superfences:
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
 #      custom_fences:
 #        - name: mermaid
-#          class: mermaid-experimental
+  #          class: mermaid
 #          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
@@ -123,16 +143,58 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - Overview:
-    - Overview: index.md
-    - On-Prem K3s: Operators/k3s.md
-    - On-Prem KiND: Operators/kind.md
-    - Other K8s: Operators/k8s.md
-    - Database CR: Database/database.md
-    - Workbench CR: Workbench/workbench.md
-  # - Helm Chart Layout:
-  #   - Operators: Operators/kinetica-operators.md
-  #   - Database CR: Database/database.md
-  #   - Workbench CR: Workbench/workbench.md
+  - Setup:
+      - Setup/index.md
+      - Getting Started:
+          - GettingStarted/index.md
+          - Quickstart: GettingStarted/quickstart.md
+          - Preparation & Prerequisites: GettingStarted/preparation_and_prerequisites.md
+          - Installation:  GettingStarted/installation.md
+          - Amazon EKS: GettingStarted/eks.md
+          - Azure AKS: GettingStarted/aks.md
+          - KinD: GettingStarted/kind.md
+          - k3s: GettingStarted/k3s.md
+      - Advanced Topics: Advanced/advanced_topics.md
+  - Operations:
+      - Operations/index.md
+      - Monitoring:
+          - Metrics & Monitoring: Monitoring/metrics_and_monitoring.md
+          - Logs: Monitoring/logs.md
+          - OpenTelemetry: Operations/otel.md
+  - Architecture & Design:
+      - Architecture/index.md
+      - Architecture:
+        - Core Database Architecture: Architecture/overview.md
+        - Kubernetes Architecture: Architecture/kubernetes.md
+  - Support:
+      - Support/index.md
+      - Help & Tutorials: Help/help_and_tutorials.md
+      - Troubleshooting: Troubleshooting/troubleshooting.md
+  - Reference:
+    - Reference/index.md
+    - Kinetica Helm Chart Reference:
+        - Kinetica Operators: Reference/helm_kinetica_operators.md
+    - Kinetica Cluster CRD/CR Reference:
+      - Kinetica Clusters Reference: Reference/kinetica_clusters.md
+      - Kinetica Cluster Users Reference: Reference/kinetica_cluster_users.md
+      - Kinetica Cluster Roles Reference: Reference/kinetica_cluster_roles.md
+      - Kinetica Cluster Grants Reference: Reference/kinetica_cluster_grants.md
+      - Kinetica Cluster Resource Groups Reference: Reference/kinetica_cluster_resource_groups.md
+      - Kinetica Cluster Schemas Reference: Reference/kinetica_cluster_schemas.md
+      - Kinetica Cluster Admins Reference: Reference/kinetica_cluster_admins.md
+      - Kinetica Cluster Backups Reference: Reference/kinetica_cluster_backups.md
+      - Kinetica Cluster Restores Reference: Reference/kinetica_cluster_restores.md
+    - Workbench CRD/CR Reference:
+        - Kinetica Workbench Reference: Reference/kinetica_workbench.md
+#  - blog:
+#      - blog/index.md
 
+
+extra:
+  homepage: https://www.kinetica.com
+  version:
+    provider: mike
+
+watch:
+    - includes
 

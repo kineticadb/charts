@@ -1,1 +1,0 @@
-# Kinetica DB User CRD/CR Reference

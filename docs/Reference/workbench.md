@@ -30,8 +30,6 @@ metadata:
   namespace: gpudb
 ```
 
-### An Example Workbench CR
-
 The simplest valid Workbench CR looks as follows: -
 
 ```yaml title="workbench.yaml" linenums="1"
@@ -50,6 +48,8 @@ spec:
   ingressController: nginx-ingress
 ```
 
+`1. clusterName` - the user defined name of the Kinetica DB Cluster
 
+`2. clusterSize` - block that defines the number of DB Ranks to run
 
-
+=== "helm"

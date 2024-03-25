@@ -1,1 +1,0 @@
-# Kinetica DB User Permission Grant CRD/CR Reference
