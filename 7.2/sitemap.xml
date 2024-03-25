@@ -31,6 +31,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.kinetica.com/7.2/Advanced/ingress_urls/</loc>
+         <lastmod>2024-03-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.kinetica.com/7.2/Advanced/nginx_ingress_config/</loc>
          <lastmod>2024-03-25</lastmod>
          <changefreq>daily</changefreq>
