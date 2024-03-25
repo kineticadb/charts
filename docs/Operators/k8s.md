@@ -1,11 +1,17 @@
 
 # Overview
 
-For managed Kubernetes solutions (AKS, EKS, GKE) or other on-prem K8s flavors, follow this generic guide to install the Kinetica Operators, Database and Workbench. A product license key will be required for install. Please contact [Kinetica Support](support@kinetica.com) to request a trial key.
+For managed Kubernetes solutions (AKS, EKS, GKE) or other on-prem K8s flavors, 
+follow this generic guide to install the Kinetica Operators, Database and Workbench. 
+A product license key will be required for install. Please contact [Kinetica Support](mailto:support@kinetica.com) 
+to request a trial key.
 
 ## Preparation and prerequisites
 
-Installation requires **Helm3** and access to an on-prem or CSP managed Kubernetes cluster. **kubectl** is optional but highly recommended. The context for the desired target cluster must be selected from your `~/.kube/config` file or set via the `KUBECONFIG` environment variable. Check to see if you have the correct context with,
+Installation requires **Helm3** and access to an on-prem or CSP managed Kubernetes cluster. 
+**kubectl** is optional but highly recommended.
+The context for the desired target cluster must be selected from your `~/.kube/config` file 
+or set via the `KUBECONFIG` environment variable. Check to see if you have the correct context with,
 
 ```bash
 kubectl config current-context

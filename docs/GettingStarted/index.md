@@ -12,7 +12,7 @@ hide:
 
     What you need to know & do before beginning an installation.
 
-    [:octicons-arrow-right-24: Preparation and Prerequisites](GettingStarted/preparation_and_prerequisites.md)
+    [:octicons-arrow-right-24: Preparation and Prerequisites](preparation_and_prerequisites.md)
 
 -   :material-clock-fast:{ .lg .middle } __Set up in 15 minutes (local install)__
 

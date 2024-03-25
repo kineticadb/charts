@@ -154,7 +154,10 @@ nav:
           - Azure AKS: GettingStarted/aks.md
           - KinD: GettingStarted/kind.md
           - k3s: GettingStarted/k3s.md
-      - Advanced Topics: Advanced/advanced_topics.md
+      - Advanced Topics:
+          - Advanced/index.md
+          - Alternative Charts: Advanced/alternative_charts.md
+          - Ingress Configuration: Advanced/ingress_configuration.md
   - Operations:
       - Operations/index.md
       - Monitoring:
@@ -164,8 +167,8 @@ nav:
   - Architecture & Design:
       - Architecture/index.md
       - Architecture:
-        - Core Database Architecture: Architecture/overview.md
-        - Kubernetes Architecture: Architecture/kubernetes.md
+        - Core Database Architecture: Architecture/db_architecture.md
+        - Kubernetes Architecture: Architecture/kinetica_for_kubernetes_architecture.md
   - Support:
       - Support/index.md
       - Help & Tutorials: Help/help_and_tutorials.md
