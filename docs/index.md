@@ -38,6 +38,14 @@ Kinetica DB can be quickly installed into Kubernetes using Helm.
 
     [:octicons-arrow-right-24: Installation](GettingStarted/installation.md)
 
+-   :material-ninja:{ .lg .middle } __Channel Your Inner Ninja__
+
+    ---
+
+    Advanced Installation Topics which go beyond the basic installation.
+
+    [:octicons-arrow-right-24: Advanced Topics](Advanced/index.md)
+
 -   :material-radar:{ .lg .middle } __Running and Managing the Platform__
 
     ---

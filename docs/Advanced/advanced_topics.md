@@ -44,3 +44,7 @@ the control plane (for building a highly-available cluster) and Kubernetes Servi
 on any external hardware or software.
 
 #### Coming Soon
+
+ ## Integration with Kerberos
+
+#### Coming Soon
