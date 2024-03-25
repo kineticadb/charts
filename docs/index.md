@@ -1,42 +1,78 @@
-# Overview
+---
+hide:
+  - navigation  
+  - toc
+---
+# `kineticadb/charts` 
 
-This repository provides the helm chart for deploying the Kubernetes Operators for Database and Workbench. Once the operators are installed, you should be able to use the Kinetica Database and Workbench CRDs to deploy and manage Kinetica clusters and workbenches.
+Accelerate your AI and analytics. Kinetica harnesses real-time data and the power of CPUs &  GPUs for 
+lightning-fast insights due to it being uniquely designed for fast and flexible analytics on large volumes 
+of changing data with incredible performance.
 
+Kinetica DB can be quickly installed into Kubernetes using Helm.
 
-## Add Kinetica Helm Repository
+<div class="grid cards" markdown>
+-   :material-clock-fast:{ .lg .middle } __Set up in 15 minutes__
 
-To add the Kinetica Helm repoistory to Helm 3:-
+    ---
 
-```shell
-helm repo add kinetica-operators https://kineticadb.github.io/charts
-helm repo update
+    Install the Kinetica DB locally on `Kind` or `k3s`
+    with `helm` to get up and running in minutes (Dev/Test).
 
-# if you get a 404 error on the .tgz file, you may do the following
-# you could get this if you had previously added the repo and the chart has been updated in development
-helm repo remove kinetica-operators
-helm repo add kinetica-operators https://kineticadb.github.io/charts
+    [:octicons-arrow-right-24: Quickstart](GettingStarted/quickstart.md)
 
-```
+-   :material-shovel:{ .lg .middle } __Prepare to Install__
 
-Installation values will depend on the target kubernetes platform you are using.
+    ---
 
-This chart provides out of the box support for trying out in K3s and Kind clusters. For k3s, you should be able to use either the GPU and CPU version of the databases. In these platforms, a non production configuration of the Kinetica Database and Workbench is also deployed for you to get started. However, you should be able to change the k3s values file to deploy in other platforms as well. For fine grained configuration of the Database or the Workbench, refer to the [Database](Database/database.md) and [Workbench](Workbench/workbench.md) documentation.
+    What you need to know & do before beginning a production installation.
 
-We use the same chart for our [SaaS](https://cloud.kinetica.com/) and [AWS Marketplace offerings](https://www.kinetica.com/blog/getting-started-with-kinetica-on-aws/). If you want to try out in SaaS or AWS Marketplace, follow those links, you need not use this chart directly.
+    [:octicons-arrow-right-24: Preparation and Prerequisites](GettingStarted/preparation_and_prerequisites.md)
 
-Current version of the chart supports kubernetes version 1.25 and above.
+-   :material-database:{ .lg .middle } __Production DB Installation__
 
+    ---
 
+    Install the Kinetica DB with helm to get up and running quickly
+    (Production).
 
-## k3s (k3s.io)
+    [:octicons-arrow-right-24: Installation](GettingStarted/installation.md)
 
-Refer to  [Kinetica on K3s](Operators/k3s.md)
+-   :material-radar:{ .lg .middle } __Running and Managing the Platform__
 
-## Kind (kubernetes in docker kind.sigs.k8s.io)
+    ---
 
-Refer to  [Kinetica on Kind](Operators/kind.md)
+    Metrics, Monitoring, Logs and Telemetry Distribution.
 
-## K8s - Any flavour (kubernetes.io)
+    [:octicons-arrow-right-24: Operations](Operations/index.md)
 
-Refer to  [Kinetica on K8s](Operators/k8s.md)
+-   :material-office-building:{ .lg .middle } __Product Architecture__
 
+    ---
+
+    The Modern Analytics Database Architected for Performance at Scale.
+
+    [:octicons-arrow-right-24: Architecture](Architecture/index.md)
+
+-   :material-medical-bag:{ .lg .middle } __Support__
+
+    ---
+
+    Additional Help, Tutorials and Troubleshooting resources.
+
+    [:octicons-arrow-right-24: Support](Support/index.md)
+
+-  :material-library:{ .lg .middle } __Configuration in Detail__
+
+    ---
+
+    Detailed reference material for the Helm Charts & Kinetica for Kubernetes CRDs.
+
+    [:octicons-arrow-right-24: Reference Documentation](Reference/index.md "Reference material for the Helm Charts & Kubernetes CRDs")
+</div>
+
+[//]: # (* [Setup]&#40;Setup/index.md&#41; - Setting up Kinetica on Kubernetes)
+[//]: # (* [Operations]&#40;Operations/index.md&#41; - Operating Kinetica on Kubernetes)
+[//]: # (* [Architecture & Design]&#40;Architecture/index.md&#41; - Architecture overview of KineticaDB & Kinetica for Kubernetes)
+[//]: # (* [Support]&#40;Support/index.md&#41; - Help, Tutorials and Troubleshooting)
+[//]: # (* [Reference]&#40;Reference/index.md&#41; - Reference material for the Helm Charts & Kubernetes CRDs.)
