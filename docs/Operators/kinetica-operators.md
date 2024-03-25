@@ -109,8 +109,6 @@ Example Helm `values.yaml` for different Cloud Providers/On-Prem installations: 
 
 === "On-Prem"
 
-    --8<-- ".browserslistrc"
-
     ```yaml title="values.yaml" linenums="1" hl_lines="15 17"
     namespace: kinetica-system
 

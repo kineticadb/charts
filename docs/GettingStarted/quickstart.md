@@ -12,11 +12,11 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 !!! note "Kubernetes >= 1.25"
     The current version of the chart supports kubernetes version 1.25 and above.
 
-Please select your target installation type:
+## Please select your target Kubernetes variant:
 
 === "kind"
 
-    ## Kind (kubernetes in docker kind.sigs.k8s.io)
+    ### Kind (kubernetes in docker kind.sigs.k8s.io)
     This installation in a kind cluster is for trying out the operators and the database
     in a non-production environment.
     
@@ -25,13 +25,13 @@ Please select your target installation type:
     
         **Please contact [Kinetica Support](mailto:support@kinetica.com "Kinetica Support Email") to request a trial key.**
     
-    ### Create Kind Cluster 1.29
+    #### Create Kind Cluster 1.29
     
     ``` sh title="Create a new Kind Cluster"
     kind create cluster --config charts/kinetica-operators/kind.yaml
     ```
     
-    ### Kind - Install kinetica-operators including a sample db to try out
+    #### Kind - Install kinetica-operators including a sample db to try out
     
     Review the values file charts/kinetica-operators/values.onPrem.kind.yaml. 
     This is trying to install the operators and a simple db with workbench 
@@ -40,7 +40,7 @@ Please select your target installation type:
     As you can see it is trying to create an ingress pointing towards local.kinetica. 
     If you have a domain pointing to your machine, replace it with the correct domain name.
     
-    #### Kind - Install the  Kinetica-Operators Chart
+    ##### Kind - Install the  Kinetica-Operators Chart
 
     ``` sh title="Kind - Install the Kinetca-Operators Chart"
     wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.kind.yaml
@@ -62,15 +62,15 @@ Please select your target installation type:
 
     
 === "k3s"
-    ## k3s (k3s.io)
+    ### k3s (k3s.io)
     
-    ### Install k3s 1.29
+    #### Install k3s 1.29
     
     ``` sh title="Install k3s"
     curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=traefik  --node-name kinetica-master --token 12345" K3S_KUBECONFIG_OUTPUT=~/.kube/config_k3s K3S_KUBECONFIG_MODE=644 INSTALL_K3S_VERSION=v1.29.2+k3s1 sh -
     ```
 
-    ### K3s - Install kinetica-operators including a sample db to try out
+    #### K3s - Install kinetica-operators including a sample db to try out
 
     Review the values file `charts/kinetica-operators/values.onPrem.k3s.yaml`. 
     This is trying to install the operators and a simple db with workbench installation 
@@ -86,7 +86,7 @@ Please select your target installation type:
     127.0.0.1  local.kinetica
     ```
    
-    ### K3S - Install the  Kinetica-Operators Chart (CPU)
+    #### K3S - Install the  Kinetica-Operators Chart (CPU)
 
     ``` sh 
     wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k3s.yaml
@@ -102,7 +102,7 @@ Please select your target installation type:
     helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
     ```
 
-    ### K3S - Install the  Kinetica-Operators Chart (GPU)
+    #### K3S - Install the  Kinetica-Operators Chart (GPU)
 
     If you wish to try out the GPU capabilities, you can use the following values file, 
     provided you are in a nvidia gpu capable machine.
@@ -116,7 +116,7 @@ Please select your target installation type:
     !!! success "Accessing the Workbench"
         You should be able to access the workbench at [http://local.kinetica](http://local.kinetica "Workbench URL")
      
-    ### Uninstall k3s
+    #### Uninstall k3s
 
     ``` sh title="uninstall k3s"
     /usr/local/bin/k3s-uninstall.sh

@@ -69,19 +69,8 @@ plugins:
         - Kinetica Workbench
         - Kinetica
   - search
-#  - redirects:
-#      redirect_maps:
-#        changelog/insiders.md: insiders/changelog.md
-#        upgrading.md: upgrade.md
-#        sponsorship.md: insiders/index.md
   - minify:
       minify_html: true
-#  - git-revision-date-localized:
-#      type: timeago
-#      locale: en
-#      fallback_to_build_date: true
-#      exclude:
-#        - index.md
   - mike:
       # These fields are all optional; the defaults are as below...
       alias_type: symlink
@@ -91,6 +80,18 @@ plugins:
       version_selector: true
       css_dir: css
       javascript_dir: js
+#  - git-revision-date-localized:
+#      type: timeago
+#      locale: en
+#      fallback_to_build_date: true
+#      exclude:
+#        - index.md
+#  - redirects:
+#      redirect_maps:
+#        changelog/insiders.md: insiders/changelog.md
+#        upgrading.md: upgrade.md
+#        sponsorship.md: insiders/index.md
+
 
 # Extensions
 markdown_extensions:
@@ -128,6 +129,7 @@ markdown_extensions:
   - pymdownx.saneheaders
   - pymdownx.smartsymbols
   - pymdownx.snippets:
+      check_paths: true
       auto_append:
         - includes/abbreviations.md
   - pymdownx.superfences:
