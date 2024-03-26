@@ -3,5 +3,5 @@
 
 ## Documentation
 
-Detailed documentation can be found at https://kineticadb.github.io/charts/7.2/
+Detailed documentation can be found at https://kineticadb.github.io/charts/latest/
 
