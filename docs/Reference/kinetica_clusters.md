@@ -6,6 +6,18 @@ hide:
 
 This page covers the Kinetica Cluster Kubernetes CRD.
 
+## `kubectl` cli commands
+
+### `kubectl -n _namespace_ get kc`
+
+Lists the `KineticaUsers` defined within the specified anmespace to the console.
+
+![get_kc.gif](..%2Fimages%2Fget_kc.gif)
+
+``` shell
+kubectl -n _namespace_ get ku
+```
+
 ## Full KineticaCluster CR Structure
 
 ``` yaml  title="kineticaclusters.app.kinetica.com_sample.yaml"

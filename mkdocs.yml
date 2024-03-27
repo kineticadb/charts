@@ -160,6 +160,8 @@ nav:
           - Advanced/index.md
           - Alternative Charts: Advanced/alternative_charts.md
           - Ingress Configuration: Advanced/ingress_configuration.md
+          - Air-Gapped Environments: Advanced/airgapped.md
+          - Kinetica DB on OS X (Arm64):  Advanced/kinetica_mac_arm_k8s.md
   - Operations:
       - Operations/index.md
       - Monitoring:

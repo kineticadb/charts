@@ -6,6 +6,16 @@ hide:
 # Advanced Topics
 
 <div class="grid cards" markdown>
+-   :material-apple:{ .lg .middle } __Kinetica DB on Apple OS X (Apple Silicon)__
+
+    ---
+
+    Install the Kinetica DB on a new Kubernetes 'production-like' cluster
+    via `kubeadm` on UTM VMs.
+    (Production-like).
+
+    [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
+
 -   :simple-helm:{ .lg .middle } __Find alternative chart versions__
 
     ---
@@ -22,6 +32,15 @@ hide:
 
 
     [:octicons-arrow-right-24: Ingress Configuration](ingress_configuration.md "Ingress Record Creation")
+
+-   :material-connection:{ .lg .middle } __Air-Gapped Environments__
+
+    ---
+
+    Specifics for installing Kinetica for Kubernetes in an Air-Gapped Environment
+
+
+    [:octicons-arrow-right-24: Airgapped](airgapped.md "Air-Gapped Envionment Specifics")
 
 -   :simple-opentelemetry:{ .lg .middle } __Using your own OpenTelemetry Collector__
 

@@ -78,9 +78,3 @@ Kinetica DB can be quickly installed into Kubernetes using Helm.
 
     [:octicons-arrow-right-24: Reference Documentation](Reference/index.md "Reference material for the Helm Charts & Kubernetes CRDs")
 </div>
-
-[//]: # (* [Setup]&#40;Setup/index.md&#41; - Setting up Kinetica on Kubernetes)
-[//]: # (* [Operations]&#40;Operations/index.md&#41; - Operating Kinetica on Kubernetes)
-[//]: # (* [Architecture & Design]&#40;Architecture/index.md&#41; - Architecture overview of KineticaDB & Kinetica for Kubernetes)
-[//]: # (* [Support]&#40;Support/index.md&#41; - Help, Tutorials and Troubleshooting)
-[//]: # (* [Reference]&#40;Reference/index.md&#41; - Reference material for the Helm Charts & Kubernetes CRDs.)
