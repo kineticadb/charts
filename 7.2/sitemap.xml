@@ -91,6 +91,16 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.kinetica.com/7.2/GettingStarted/installation_cpu/</loc>
+         <lastmod>2024-03-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/7.2/GettingStarted/installation_gpu/</loc>
+         <lastmod>2024-03-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/k3s/</loc>
          <lastmod>2024-03-28</lastmod>
          <changefreq>daily</changefreq>
