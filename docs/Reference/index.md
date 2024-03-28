@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Reference Section
+# :material-library: Reference Section
 
 <div class="grid cards" markdown>
 -   :simple-helm:{ .lg .middle } __Kinetica Operators Helm__
@@ -14,7 +14,7 @@ hide:
 
     [:octicons-arrow-right-24: Charts](helm_kinetica_operators.md)
 
--   :material-kubernetes:{ .lg .middle } __Kinetica Core DB CRDs__
+-   :material-kubernetes:{ .lg .middle } __Kinetica Core DB CRDs__-
 
     ---
 
@@ -29,5 +29,5 @@ hide:
     Kinetica Workbench Kubernetes CRD & ConfigMap reference data.
 
     [:octicons-arrow-right-24: Workbench](kinetica_workbench.md)
-- 
+
 </div>

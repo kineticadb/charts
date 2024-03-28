@@ -1,7 +1,7 @@
 hide:
     - toc
 ---
-# Quickstart
+# :material-clock-fast: Quickstart
 
 For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Homepage") or
 [k3s](https://k3s.io "k3s Homepage").
@@ -61,7 +61,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
         You should be able to access the workbench at [http://local.kinetica](http://local.kinetica "Workbench URL")
 
     
-=== "k3s"
+=== ":simple-k3s: k3s"
     ### k3s (k3s.io)
     
     #### Install k3s 1.29

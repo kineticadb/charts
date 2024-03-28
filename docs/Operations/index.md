@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Operations
+# :material-radar: Operations
 
 <div class="grid cards" markdown>
 -   :simple-prometheus:{ .lg .middle } __Metrics__
@@ -14,7 +14,7 @@ hide:
 
     [:octicons-arrow-right-24: Metrics](../Monitoring/metrics_and_monitoring.md)
 
--   :material-radar:{ .lg .middle } __Logs__
+-   :material-text-box:{ .lg .middle } __Logs__
 
     ---
 
@@ -22,7 +22,7 @@ hide:
 
     [:octicons-arrow-right-24: Logs](../Monitoring/logs.md)
 
--   :simple-opentelemetry:{ .lg .middle } __Distribution__
+-   :simple-opentelemetry:{ .lg .middle } __Metric & Log Distribution__
 
     ---
 

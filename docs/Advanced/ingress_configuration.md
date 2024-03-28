@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Ingress Configuration
+# :simple-ingress: Ingress Configuration
 
 <div class="grid cards" markdown>
 -   :simple-nginx:{ .lg .middle } __`ingress-nginx` Configuration__

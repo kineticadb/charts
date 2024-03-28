@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# `nginx-ingress` Ingress Configuration
+# :simple-nginx: `nginx-ingress` Ingress Configuration
 
 
 #### Coming Soon

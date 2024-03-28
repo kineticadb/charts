@@ -1,3 +1,3 @@
-# Kinetica Workbench cRD Reference
+# :material-kubernetes: Workbench CRD Reference
 
 #### Coming Soon

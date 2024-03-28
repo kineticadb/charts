@@ -66,7 +66,7 @@ Please select the method to transfer the images: -
     [--to-registry-insecure-skip-tls-verify]
     ```
 
-=== "containerd"
+=== ":simple-containerd: containerd"
 
     It is possible with `containerd` to pull images, save them and load them either into 
     a Container Registry in the air gapped environment or directly 
@@ -74,7 +74,7 @@ Please select the method to transfer the images: -
     
     If the target `containerd` is on a node running a Kubernetes Cluster then these
     images will be sourced by Kubernetes from the loaded images, via CRI, with no requirement 
-    to pull them from an external source.
+    to pull them from an external source e.g. a Registry or Mirror.
 
     !!! note "`sudo` required"
         Depending on how `containerd` has been installed and configured many of the example calls below may
@@ -125,7 +125,7 @@ Please select the method to transfer the images: -
     crictl images
     ```
 
-=== "docker"
+=== ":simple-docker: docker"
 
     It is possible with `docker` to pull images, save them and load them into
     an OCI Container Registry in the air gapped environment.

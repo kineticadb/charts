@@ -1,4 +1,4 @@
-# Amazon EKS Specifics
+# :simple-amazoneks: Amazon EKS Specifics
 
 This page covers any Amazon EKS kubernetes cluster installation specifics.
 

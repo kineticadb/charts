@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Support
+# :material-medical-bag: Support
 
 <div class="grid cards" markdown>
 -   :material-lifebuoy:{ .lg .middle } __Taking the next steps__

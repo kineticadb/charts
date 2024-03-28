@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Using Alternative Helm Charts
+# :simple-helm: Using Alternative Helm Charts
 
 If requested by Kinetica Support you can search and use pre-release versions of the Kinetica Helm Charts.
 

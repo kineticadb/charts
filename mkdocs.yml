@@ -114,6 +114,9 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - includes/.icons
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -151,7 +154,10 @@ nav:
           - GettingStarted/index.md
           - Quickstart: GettingStarted/quickstart.md
           - Preparation & Prerequisites: GettingStarted/preparation_and_prerequisites.md
-          - Installation:  GettingStarted/installation.md
+          - Installation:
+              - GettingStarted/installation.md
+              - CPU: GettingStarted/installation_cpu.md
+              - GPU: GettingStarted/installation_gpu.md
           - Amazon EKS: GettingStarted/eks.md
           - Azure AKS: GettingStarted/aks.md
           - KinD: GettingStarted/kind.md

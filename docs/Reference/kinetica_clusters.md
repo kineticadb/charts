@@ -2,7 +2,7 @@
 hide:
   - toc
 ---
-# Kinetica Clusters CRD Reference 
+# :kubernetes-icons-crd: Kinetica Clusters CRD Reference
 
 This page covers the Kinetica Cluster Kubernetes CRD.
 

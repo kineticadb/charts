@@ -1,3 +1,3 @@
-# Log Collection & Display
+# :material-text-box: Log Collection & Display
 
 #### Coming Soon

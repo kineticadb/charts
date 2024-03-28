@@ -3,7 +3,7 @@ hide:
   - navigation  
   - toc
 ---
-# `kineticadb/charts` 
+# :simple-helm: `kineticadb/charts` 
 
 Accelerate your AI and analytics. Kinetica harnesses real-time data and the power of CPUs &  GPUs for 
 lightning-fast insights due to it being uniquely designed for fast and flexible analytics on large volumes 

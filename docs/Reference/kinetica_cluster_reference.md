@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Kinetica Core DB CRDs
+# :material-kubernetes: Core DB CRDs
 
 <div class="grid cards" markdown>
 -   :material-kubernetes:{ .lg .middle } __DB Clusters__

@@ -1,4 +1,4 @@
-# Kinetica DB on Kubernetes (Mac Silicon)
+# :material-apple: Kinetica DB on Kubernetes :simple-arm:
 
 This walkthrough will show how to install Kinetica DB on a Mac running OS X.  
 The Kubernetes cluster will be running on VMs with Ubuntu Linux 22.04 ARM64. 

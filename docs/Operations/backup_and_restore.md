@@ -1,4 +1,4 @@
-# Kinetica Backup & Restore
+# :material-backup-restore: Kinetica DB Backup & Restore
 
 !!! note "Velero Installation"
     Backup & Restore requires that v

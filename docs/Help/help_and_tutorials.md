@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# Help & Tutorials
+# :material-lifebuoy: Help & Tutorials
 
 <div class="grid cards" markdown>
 -  :material-library-outline:{ .lg .middle } __Tutorials__

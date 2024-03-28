@@ -1,3 +1,3 @@
-# OpenTelemetry Integration for Metric & Log Distribution
+# :simple-opentelemetry: OTEL Integration for Metric & Log Distribution
 
 #### Coming Soon

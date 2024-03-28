@@ -1,4 +1,4 @@
-# Preparation & Prerequisites
+# :material-shovel: Preparation & Prerequisites
 
 Checks & steps to ensure a smooth installation.
 
@@ -51,6 +51,59 @@ Please check your Kubernetes installation or access credentials (kubeconfig).
 --8<-- "docs/Advanced/kinetica_images_list_for_airgapped_environments.md"
 
 [//]: # (:octicons-x-circle-fill-24:)
+
+### Label the Nodes
+
+Kinetica requires some of the Kubernetes to be labeled as it splits some of the 
+components into different 'pools'. This enables different physical node type to be present
+in the Kubernetes Cluster and we can target which Kinetica components go where.
+
+e.g. for a GPU installation some nodes in the cluster will have GPUs and others are CPU only.
+We can put the DB on the GPU nodes and our infrastructure components on CPU only nodes.
+
+=== ":simple-intel: :simple-amd: :simple-arm: cpu"
+
+    The Kubernetes cluster nodes selected to host the Kinetica infrastructure pods 
+    i.e. non-DB Pods require the following label `app.kinetica.com/pool=infra`.
+
+    ![CPU Node Labels](..%2Fimages%2FCPU_Node_Labels.svg)
+
+    ``` shell title="Label the Infrastructure Nodes"
+        kubectl label node k8snode1 app.kinetica.com/pool=infra
+    ```
+
+    whilst the Kubernetes cluster nodes selected to host the Kinetica DB Pods 
+    require the following label `app.kinetica.com/pool=compute`.
+
+    ``` shell title="Label the Database Nodes"
+        kubectl label node k8snode2 app.kinetica.com/pool=compute
+    ```
+
+    ---
+
+=== ":simple-nvidia: gpu"
+
+    The Kubernetes cluster nodes selected to host the Kinetica infrastructure pods 
+    i.e. non-DB Pods require the following label `app.kinetica.com/pool=infra`.
+
+    ![GPU Node Labels](..%2Fimages%2FGPU_Node_Labels.svg)
+
+    ``` shell title="Label the Infrastructure Nodes"
+        kubectl label node k8snode1 app.kinetica.com/pool=infra
+    ```
+
+    whilst the Kubernetes cluster nodes selected to host the Kinetica DB Pods 
+    require the following label `app.kinetica.com/pool=compute-gpu`.
+
+    ``` shell title="Label the Database Nodes"
+        kubectl label node k8snode2 app.kinetica.com/pool=compute-gpu
+    ```
+
+    ---
+
+!!! warning "Pods Not Scheduling"
+    If the Kubernetes are not labeled you may have a situation where Kinetica pods
+    not schedule and sit in a 'Pending' state.
 
 ## Install the kinetica-operators chart
 
