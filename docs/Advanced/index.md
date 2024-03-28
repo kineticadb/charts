@@ -6,16 +6,6 @@ hide:
 # :material-ninja: Advanced Topics
 
 <div class="grid cards" markdown>
--   :material-apple:{ .lg .middle } __Kinetica DB on Apple OS X (Apple Silicon)__
-
-    ---
-
-    Install the Kinetica DB on a new Kubernetes 'production-like' cluster
-    via `kubeadm` using Cilium Networking, kube-vip LoadBalancer and running on UTM VMs.
-    (Production-like).
-
-    [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
-
 -   :simple-helm:{ .lg .middle } __Find alternative chart versions__
 
     ---
@@ -51,13 +41,16 @@ hide:
 
     [:octicons-arrow-right-24: External OTEL](advanced_topics.md "OTEL Collector Configuration")
 
--  :simple-ingress:{ .lg .middle } __Ingress Configuration__
+-   :material-apple:{ .lg .middle } __Kinetica DB on Apple OS X (Apple Silicon)__
 
     ---
 
-    How to configure your Ingress Controller to expose Kinetica for Kubernetes components.
+    Install the Kinetica DB on a new Kubernetes 'production-like' cluster
+    via `kubeadm` using Cilium Networking, kube-vip LoadBalancer and running on UTM VMs.
+    (Production-like).
 
-    [:octicons-arrow-right-24: Ingress](ingress_configuration.md "Ingress Record Configuration")
+    [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
+
 </div>
 
 --- 

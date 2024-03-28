@@ -1,4 +1,4 @@
-# Advanced Topics
+# :material-ninja: Advanced Topics
 
 ## Install from a development/pre-release chart version
 

@@ -52,11 +52,11 @@ Please check your Kubernetes installation or access credentials (kubeconfig).
 
 [//]: # (:octicons-x-circle-fill-24:)
 
-### Label the Nodes
+### Label the Kubernetes    Nodes
 
-Kinetica requires some of the Kubernetes to be labeled as it splits some of the 
-components into different 'pools'. This enables different physical node type to be present
-in the Kubernetes Cluster and we can target which Kinetica components go where.
+Kinetica requires some of the Kubernetes Nodes to be labeled as it splits some of the 
+components into different deployment 'pools'. This enables different physical node types to be present
+in the Kubernetes Cluster allowing us to target which Kinetica components go where.
 
 e.g. for a GPU installation some nodes in the cluster will have GPUs and others are CPU only.
 We can put the DB on the GPU nodes and our infrastructure components on CPU only nodes.
@@ -154,3 +154,20 @@ parameter.
 
 !!! warning "Amazon EKS"
     If installing on Amazon EKS [_See here_](eks.md#ebs-csi-driver)
+
+#### Planning access to your Kinetica Cluster 
+
+!!! question "Existing Ingress Controller?"
+    If you have an existing Ingress Controller in your Kubernetes cluster and do not want
+    Kinetica to install an `ingresss-nginx` to expose it's endpoints then you can disable
+    `ingresss-nginx` installation in the `values.yaml` by editing the file and setting
+    `install: true` to `install: false`: -
+    
+        ```` yaml
+        nodeSelector: {}
+        tolerations: []
+        affinity: {}
+    
+        ingressNginx:
+            install: false
+        ````

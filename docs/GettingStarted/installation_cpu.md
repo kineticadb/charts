@@ -1,4 +1,4 @@
-# :material-cpu-64-bit: Installation - CPU Only 
+# :simple-intel: :simple-amd: :simple-arm: Installation - CPU Only 
 
 For managed Kubernetes solutions (AKS, EKS, GKE) or on-prem (kubeadm) Kubernetes variants, 
 follow this generic guide to install the Kinetica Operators, Database and Workbench.

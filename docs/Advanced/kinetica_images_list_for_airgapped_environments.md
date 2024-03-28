@@ -2,7 +2,7 @@
     If you are installing Kinetica with Helm in an air-gapped environment you will either need a Registry Proxy to pass
     the requests through or to download the images and push them to your internal Registry.
 
-    For information on ways to transfer the files into an air-gapped environment [**_See here_**](airgapped.md "Ways to transfer images").
+    For information on ways to transfer the files into an air-gapped environment [**_See here_**](../Advanced/airgapped.md "Ways to transfer images").
 
     ### Required Container Images
     #### docker.io (Required Kinetica Images for All Installations)
