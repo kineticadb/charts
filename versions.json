@@ -4,6 +4,9 @@
     "title": "7.2",
     "aliases": [
       "latest"
-    ]
+    ],
+    "properties": {
+      "version": "v7.2.0-3.rc-3"
+    }
   }
 ]
