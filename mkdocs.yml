@@ -59,7 +59,12 @@ theme:
 
 # Plugins
 plugins:
-  - glightbox
+  - glightbox:
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - skip-lightbox
+      auto_caption: true
   - blog:
       post_date_format: medium
       categories_allowed:
@@ -102,6 +107,7 @@ markdown_extensions:
   - footnotes
   - meta
   - md_in_html
+  - meta
   - toc:
       permalink: true
   - pymdownx.arithmatex:
@@ -167,6 +173,8 @@ nav:
           - Alternative Charts: Advanced/alternative_charts.md
           - Ingress Configuration: Advanced/ingress_configuration.md
           - Air-Gapped Environments: Advanced/airgapped.md
+          - S3 Storage for Dev/Test: Advanced/minio_s3_dev_test.md
+          - Enabling Backup/Restore: Advanced/velero_backup_restore.md
           - Kinetica DB on OS X (Arm64):  Advanced/kinetica_mac_arm_k8s.md
   - Operations:
       - Operations/index.md
@@ -174,6 +182,10 @@ nav:
           - Metrics & Monitoring: Monitoring/metrics_and_monitoring.md
           - Logs: Monitoring/logs.md
           - OpenTelemetry: Operations/otel.md
+  - Creating Resource using Kubernetes APIs:
+      - KubernetesResources/index.md
+      - User Management: KubernetesResources/user_management.md
+      - Role Management: KubernetesResources/role_management.md
   - Architecture & Design:
       - Architecture/index.md
       - Architecture:
