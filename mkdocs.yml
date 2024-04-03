@@ -230,7 +230,7 @@ nav:
       - Kinetica Cluster Restores Reference: Reference/kinetica_cluster_restores.md
     - Workbench CRD/CR Reference:
         - Kinetica Workbench Reference: Reference/kinetica_workbench.md
-  - Tags: tags.md
+  - Categories: tags.md
 
 extra:
   status:
