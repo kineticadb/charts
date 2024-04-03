@@ -1,6 +1,8 @@
 ---
 hide:
   - navigation
+tags:
+  - Advanced
 ---
 # Bare Metal/VM Installation - `kubeadm`
 

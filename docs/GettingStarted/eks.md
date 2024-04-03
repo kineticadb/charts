@@ -1,3 +1,11 @@
+---
+hide:
+  - navigation
+  - toc
+tags:
+  - Getting Started
+  - Storage
+---
 # :simple-amazoneks: Amazon EKS Specifics
 
 This page covers any Amazon EKS kubernetes cluster installation specifics.

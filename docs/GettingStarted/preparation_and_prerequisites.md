@@ -1,3 +1,10 @@
+---
+hide:
+  - navigation
+  - toc
+tags:
+  - Getting Started
+---
 # :material-shovel: Preparation & Prerequisites
 
 Checks & steps to ensure a smooth installation.
@@ -109,7 +116,7 @@ We can put the DB on the GPU nodes and our infrastructure components on CPU only
 
 This chart will install the Kinetica K8s operators together with a default configured database and workbench UI.
 
-### 1. Add the Kinetica chart repository
+### Add the Kinetica chart repository
 
 Add the repo locally as *kinetica-operators*:
 
@@ -119,7 +126,7 @@ helm repo add kinetica-operators https://kineticadb.github.io/charts
 
 ![Helm Repo Add](../images/helm_repo_add.gif "Add the Kinetica Helm Repository to the local machine")
 
-### 2. Obtain the default Helm values file
+### Obtain the default Helm values file
 
 For the generic Kubernetes install use the following values file without modification.
 Advanced users with specific requirements may need to adjust parameters in this file.
@@ -128,7 +135,7 @@ Advanced users with specific requirements may need to adjust parameters in this 
 wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k8s.yaml
 ```
 
-### 3. Determine the following prior to the chart install
+### Determine the following prior to the chart install
 
 !!! info inline end "Default Admin User"
     the default admin user in the Helm chart is `kadmin` but this is configurable.

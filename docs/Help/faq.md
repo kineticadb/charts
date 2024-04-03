@@ -5,6 +5,6 @@ hide:
 tags:
   - Support
 ---
-# How to change the Clusters FQDN
+# :material-frequently-asked-questions: Frequently Asked Questions
 
 #### Coming Soon

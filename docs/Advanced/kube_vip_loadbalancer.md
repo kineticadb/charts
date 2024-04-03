@@ -1,6 +1,9 @@
 ---
 hide:
   - navigation
+tags:
+  - Advanced
+  - Ingress
 ---
 # Kubernetes Cluster LoadBalancer for Bare Metal/VM Installations
 

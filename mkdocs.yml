@@ -23,20 +23,23 @@ theme:
     - content.tooltips
     - content.code.copy
     - content.code.annotate
+    - content.tabs.link
     - header.autohide
     - navigation.expand
     - navigation.footer
     - navigation.indexes
     - navigation.instant
     - navigation.instant.progress
+    - navigation.prune
     - navigation.sections
     - navigation.top
     - navigation.tracking
     - search.highlight
     - search.share
     - search.suggest
-    #   - navigation.tabs
-    #  - navigation.tabs.sticky
+    - tags
+    - navigation.tabs
+    - navigation.tabs.sticky
     # - toc.integrate
   palette:
     - scheme: default
@@ -56,9 +59,17 @@ theme:
     code: Roboto Mono
   icon:
     repo: fontawesome/brands/github
+    tag:
+      advanced: material/ninja
+      getting_started: material/shovel
+      storage: simple/googlecloudstorage
+      ingress: simple/ingress
+      network: material/network
 
 # Plugins
 plugins:
+  - tags:
+      tags_file: tags.md
   - glightbox:
       zoomable: true
       draggable: true
@@ -149,12 +160,16 @@ markdown_extensions:
 #          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
 
 # Page tree
 nav:
+  - Home: index.md
   - Setup:
       - Setup/index.md
       - Getting Started:
@@ -177,13 +192,15 @@ nav:
           - S3 Storage for Dev/Test: Advanced/minio_s3_dev_test.md
           - Enabling Backup/Restore: Advanced/velero_backup_restore.md
           - Kinetica DB on OS X (Arm64):  Advanced/kinetica_mac_arm_k8s.md
+  - Advanced:
+      Advanced/index.md
   - Operations:
       - Operations/index.md
       - Monitoring:
           - Metrics & Monitoring: Monitoring/metrics_and_monitoring.md
           - Logs: Monitoring/logs.md
           - OpenTelemetry: Operations/otel.md
-  - Creating Resources using Kubernetes APIs:
+  - Creating Resources:
       - KubernetesResources/index.md
       - User Management: KubernetesResources/user_management.md
       - Role Management: KubernetesResources/role_management.md
@@ -196,6 +213,7 @@ nav:
       - Support/index.md
       - Help & Tutorials: Help/help_and_tutorials.md
       - Troubleshooting: Troubleshooting/troubleshooting.md
+      - FAQ: Help/faq.md
   - Reference:
     - Reference/index.md
     - Kinetica Helm Chart Reference:
@@ -212,11 +230,20 @@ nav:
       - Kinetica Cluster Restores Reference: Reference/kinetica_cluster_restores.md
     - Workbench CRD/CR Reference:
         - Kinetica Workbench Reference: Reference/kinetica_workbench.md
-#  - blog:
-#      - blog/index.md
-
+  - Tags: tags.md
 
 extra:
+  status:
+    new: Recently added
+  tag:
+    Storage: storage
+    Ingress: ingress
+    Network: network
+    Architecture: architecture
+    Advanced: advanced
+    Getting Started: getting_started
+    Support: support
+    Reference: reference
   homepage: https://www.kinetica.com
   version:
     provider: mike

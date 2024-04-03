@@ -1,3 +1,9 @@
+---
+hide:
+  - navigation
+tags:
+  - Reference
+---
 # Kinetica Workbench Configuration
 
 * kubectl (yaml)

@@ -2,6 +2,8 @@
 hide:
   - navigation
   - toc
+tags:
+- Advanced
 ---
 # :simple-helm: Using Alternative Helm Charts
 

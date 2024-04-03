@@ -1,7 +1,8 @@
 ---
 hide:
   - navigation
-  - toc
+tags:
+  - Reference
 ---
 # :material-kubernetes: Core DB CRDs
 

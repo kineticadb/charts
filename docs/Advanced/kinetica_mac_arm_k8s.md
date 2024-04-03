@@ -2,6 +2,8 @@
 hide:
   - navigation
 glightbox.auto_caption: true
+tags:
+  - Advanced
 ---
 # :material-apple: Kinetica DB on Kubernetes :simple-arm:
 

@@ -2,8 +2,10 @@
 hide:
   - navigation
   - toc
+tags:
+  - Support
 ---
-# :material-medical-bag: Support
+# Support
 
 <div class="grid cards" markdown>
 -   :material-lifebuoy:{ .lg .middle } __Taking the next steps__
@@ -22,6 +24,15 @@ hide:
 
 
     [:octicons-arrow-right-24: Troubleshooting](../Troubleshooting/troubleshooting.md)
+
+-   :material-frequently-asked-questions:{ .lg .middle } __FAQ__
+
+    ---
+
+    Frequently Asked Questions..
+
+
+    [:octicons-arrow-right-24: FAQ](../Help/faq.md)
 </div>
 
 [//]: # (* [Help & Tutorials]&#40;../Help/help_and_tutorials.md&#41;)

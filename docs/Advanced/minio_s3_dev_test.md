@@ -1,8 +1,12 @@
 ---
 hide:
   - navigation
+tags:
+  - Advanced
+  - Storage
+status: new
 ---
-# Using [Minio](https://min.io/) for S3 Storage in Dev/Test
+# Using [Minio](https://min.io/) for S3 Storage in Dev/Test :material-new-box:
 
 !!! note "If you require a new Minio installation"
     Please follow the installation instructions found 

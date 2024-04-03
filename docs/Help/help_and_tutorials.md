@@ -2,6 +2,8 @@
 hide:
   - navigation
   - toc
+tags:
+  - Support
 ---
 # :material-lifebuoy: Help & Tutorials
 

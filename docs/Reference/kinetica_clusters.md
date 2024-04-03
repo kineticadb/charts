@@ -1,6 +1,8 @@
 ---
 hide:
-  - toc
+  - navigation
+tags:
+  - Reference
 ---
 # :kubernetes-icons-crd: Kinetica Clusters CRD Reference
 
@@ -1130,7 +1132,7 @@ spec:
           # that clients should use to connect for multi-head
           # operations. NOTE: If specified for any ranks, a public URL
           # must be specified for all ranks.
-          publicURL: "https://:8082/gpudb-{{.Rank}}"
+          publicURL: "https://:8082/gpudb-{% raw %}{{.Rank}}{% endraw %}"
           # Define the rank number of this rank.
           rank: 1
         # SetMonitorPort - Set monitor ZMQ publisher server port (-1 to

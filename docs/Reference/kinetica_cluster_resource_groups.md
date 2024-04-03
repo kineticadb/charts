@@ -1,6 +1,8 @@
 ---
 hide:
-  - toc
+  - navigation
+tags:
+  - Reference
 ---
 # Kinetica Cluster Resource Groups CRD Reference
 

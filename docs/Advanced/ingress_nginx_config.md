@@ -1,7 +1,9 @@
 ---
 hide:
   - navigation
-
+tags:
+  - Advanced  
+  - Ingress
 ---
 # :simple-nginx: `ingress-nginx` Ingress Configuration
 

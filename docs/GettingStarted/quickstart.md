@@ -1,5 +1,8 @@
+---
 hide:
-    - toc
+    - navigation
+tags:
+    - Getting Started
 ---
 # :material-clock-fast: Quickstart
 

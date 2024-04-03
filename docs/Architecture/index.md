@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# :material-office-building: Architecture
+# Architecture
 
 Kinetica is a distributed, vectorized, memory-first, columnar database with tiered storage
 that is optimized for high speed and performance – particularly on streaming analytics and

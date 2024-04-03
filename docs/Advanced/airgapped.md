@@ -1,3 +1,9 @@
+---
+hide:
+  - navigation
+tags:
+  - Advanced
+---
 # Air-Gapped Environments
 
 ## Obtaining the Kinetica Images
@@ -85,17 +91,17 @@ Please select the method to transfer the images: -
     Similar to `docker pull` we can use `ctr image pull` so to pull the core Kinetica DB cpu based image
 
     ``` shell title="Pull a remote image (containerd)"
-    ctr image pull docker.io/kineticastagingcloud/kinetica-k8s-cpu:v7.2.0-3.rc-3
+    ctr image pull docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
 
     We now need to export the pulled image as an archive to the local filesystem.
 
     ``` shell title="Export a local image (containerd)"
-    ctr image export kinetica-k8s-cpu-v7.2.0-3.rc-3.tar \
-    docker.io/kineticastagingcloud/kinetica-k8s-cpu:v7.2.0-3.rc-3
+    ctr image export kinetica-k8s-cpu-{{kinetica_full_version}}.tar \
+    docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
 
-    We can now transfer this archive (`kinetica-k8s-cpu-v7.2.0-3.rc-3.tar`) to the Kubernetes Node inside 
+    We can now transfer this archive (`kinetica-k8s-cpu-{{kinetica_full_version}}.tar`) to the Kubernetes Node inside 
     the air-gapped environment.
 
     ### containerd - Using `containerd` to import an image 
@@ -103,11 +109,11 @@ Please select the method to transfer the images: -
     Using `containerd` to import an image on to a Kubernetes Node on which a Kinetica Cluster is running.
 
     ``` shell title="Import the Images"
-    ctr -n=k8s.io images import kinetica-k8s-cpu-v7.2.0-3.rc-3.tar
+    ctr -n=k8s.io images import kinetica-k8s-cpu-{{kinetica_full_version}}.tar
     ```
 
     !!! warning "`-n=k8s.io`"
-        Whilst it is possible to use `ctr images import kinetica-k8s-cpu-v7.2.0-3.rc-3.tar` 
+        Whilst it is possible to use `ctr images import kinetica-k8s-cpu-{{kinetica_full_version}}.rc-3.tar` 
         to import the image in order for the image to be visible to Kubernets it is necessary 
         to specify `-n=k8s.io`.
 
@@ -131,15 +137,15 @@ Please select the method to transfer the images: -
     an OCI Container Registry in the air gapped environment.
 
     ``` shell title="Pull a remote image (docker)"
-    docker pull --platformlinux/amd64 docker.io/kineticastagingcloud/kinetica-k8s-cpu:v7.2.0-3.rc-3
+    docker pull --platformlinux/amd64 docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
 
     ``` shell title="Export a local image (docker)"
-    docker export --platformlinux/amd64 -o kinetica-k8s-cpu-v7.2.0-3.rc-3.tar \
-    docker.io/kineticastagingcloud/kinetica-k8s-cpu:v7.2.0-3.rc-3
+    docker export --platformlinux/amd64 -o kinetica-k8s-cpu-{{kinetica_full_version}}.tar \
+    docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
     
-    We can now transfer this archive (`kinetica-k8s-cpu-v7.2.0-3.rc-3.tar`) to the Kubernetes Node inside 
+    We can now transfer this archive (`kinetica-k8s-cpu-{{kinetica_full_version}}.rc-3.tar`) to the Kubernetes Node inside 
     the air-gapped environment.
 
     ### docker - Using `docker` to import an image 
@@ -147,5 +153,5 @@ Please select the method to transfer the images: -
     Using `docker` to import an image on to a Kubernetes Node on which a Kinetica Cluster is running.
 
     ``` shell title="Import the Images"
-    docker import --platformlinux/amd64 kinetica-k8s-cpu-v7.2.0-3.rc-3.tar registry:repository/kinetica-k8s-cpu:v7.2.0-3.rc-3
+    docker import --platformlinux/amd64 kinetica-k8s-cpu-{{kinetica_full_version}}.tar registry:repository/kinetica-k8s-cpu:v7.2.0-3.rc-3
     ```

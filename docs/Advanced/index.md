@@ -3,10 +3,10 @@ hide:
   - navigation
   - toc
 ---
-# :material-ninja: Advanced Topics
+# Advanced Topics
 
 <div class="grid cards" markdown>
--   :simple-helm:{ .lg .middle } __Find alternative chart versions__
+-   :simple-helm:{ .lg .middle } __Find alternative chart versions__ 
 
     ---
 
@@ -14,7 +14,7 @@ hide:
 
     [:octicons-arrow-right-24: Alternative Charts](alternative_charts.md "Pre-Release Helm Usage")
 
--   :simple-ingress:{ .lg .middle } __Configuring Ingress Records__
+-   :simple-ingress:{ .lg .middle } __Configuring Ingress Records__ 
 
     ---
 
@@ -23,7 +23,7 @@ hide:
 
     [:octicons-arrow-right-24: Ingress Configuration](ingress_configuration.md "Ingress Record Creation")
 
--   :material-connection:{ .lg .middle } __Air-Gapped Environments__
+-   :material-connection:{ .lg .middle } __Air-Gapped Environments__ :material-new-box:
 
     ---
 
@@ -40,7 +40,7 @@ hide:
 
     [:octicons-arrow-right-24: External OTEL](advanced_topics.md "OTEL Collector Configuration")
 
--   :simple-minio:{ .lg .middle } __Minio for Dev/Test S3 Storage__ :material-dev-to:
+-   :simple-minio:{ .lg .middle } __Minio for Dev/Test S3 Storage__ :material-dev-to: :material-new-box:
 
     ---
 
@@ -57,7 +57,7 @@ hide:
 
     [:octicons-arrow-right-24: Velero](velero_backup_restore.md "Backup/Restore Engine")
 
-- :material-kubernetes:{ .lg .middle } __Creating Resources with Kubernetes APIs__
+- :material-kubernetes:{ .lg .middle } __Creating Resources with Kubernetes APIs__ :material-new-box:
 
     ---
 
@@ -65,7 +65,7 @@ hide:
 
     [:octicons-arrow-right-24: Resources](../KubernetesResources/index.md "Kinetica CR for Resource Management")
 
-  -   :material-apple:{ .lg .middle } __Kinetica on Apple OS X (Apple Silicon)__ :simple-arm: :material-dev-to:
+  -   :material-apple:{ .lg .middle } __Kinetica on OS X (Apple Silicon)__ :simple-arm: :material-dev-to: :material-new-box:
 
       ---
 
@@ -75,7 +75,7 @@ hide:
 
       [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
 
-  -   :material-tools:{ .lg .middle } __Bare Metal/VM Installation from Scratch__
+  -   :material-tools:{ .lg .middle } __Bare Metal/VM Installation from Scratch__ :material-new-box:
 
       ---
 
@@ -86,7 +86,7 @@ hide:
 
       [:octicons-arrow-right-24: Bare Metal/VM Installation](kubernetes_bare_metal_vm_install.md)
 
--   :simple-ingress:{ .lg .middle } __Software LoadBalancer__
+-   :simple-ingress:{ .lg .middle } __Software LoadBalancer__ :material-new-box:
 
       ---
 

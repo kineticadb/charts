@@ -1,3 +1,10 @@
+---
+hide:
+  - navigation
+tags:
+  - Getting Started
+---
+
 # :simple-intel: :simple-amd: :simple-arm: Installation - CPU Only 
 
 For managed Kubernetes solutions (AKS, EKS, GKE) or on-prem (kubeadm) Kubernetes variants, 
@@ -6,7 +13,7 @@ follow this generic guide to install the Kinetica Operators, Database and Workbe
 !!! warning "Preparation & Prequisites"
     Please make sure you have followed the [Preparation & Prequisites steps](preparation_and_prerequisites.md)
 
-### 4. Install the helm chart
+### Install the helm chart
 
 Run the following Helm install command after substituting values from
 [section 3](preparation_and_prerequisites.md#3-determine-the-following-prior-to-the-chart-install)
@@ -21,7 +28,7 @@ kinetica-operators kinetica-operators/kinetica-operators \
 --set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
 ```
 
-### 5. Check installation progress
+### Check installation progress
 
 After a few moments, follow the progression of the main database pod startup with:
 
@@ -33,7 +40,7 @@ until it reaches `"gpudb-0  3/3  Running"` at which point the database should be
 in the cluster. You may have to run this command in a different terminal if the `helm` command from step 4 has not yet
 returned to the system prompt. Once running, you can quit this kubectl watch command using *ctrl-c*.
 
-### 6. Accessing the Kinetica installation
+### Accessing the Kinetica installation
 
 ## Target Platform Specifics
 

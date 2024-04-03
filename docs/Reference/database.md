@@ -1,3 +1,10 @@
+---
+hide:
+  - navigation
+  - toc
+tags:
+  - Reference
+---
 # Kinetica Database Configuration
 
 * kubectl (yaml)

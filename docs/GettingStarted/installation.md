@@ -2,8 +2,10 @@
 hide:
   - navigation
   - toc
+tags:
+  - Getting Started
 ---
-# :material-database: Kinetica for Kubernetes Installation
+# Kinetica for Kubernetes Installation
 
 <div class="grid cards" markdown>
 -   :material-cpu-64-bit:{ .lg .middle } __CPU Only Installation__ :simple-intel: :simple-amd: :simple-arm:

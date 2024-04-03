@@ -2,6 +2,12 @@
 hide:
   - navigation
   - toc
+tags:
+  - Ingress
+
+status: new
+subtitle: Nullam urna elit, malesuada eget finibus ut, ac tortor
+icon: material/emoticon-happy
 ---
 # :simple-ingress: Ingress Configuration
 
