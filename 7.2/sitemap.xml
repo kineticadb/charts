@@ -6,6 +6,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.kinetica.com/7.2/tags/</loc>
+         <lastmod>2024-04-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.kinetica.com/7.2/Advanced/</loc>
          <lastmod>2024-04-03</lastmod>
          <changefreq>daily</changefreq>
@@ -142,6 +147,11 @@
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Help/changing_the_fqdn/</loc>
+         <lastmod>2024-04-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/7.2/Help/faq/</loc>
          <lastmod>2024-04-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -332,6 +342,11 @@
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/blog/</loc>
+         <lastmod>2024-04-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.kinetica.com/7.2/tags/</loc>
          <lastmod>2024-04-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
