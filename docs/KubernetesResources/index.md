@@ -82,7 +82,7 @@ hide:
     !!! note
         This requires [Velero](https://velero.io/docs/v1.13/basic-install/ "Velero Installation Page") to be installed on the Kubernetes Cluster.
 
-    [:octicons-arrow-right-24: KineticaBackup](kinetica_cluster_backups.md "DB Backup Management")
+    [:octicons-arrow-right-24: KineticaBackup](cluster_backup.md "DB Backup Management")
 
 [//]: # (    [:octicons-arrow-right-24: KineticaBackup]&#40;kinetica_cluster_backups.md "DB Backup Management"&#41;)
 

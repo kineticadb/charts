@@ -28,8 +28,16 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     #### Create Kind Cluster 1.29
     
     ``` sh title="Create a new Kind Cluster"
-    kind create cluster --config charts/kinetica-operators/kind.yaml
+    wget https://raw.githubusercontent.com/kineticadb/charts/{{kinetica_full_version}}/kinetica-operators/kind.yaml
+    kind create cluster --name kinetica --config kind.yaml
     ```
+
+    ```shell title="List Kind clusters"
+     kind get clusters
+    ```
+
+    !!! tip "Set Kubernetes Context"
+        Please set your Kubernetes Context to `kind-kinetica` before performing the following steps. 
     
     #### Kind - Install kinetica-operators including a sample db to try out
     
@@ -42,10 +50,10 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     
     ##### Kind - Install the  Kinetica-Operators Chart
 
-    ``` sh title="Kind - Install the Kinetca-Operators Chart"
-    wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.kind.yaml
+    ``` sh title="Get & install the Kinetica-Operators Chart"
+    wget https://raw.githubusercontent.com/kineticadb/charts/{{kinetica_full_version}}/kinetica-operators/values.onPrem.kind.yaml
 
-    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
     
     or if you have been asked by the Kinetica Support team to try a development version
@@ -54,7 +62,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     helm search repo kinetica-operators --devel --versions
 
-    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version {{helm_cart_version}}
     ```
  
     !!! success "Accessing the Workbench"

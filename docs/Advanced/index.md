@@ -29,7 +29,6 @@ hide:
 
     Specifics for installing Kinetica for Kubernetes in an Air-Gapped Environment
 
-
     [:octicons-arrow-right-24: Airgapped](airgapped.md "Air-Gapped Envionment Specifics")
 
 -   :simple-opentelemetry:{ .lg .middle } __Using your own OpenTelemetry Collector__
@@ -37,16 +36,15 @@ hide:
     ---
 
     How to configure Kinetica for Kubernetes to use your open OpenTelemetry collector.
-
+    <br/><br/>
 
     [:octicons-arrow-right-24: External OTEL](advanced_topics.md "OTEL Collector Configuration")
 
--   :simple-minio:{ .lg .middle } __Minio for Dev/Test S3 Storage__
+-   :simple-minio:{ .lg .middle } __Minio for Dev/Test S3 Storage__ :material-dev-to:
 
     ---
 
-    Install [Minio](https://min.io/) in order to enable S3 storage for Dev/Test.
-    (Production).
+    Install [Minio](https://min.io/) in order to enable S3 storage for Development.<br/><br/>
 
     [:octicons-arrow-right-24: min.io](minio_s3_dev_test.md "S3 Buckets for Dev/Test")
 
@@ -55,20 +53,27 @@ hide:
     ---
 
     Install [Velero](https://velero.io/) in order to enable Kinetica for Kubernetes 
-    Backup/Restore functionality.
-    (Production).
+    Backup/Restore functionality.<br/><br/>
 
     [:octicons-arrow-right-24: Velero](velero_backup_restore.md "Backup/Restore Engine")
 
--   :material-apple:{ .lg .middle } __Kinetica DB on Apple OS X (Apple Silicon)__
+- :material-kubernetes:{ .lg .middle } __Creating Resources with Kubernetes APIs__
 
     ---
 
-    Install the Kinetica DB on a new Kubernetes 'production-like' cluster on Apple OS X
-    (Apple Silicon) using [UTM](https://mac.getutm.app/
-     "UTM employs Apple's Hypervisor virtualization framework to run ARM64 operating systems on Apple Silicon at near native speeds.").
+    Create Users, Roles, DB Schema etc. using Kubernertes CRs.
 
-    [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
+    [:octicons-arrow-right-24: Resources](../KubernetesResources/index.md "Kinetica CR for Resource Management")
+
+  -   :material-apple:{ .lg .middle } __Kinetica on Apple OS X (Apple Silicon)__ :simple-arm: :material-dev-to:
+
+      ---
+
+      Install the Kinetica DB on a new Kubernetes 'production-like' cluster on Apple OS X
+      (Apple Silicon) using [UTM](https://mac.getutm.app/
+       "UTM employs Apple's Hypervisor virtualization framework to run ARM64 operating systems on Apple Silicon at near native speeds.").
+
+      [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
 
   -   :material-tools:{ .lg .middle } __Bare Metal/VM Installation from Scratch__
 
@@ -78,9 +83,19 @@ hide:
       cluster via [`kubeadm`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/)
       using [`cilium`](https://cilium.io/) Networking,
       [`kube-vip`](https://kube-vip.io/) LoadBalancer.
-      (Production).
 
-      [:octicons-arrow-right-24: Apple ARM64](kinetica_mac_arm_k8s.md)
+      [:octicons-arrow-right-24: Bare Metal/VM Installation](kubernetes_bare_metal_vm_install.md)
+
+-   :simple-ingress:{ .lg .middle } __Software LoadBalancer__
+
+      ---
+
+    Install a software Kubernetes CCM/LoadBalancer for bare metal or 
+    VM based Kubernetes CLusters.
+    <br/><br/>
+    [`kube-vip`](https://kube-vip.io/) LoadBalancer.
+
+    [:octicons-arrow-right-24: Software LoadBalancer](kube_vip_loadbalancer.md)
 
 </div>
 

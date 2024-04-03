@@ -3,7 +3,9 @@ hide:
   - navigation  
   - toc
 ---
-# :simple-helm: `kineticadb/charts` 
+# :simple-helm: `kineticadb/charts`  
+
+[//]: # (Version={{kinetica_full_version}})
 
 Accelerate your AI and analytics. Kinetica harnesses real-time data and the power of CPUs &  GPUs for 
 lightning-fast insights due to it being uniquely designed for fast and flexible analytics on large volumes 
@@ -12,12 +14,12 @@ of changing data with incredible performance.
 Kinetica DB can be quickly installed into Kubernetes using Helm.
 
 <div class="grid cards" markdown>
--   :material-clock-fast:{ .lg .middle } __Set up in 15 minutes__
+-   :material-clock-fast:{ .lg .middle } __Set up in 15 minutes__ :material-dev-to:
 
     ---
 
     Install the Kinetica DB locally on `Kind` or `k3s`
-    with `helm` to get up and running in minutes (Dev/Test).
+    with `helm` to get up and running in minutes.
 
     [:octicons-arrow-right-24: Quickstart](GettingStarted/quickstart.md)
 
@@ -34,7 +36,6 @@ Kinetica DB can be quickly installed into Kubernetes using Helm.
     ---
 
     Install the Kinetica DB with helm to get up and running quickly
-    (Production).
 
     [:octicons-arrow-right-24: Installation](GettingStarted/installation.md)
 

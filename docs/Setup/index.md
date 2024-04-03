@@ -19,7 +19,7 @@ hide:
 
     ---
 
-    Install the Kinetica DB with helm and get up and running in minutes.
+    Install the Kinetica DB with Helm and get up and running in minutes.
 
     [:octicons-arrow-right-24: Installation](../GettingStarted/installation.md)
 
@@ -30,7 +30,7 @@ hide:
     It is possible using the Helm Charts and Kinetica CRDs to customize your installation in a number of ways.
 
     [:octicons-arrow-right-24: Advanced Topics](../Advanced/advanced_topics.md)
-- 
+
 </div>
 
 [//]: # (* [Getting Started]&#40;../GettingStarted/index.md&#41;)

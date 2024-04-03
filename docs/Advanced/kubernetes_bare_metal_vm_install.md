@@ -2,7 +2,7 @@
 hide:
   - navigation
 ---
-# Bare Metal/VK Installation - `kubeadm`
+# Bare Metal/VM Installation - `kubeadm`
 
 ## Kubernetes Node Installation
 
@@ -383,3 +383,15 @@ kubectl -n gpudb get po gpudb-0 -w
 !!! success "Kinetica DB Provision Complete"
     Once you see `gpudb-0 3/3 Running` the database is up and running.
 
+---
+
+!!! note "Software LoadBalancer"
+    If you require a software based LoadBalancer to allocate IP address to the 
+    Ingress Controller or
+    exposed Kubernetes Services then [**_see here_**](kube_vip_loadbalancer.md)
+
+    This is usually apparent if your ingress or other Kubernetes Services with the type
+    `LoadBalancer` are stuck in the `Pending` state.
+
+---
+[:material-arrow-expand-up:  Home](../index.md "Home Page")
