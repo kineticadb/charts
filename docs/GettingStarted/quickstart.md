@@ -62,7 +62,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     helm search repo kinetica-operators --devel --versions
 
-    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version {{helm_cart_version}}
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version {{helm_chart_version}}
     ```
  
     !!! success "Accessing the Workbench"
