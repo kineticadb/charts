@@ -7,10 +7,12 @@ tags:
 ---
 # :simple-nginx: `ingress-nginx` Ingress Configuration
 
-To use an 'external' ingress-nginx controller i.e. not the one optionally installed 
-by the KInetica Helm chart it is necessary to disable ingress in the `KineticaCluster` CR.
+To use an 'external' ingress-nginx controller 
+i.e. not the one optionally installed 
+by the Kinetica Operators Helm chart it is necessary to 
+disable ingress in the `KineticaCluster` CR.
 
-the field `spec.ingressController: nginx` should be set to `spec.ingressController: none`.
+The field `spec.ingressController: nginx` should be set to `spec.ingressController: none`.
 
 It is then necessary to create the required Ingress CRs by hand. Below is a list
 of the Ingress paths that need to be exposed along with sample ingress-nginx CRs.

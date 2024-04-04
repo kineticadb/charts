@@ -11,7 +11,7 @@ hide:
     ---
 
     Collecting and storing metrics as time series data.
-
+    <br/><br/><br/>
     [:octicons-arrow-right-24: Metrics](../Monitoring/metrics_and_monitoring.md)
 
 -   :material-text-box:{ .lg .middle } __Logs__
@@ -19,7 +19,7 @@ hide:
     ---
 
     Log aggregation.
-
+    <br/><br/><br/>
     [:octicons-arrow-right-24: Logs](../Monitoring/logs.md)
 
 -   :simple-opentelemetry:{ .lg .middle } __Metric & Log Distribution__
@@ -27,7 +27,7 @@ hide:
     ---
 
     Metrics & Logs can be distributed to other systems using OpenTelemetry.
-
+    <br/><br/>
     [:octicons-arrow-right-24: OpenTelemety](otel.md)
 
 -   :material-backup-restore:{ .lg .middle } __Backup & Restore__
@@ -35,7 +35,7 @@ hide:
     ---
 
     Backup & Restore of the Kinetica DB.
-
+    <br/><br/><br/>
     [:octicons-arrow-right-24: Backup & Restore](backup_and_restore.md)
 </div>
 

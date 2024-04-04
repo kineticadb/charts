@@ -13,7 +13,7 @@ tags:
     ---
 
     Kinetica Operators Helm charts & values file reference data.
-
+    <br/><br/>
     [:octicons-arrow-right-24: Charts](helm_kinetica_operators.md)
 
 -   :material-kubernetes:{ .lg .middle } __Kinetica Core DB CRDs__-
@@ -21,7 +21,7 @@ tags:
     ---
 
     Kinetica DB Kubernetes CRD & ConfigMap reference data.
-
+    <br/><br/>
     [:octicons-arrow-right-24: Cluster CRDs](kinetica_cluster_reference.md)
 
 -   :material-kubernetes:{ .lg .middle } __Kinetica Workbench CRDs__
@@ -29,7 +29,7 @@ tags:
     ---
 
     Kinetica Workbench Kubernetes CRD & ConfigMap reference data.
-
+    <br/><br/>
     [:octicons-arrow-right-24: Workbench](kinetica_workbench.md)
 
 </div>

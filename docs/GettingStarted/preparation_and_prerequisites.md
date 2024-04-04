@@ -50,7 +50,8 @@ and that you can access this cluster correctly with,
 kubectl get nodes
 ```
 
-![Find get_nodes](../images/get_nodes.gif "List all nodes in the Kubernetes Cluster")
+??? example "Get Nodes"
+    ![Find get_nodes](../images/get_nodes.gif "List all nodes in the Kubernetes Cluster")
 
 If you do not see a list of nodes for your K8s cluster the helm installation will not work.
 Please check your Kubernetes installation or access credentials (kubeconfig).
@@ -124,7 +125,8 @@ Add the repo locally as *kinetica-operators*:
 helm repo add kinetica-operators https://kineticadb.github.io/charts
 ```
 
-![Helm Repo Add](../images/helm_repo_add.gif "Add the Kinetica Helm Repository to the local machine")
+??? example "Helm Repo Add"
+    ![Helm Repo Add](../images/helm_repo_add.gif "Add the Kinetica Helm Repository to the local machine")
 
 ### Obtain the default Helm values file
 
@@ -154,17 +156,18 @@ wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operato
 kubectl get sc -o name 
 ```
 
-![Find Storage Class](../images/find_storage_class.gif "List all the Storage Classes on the Kubernetes Cluster")
+??? example "List StorageClass"
+    ![Find Storage Class](../images/find_storage_class.gif "List all the Storage Classes on the Kubernetes Cluster")
 
 use the name found after the /, For example, in `storageclass.storage.k8s.io/local-path` use "local-path" as the
 parameter.
 
-!!! warning "Amazon EKS"
+??? warning "Amazon EKS"
     If installing on Amazon EKS [_See here_](eks.md#ebs-csi-driver)
 
 #### Planning access to your Kinetica Cluster 
 
-!!! question "Existing Ingress Controller?"
+??? question "Existing Ingress Controller?"
     If you have an existing Ingress Controller in your Kubernetes cluster and do not want
     Kinetica to install an `ingresss-nginx` to expose it's endpoints then you can disable
     `ingresss-nginx` installation in the `values.yaml` by editing the file and setting

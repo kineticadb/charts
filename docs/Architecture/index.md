@@ -19,7 +19,7 @@ changing data with incredible performance.
 
     Install the Kinetica DB with helm and get up
     and running in minutes
-
+    <br/><br/>
     [:octicons-arrow-right-24: Core Database Architecture](db_architecture.md "Kinetica Core Database Overview")
 
 -   :material-kubernetes:{ .lg .middle } __Kinetica for Kubernetes Architecture__
@@ -28,10 +28,6 @@ changing data with incredible performance.
 
     Install the Kinetica DB with helm and get up
     and running in minutes
-
+    <br/><br/>
     [:octicons-arrow-right-24: Kubernetes Architecture](kinetica_for_kubernetes_architecture.md "Kinetica for Kubernetes Architecture")
 </div>
-
-[//]: # (* [Kinetica Database Architecture]&#40;db_architecture "Kinetica Database Overview"&#41;)
-
-[//]: # (* [Kubernetes Architecture]&#40;kinetica_for_kubernetes_architecture "Kinetica for Kubernetes Architecture"&#41;)

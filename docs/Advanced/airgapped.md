@@ -18,9 +18,9 @@ Please select the method to transfer the images: -
     [`mesosphere/mindthegap`](https://github.com/mesosphere/mindthegap)
 
     !!! quote "mindthegap"
-    `mindthegap` provides utilities to manage air-gapped image bundles, 
-    both creating image bundles and seeding images from a bundle into 
-    an existing OCI registry or directly loading them to `containerd`.
+        `mindthegap` provides utilities to manage air-gapped image bundles, 
+        both creating image bundles and seeding images from a bundle into 
+        an existing OCI registry or directly loading them to `containerd`.
 
     This makes it possible with `mindthegap` to
 
@@ -32,8 +32,8 @@ Please select the method to transfer the images: -
     Kinetica provides two `mindthegap` yaml files which list all the necessary images
     for Kinetica for Kubernetes.
 
-    * [CPU only]()
-    * [ CPU & nVidia CUDA GPU]()
+    * [CPU only](../../mind_the_gap_cpu.yaml)
+    * [ CPU & nVidia CUDA GPU](../../mind_the_gap_gpu.yaml)
 
     ### Install `mindthegap`
 
@@ -113,9 +113,11 @@ Please select the method to transfer the images: -
     ```
 
     !!! warning "`-n=k8s.io`"
-        Whilst it is possible to use `ctr images import kinetica-k8s-cpu-{{kinetica_full_version}}.rc-3.tar` 
-        to import the image in order for the image to be visible to Kubernets it is necessary 
-        to specify `-n=k8s.io`.
+        It is possible to use `ctr images import kinetica-k8s-cpu-{{kinetica_full_version}}.rc-3.tar` 
+        to import the image to `containerd`.
+
+        However, in order for the image to be visible to the Kubernetes Cluster
+        running on `containerd` it is necessary to add the parameter `-n=k8s.io`.
 
     ### containerd - Verifying the image is available
 

@@ -182,8 +182,6 @@ nav:
               - GPU: GettingStarted/installation_gpu.md
           - Amazon EKS: GettingStarted/eks.md
           - Azure AKS: GettingStarted/aks.md
-          - KinD: GettingStarted/kind.md
-          - k3s: GettingStarted/k3s.md
       - Advanced Topics:
           - Advanced/index.md
           - Alternative Charts: Advanced/alternative_charts.md
