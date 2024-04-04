@@ -3,7 +3,7 @@ hide:
   - navigation
   - toc
 ---
-# :material-radar: Operations
+# Operations
 
 <div class="grid cards" markdown>
 -   :simple-prometheus:{ .lg .middle } __Metrics__

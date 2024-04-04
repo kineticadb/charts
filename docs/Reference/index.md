@@ -5,7 +5,7 @@ hide:
 tags:
   - Reference
 ---
-# :material-library: Reference Section
+# Reference Section
 
 <div class="grid cards" markdown>
 -   :simple-helm:{ .lg .middle } __Kinetica Operators Helm__

@@ -81,6 +81,35 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=traefik  --node-name kinetica-master --token 12345" K3S_KUBECONFIG_OUTPUT=~/.kube/config_k3s K3S_KUBECONFIG_MODE=644 INSTALL_K3S_VERSION=v1.29.2+k3s1 sh -
     ```
 
+    Once installed we need to set the current Kubernetes context to point to the newly
+    created k3s cluster.
+
+    Select if you want local or remote access to the Kubernetes Cluster: -
+
+    === "Local Access"
+        For only local access to the cluster we can simply set the `KUBECONFIG` 
+        environment variable
+
+        ``` shell title="Set kubectl context"
+        export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+        ```
+    === "Remote Access"
+        For remote access i.e. outside the host/VM k3s is installed on: -
+
+        Copy `/etc/rancher/k3s/k3s.yaml` on your machine located 
+        outside the cluster as `~/.kube/config`. 
+        Then edit the file and replace the value of the server 
+        field with the IP or name of your K3s server.
+
+        ```shell title="Copy the kube config and set the context"
+        sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+        mkdir -p ~/.kube
+        sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+        sudo chown "${USER:=$(/usr/bin/logname)}:$USER" ~/.kube/config
+        # Edit the ~/.kube/config server field with the IP or name of your K3s server here
+        export KUBECONFIG=~/.kube/config
+        ```
+
     #### K3s - Install kinetica-operators including a sample db to try out
 
     Review the values file `charts/kinetica-operators/values.onPrem.k3s.yaml`. 

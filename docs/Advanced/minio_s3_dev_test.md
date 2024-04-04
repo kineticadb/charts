@@ -20,8 +20,15 @@ the Kinetica storage class `kinetica-k8s-sample-storageclass`.
 
 ![create_tenant.png](..%2Fimages%2Fminio%2Fcreate_tenant.png)
 
-In that tenant we created a bucket `kinetica-cold-storage` and in that bucket we
-created the path `gpudb/cold-storage`.
+!!! tip "Console Port Forward"
+    Forward the minio console for our newly created tenant
+
+    ```shell
+    kubectl port-forward service/kinetica-console -n gpudb 9443:9443
+    ```
+
+In that tenant we create a bucket `kinetica-cold-storage` and in that bucket we
+create the path `gpudb/cold-storage`.
 
 ![create_path_in_bucket.png](..%2Fimages%2Fminio%2Fcreate_path_in_bucket.png)
 
