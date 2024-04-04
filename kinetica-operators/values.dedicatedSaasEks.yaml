@@ -64,8 +64,8 @@ ingressNginx:
   defaultBackend:
     enabled: true
     image:
-      repository: docker.io/kineticadevcloud/kinetica-default-backend
-      tag: v0.0.1
+      repository: docker.io/kineticastaging/kinetica-default-backend
+      tag: v7.2.0-4.rc-1
       digest: ""
     nodeSelector:
       access: public

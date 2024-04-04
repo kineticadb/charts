@@ -102,7 +102,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
         field with the IP or name of your K3s server.
 
         ```shell title="Copy the kube config and set the context"
-        sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+        sudo chmod 600 /etc/rancher/k3s/k3s.yaml
         mkdir -p ~/.kube
         sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
         sudo chown "${USER:=$(/usr/bin/logname)}:$USER" ~/.kube/config
