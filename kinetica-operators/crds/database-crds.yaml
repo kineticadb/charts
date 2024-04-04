@@ -1432,8 +1432,9 @@ spec:
                     additionalProperties:
                       type: string
                     description: "NodeGroups - List of NodeGroups for this cluster
-                      MUST contain at least the following keys * infra * infra_public
-                      * compute * aaw_cpu \n NOTE: Marked as optional but is mandatory"
+                      MUST contain at least the following keys * none * infra * infra_public
+                      * compute * compute-gpu * aaw_cpu \n NOTE: Marked as optional
+                      but is mandatory"
                     type: object
                   otelTracing:
                     description: OTELTracing - OpenTelemetry Tracing Specifics
@@ -2979,6 +2980,7 @@ spec:
                       ai:
                         default:
                           apiProvider: sqlgpt
+                          apiUrl: https://sqlgpt.io/api/sql/suggest
                         properties:
                           apiKey:
                             type: string
@@ -2988,8 +2990,10 @@ spec:
                               is "sqlgpt"
                             enum:
                             - sqlgpt
+                            - kineticallm
                             type: string
                           apiUrl:
+                            default: https://sqlgpt.io/api/sql/suggest
                             type: string
                         required:
                         - apiProvider
