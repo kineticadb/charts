@@ -47,7 +47,7 @@ openldap:
     enabled: true
     existingClaim: ""
     accessMode: "ReadWriteOnce"
-    size: 1Mi
+    size: 1Gi
     storageClass: "local-path"
 
 db:

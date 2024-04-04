@@ -38,7 +38,21 @@ kubectl -n gpudb get po gpudb-0 -w
 
 until it reaches `"gpudb-0  3/3  Running"` at which point the database should be ready and all other software installed
 in the cluster. You may have to run this command in a different terminal if the `helm` command from step 4 has not yet
-returned to the system prompt. Once running, you can quit this kubectl watch command using *ctrl-c*.
+returned to the system prompt. Once running, you can quit this kubectl watch command using ++ctrl+c++.
+
+??? failure "error no pod named gpudb-0"
+    If you receive an error message running `kubectl -n gpudb get po gpudb-0 -w` informing you that no pod
+    named `gpudb-0` exists. Please check that the OpenLDAP pod is running by running
+
+    ```shell title="Check OpenLDAP status"
+    kubectl -n gpudb get pods
+    kubectl -n gpudb describe pod openldap-5f87f77c8b-trpmf
+    ```
+
+    where the pod name `openldap-5f87f77c8b-trpmf` is that shown when running `kubectl -n gpudb get pods`
+
+    Validate if the pod is waiting for it's Persistent Volume Claim/Persistent Volume to be created
+    and bound to the pod.
 
 ### Accessing the Kinetica installation
 
