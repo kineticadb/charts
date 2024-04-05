@@ -122,7 +122,7 @@ This chart will install the Kinetica K8s operators together with a default confi
 Add the repo locally as *kinetica-operators*:
 
 ``` sh title="Helm repo add"
-helm repo add kinetica-operators https://kineticadb.github.io/charts
+helm repo add kinetica-operators https://kineticadb.github.io/charts/latest
 ```
 
 ??? example "Helm Repo Add"
@@ -134,7 +134,7 @@ For the generic Kubernetes install use the following values file without modific
 Advanced users with specific requirements may need to adjust parameters in this file.
 
 ``` sh title="Helm values.yaml download"
-wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k8s.yaml
+wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k8s.yaml
 ```
 
 ### Determine the following prior to the chart install
