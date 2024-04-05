@@ -1,3 +1,4 @@
+*[CCM]: Kubernetes Cloud Controller Manager
 *[CRD]: Kubernetes Custom Resource Definition
 *[CR]: Kubernetes Custom Resource
 *[CSP]: Cloud Service Provider

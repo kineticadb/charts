@@ -11,6 +11,10 @@ For our example we are going to enable a Kubernetes based LoadBalancer to issue
 IP addresses to our Kubernetes Services of type `LoadBalancer` using
 [`kube-vip`](https://kube-vip.io/).
 
+??? example "Ingress Service is pending"
+    The `ingress-nginx-controller` is currently in the `pending` state as there is no CCM/LoadBalancer
+    ![pending_service.gif](..%2Fimages%2Fkube_vip%2Fpending_service.gif)
+
 ## `kube-vip`
 
 We will install two components into our Kubernetes CLuster
@@ -25,6 +29,8 @@ We will install two components into our Kubernetes CLuster
     an IP address for Services of type LoadBalancer similar to what 
     public cloud providers allow through a Kubernetes CCM.
 
+??? example "Install the kube-vip CCM"
+    ![kube_vip_install_ccm.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_ccm.gif)
 
 ```shell title="Install the kube-vip CCM"
 kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/main/manifest/kube-vip-cloud-controller.yaml
@@ -32,7 +38,10 @@ kubectl apply -f https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provi
 
 Now we need to setup the required RBAC permissions: -
 
-```shell
+??? example "Install the kube-vip RBAC"
+    ![kube_vip_install_rbac.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_rbac.gif)
+
+```shell title="Install kube-vip RBAC"
 kubectl apply -f https://kube-vip.io/manifests/rbac.yaml
 ```
 
@@ -40,7 +49,10 @@ The following ConfigMap will configure the `kube-vip-cloud-controller` to obtain
 IP addresses from the host networks DHCP server. i.e. the DHCP
 on the physical network that the host machine or VM is connected to.
 
-```yaml
+??? example "Install the kube-vip ConfigMap"
+    ![kube_vip_install_configmap.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_configmap.gif)
+
+```yaml title="Install the kube-vip ConfigMap"
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -54,7 +66,21 @@ It is possible to specify IP address ranges see [here](https://kube-vip.io/docs/
 
 ### Kubernetes Load-Balancer Service
 
-```yaml
+??? example "Obtain the Master Node IP address & Interface name"
+    ![kube_vip_install_ip_a.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_ip_a.gif)
+
+```shell title="Obtain the Master Node IP address & Interface name"
+ip a
+```
+
+In this example the network interface of the master node is `192.168.2.180` and the interface is
+`enp0s1`.
+
+We need to apply the `kube-vip` daemonset but first we 
+??? example "Install the kube-vip Daemonset"
+    ![kube_vip_install_daemonset.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_daemonset.gif)
+
+```yaml title="Install the kube-vip Daemonset"
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -138,9 +164,33 @@ spec:
   updateStrategy: {}
 ```
 
-Example showing DHCP allocated external IP address to the Ingress Controller.
+!!! note "ARP or BGP"
+    The Daemonset above uses ARP to communicate with the network it is also possible to use BGP.
+    [**_See Here_**](https://kube-vip.io/docs/installation/daemonset/#bgp-example-for-daemonset)
 
-![ingress_not_pending.png](..%2Fimages%2Fingress_not_pending.png)
+??? example "Example showing DHCP allocated external IP address to the Ingress Controller"
+    ![ingress_not_pending.png](..%2Fimages%2Fingress_not_pending.png)
+
+Our `ingress-nginx-controller` has been allocated the IP Address `192.168.2.194`.  
+
+!!! note "Ingress Access"
+    The `ingress-niginx-controller` requires the host FQDN to be on the user requests in order to know
+    how to route the requests to the correct Kubernetes Service. Using the iP address in the URL will cause
+    an error as ingress cannot select the correct service.
+
+??? example "List Ingress"
+    ![kube_vip_get_ing.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_get_ing.gif)
+
+![get_ing.png](..%2Fimages%2Fkube_vip%2Fget_ing.png)
+
+If you did not set the FQDN of the Kinetica Cluster to a DNS resolvable hostname add `local.kinetica`
+to your `/etc/hosts/` file in order to be able to access the Kinetica URLs
+
+??? example "Edit /etc/hosts"
+    ![kube_vip_etc_hosts.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_etc_hosts.gif)
+
+!!! success "Accessing the Workbench"
+    You should be able to access the workbench at [http://local.kinetica](http://local.kinetica "Workbench URL")
+
 
 ---
-[:material-arrow-expand-up:  Home](../index.md "Home Page")

@@ -81,7 +81,9 @@ returned to the system prompt. Once running, you can quit this kubectl watch com
      ```
 
      Option 2: Use your custom domain
-     Create a record in your DNS server pointing to the LoadBalancer DNS. Then edit the KineticaCluster Custom Resource and Workbench Custom Resource with the correct domain name, as mentioned above.
+     Create a record in your DNS server pointing to the LoadBalancer DNS. 
+     Then edit the KineticaCluster Custom Resource and Workbench Custom Resource with 
+     the correct domain name, as mentioned above.
 
 === "local - dev"
     Installing on a local machine which does not have a domain name,
