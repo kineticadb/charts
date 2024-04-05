@@ -100,7 +100,7 @@ persistence:
   # storageClass: "-"
   accessMode: ReadWriteOnce
    # existingClaim: ""  
-  size: 1Gi
+  size: 1Mi
   storageClass: "local-path"
 
 resources:
