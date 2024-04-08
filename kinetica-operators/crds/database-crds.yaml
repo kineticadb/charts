@@ -14279,6 +14279,11 @@ spec:
                       & Grafana or have a separate PV for each.   Default: true'
                     type: boolean
                   sharedPVResources:
+                    default:
+                      limits:
+                        storage: 100Gi
+                      requests:
+                        storage: 10Gi
                     description: Resource block specifically for use with SharedPV
                       = true to set storage `requests` & `limits`
                     properties:
