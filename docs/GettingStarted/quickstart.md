@@ -53,6 +53,8 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     
     ##### Kind - Install the  Kinetica-Operators Chart
 
+    --8<-- "docs/GettingStarted/helm_repo_add.md"
+
     ``` sh title="Get & install the Kinetica-Operators Chart"
     wget https://raw.githubusercontent.com/kineticadb/charts/{{kinetica_full_version}}/kinetica-operators/values.onPrem.kind.yaml
 
@@ -122,13 +124,15 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     If you are on a local machine which is not having a domain name, 
     you add the following entry to your `/etc/hosts` file or equivalent.
     
-    ``` sh title="Configure local acces - /etc/hosts"
+    ```shell title="Configure local acces - /etc/hosts"
     127.0.0.1  local.kinetica
     ```
    
     #### K3S - Install the  Kinetica-Operators Chart (CPU)
 
-    ``` sh 
+    --8<-- "docs/GettingStarted/helm_repo_add.md"
+
+    ``` shell title="Download Template values.yaml" 
     wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k3s.yaml
     
     helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
