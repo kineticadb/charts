@@ -20,6 +20,12 @@ the Kinetica storage class `kinetica-k8s-sample-storageclass`.
 
 ![create_tenant.png](..%2Fimages%2Fminio%2Fcreate_tenant.png)
 
+or use the minio kubectl plugin
+
+```shell title="minio cli - create tenant"
+kubectl minio tenant create kinetica --capacity 32Gi --servers 1 --volumes 1 --namespace gpudb --storage-class kinetica-k8s-sample-storageclass --disable-tls
+```
+
 !!! tip "Console Port Forward"
     Forward the minio console for our newly created tenant
 
@@ -52,7 +58,7 @@ If we look in the `gpudb` name space we can see that Minio created a
 Kubernetes service called `minio` exposed on port `443`.   
 
 In the `coldStorageS3` we need to add an `endpoint` field which contains the `minio`
-service name and the namespace `gpudb` i.e. `s3://https://minio.gpudb.svc.cluster.local`.
+service name and the namespace `gpudb` i.e. `minio.gpudb.svc.cluster.local`.
 
 ```yaml title="`KineticaCluster coldStorageTier` S3 Configuration"
 spec:
@@ -61,12 +67,16 @@ spec:
       tieredStorage:
         coldStorageTier:
           coldStorageS3:
-            name: ''
+        coldStorageTier:
+            coldStorageType: s3
+            coldStorageS3:
             basePath: gpudb/cold-storage/
             bucketName: kinetica-cold-storage
-            useVirtualAddressing: false
+            endpoint: minio.gpudb.svc.cluster.local:80
+            limit: "32Gi"
+            useHttps: false
             useManagedCredentials: false
-            endpoint: s3://https://minio.gpudb.svc.cluster.local
+            useVirtualAddressing: false
             awsSecretAccessKey: 6rLaOOddP3KStwPDhf47XLHREPdBqdav
             awsAccessKeyId: VvlP5rHbQqzcYPHG
       tieredStrategy:
