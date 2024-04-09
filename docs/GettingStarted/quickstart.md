@@ -31,7 +31,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     #### Create Kind Cluster 1.29
     
     ``` sh title="Create a new Kind Cluster"
-    wget https://raw.githubusercontent.com/kineticadb/charts/{{kinetica_full_version}}/kinetica-operators/kind.yaml
+    wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/kind.yaml
     kind create cluster --name kinetica --config kind.yaml
     ```
 
@@ -56,7 +56,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     --8<-- "docs/GettingStarted/helm_repo_add.md"
 
     ``` sh title="Get & install the Kinetica-Operators Chart"
-    wget https://raw.githubusercontent.com/kineticadb/charts/{{kinetica_full_version}}/kinetica-operators/values.onPrem.kind.yaml
+    wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.kind.yaml
 
     helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
@@ -133,7 +133,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     --8<-- "docs/GettingStarted/helm_repo_add.md"
 
     ``` shell title="Download Template values.yaml" 
-    wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k3s.yaml
+    wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k3s.yaml
     
     helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
@@ -152,7 +152,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     provided you are in a nvidia gpu capable machine.
     
     ``` sh title="k3s GPU Installation"
-    wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k3s.gpu.yaml
+    wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k3s.gpu.yaml
     
     helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
