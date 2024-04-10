@@ -6,15 +6,15 @@
 
     ### Required Container Images
     #### docker.io (Required Kinetica Images for All Installations)
-    * docker.io/kineticastagingcloud/kinetica-k8s-operator:v7.2.0-3.rc-3
-        * docker.io/kineticastagingcloud/kinetica-k8s-cpu:v7.2.0-3.rc-3 **or** 
-        * docker.io/kineticastagingcloud/kinetica-k8s-cpu-avx512:v7.2.0-3.rc-3 **or** 
-        * docker.io/kineticastagingcloud/kinetica-k8s-gpu:v7.2.0-3.rc-3
-    * docker.io/kineticastagingcloud/workbench-operator:v7.2.0-3.rc-3
-    * docker.io/kineticastagingcloud/workbench:v7.2.0-3.rc-3
-    * docker.io/kineticastagingcloud/kinetica-k8s-monitor:v7.2.0-3.rc-3
-    * docker.io/kineticastagingcloud/busybox:v7.2.0-3.rc-3
-    * docker.io/kineticastagingcloud/fluent-bit:v7.2.0-3.rc-3
+    * docker.io/kinetica/kinetica-k8s-operator:v7.2.0-3.rc-3
+        * docker.io/kinetica/kinetica-k8s-cpu:v7.2.0-3.rc-3 **or** 
+        * docker.io/kinetica/kinetica-k8s-cpu-avx512:v7.2.0-3.rc-3 **or** 
+        * docker.io/kinetica/kinetica-k8s-gpu:v7.2.0-3.rc-3
+    * docker.io/kinetica/workbench-operator:v7.2.0-3.rc-3
+    * docker.io/kinetica/workbench:v7.2.0-3.rc-3
+    * docker.io/kinetica/kinetica-k8s-monitor:v7.2.0-3.rc-3
+    * docker.io/kinetica/busybox:v7.2.0-3.rc-3
+    * docker.io/kinetica/fluent-bit:v7.2.0-3.rc-3
     * docker.io/kinetica/kagent:7.1.9.15.20230823123615.ga
 
     #### nvcr.io (Required Kinetica Images for GPU Installations using `kinetica-k8s-gpu`)

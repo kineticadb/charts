@@ -47,7 +47,7 @@ metadata:
 spec:
   executeSqlLimit: 10000
   fqdn: kinetica-cluster.saas.kinetica.com
-  image: kineticastagingcloud/workbench:v7.1.9-8.rc1
+  image: kinetica/workbench:v7.1.9-8.rc1
   letsEncrypt:
     enabled: false
   userIdleTimeout: 60

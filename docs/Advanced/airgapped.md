@@ -91,14 +91,14 @@ Please select the method to transfer the images: -
     Similar to `docker pull` we can use `ctr image pull` so to pull the core Kinetica DB cpu based image
 
     ``` shell title="Pull a remote image (containerd)"
-    ctr image pull docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
+    ctr image pull docker.io/kinetica/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
 
     We now need to export the pulled image as an archive to the local filesystem.
 
     ``` shell title="Export a local image (containerd)"
     ctr image export kinetica-k8s-cpu-{{kinetica_full_version}}.tar \
-    docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
+    docker.io/kinetica/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
 
     We can now transfer this archive (`kinetica-k8s-cpu-{{kinetica_full_version}}.tar`) to the Kubernetes Node inside 
@@ -139,12 +139,12 @@ Please select the method to transfer the images: -
     an OCI Container Registry in the air gapped environment.
 
     ``` shell title="Pull a remote image (docker)"
-    docker pull --platformlinux/amd64 docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
+    docker pull --platformlinux/amd64 docker.io/kinetica/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
 
     ``` shell title="Export a local image (docker)"
     docker export --platformlinux/amd64 -o kinetica-k8s-cpu-{{kinetica_full_version}}.tar \
-    docker.io/kineticastagingcloud/kinetica-k8s-cpu:{{kinetica_full_version}}
+    docker.io/kinetica/kinetica-k8s-cpu:{{kinetica_full_version}}
     ```
     
     We can now transfer this archive (`kinetica-k8s-cpu-{{kinetica_full_version}}.rc-3.tar`) to the Kubernetes Node inside 
