@@ -66,8 +66,6 @@ spec:
     config:
       tieredStorage:
         coldStorageTier:
-          coldStorageS3:
-        coldStorageTier:
             coldStorageType: s3
             coldStorageS3:
             basePath: gpudb/cold-storage/
