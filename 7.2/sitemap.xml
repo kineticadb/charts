@@ -131,6 +131,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://www.kinetica.com/7.2/GettingStarted/local_kinetica_etc_hosts/</loc>
+         <lastmod>2024-04-11</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/preparation_and_prerequisites/</loc>
          <lastmod>2024-04-11</lastmod>
          <changefreq>daily</changefreq>
