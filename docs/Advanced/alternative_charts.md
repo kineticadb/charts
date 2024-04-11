@@ -34,7 +34,3 @@ kinetica-operators kinetica-operators/kinetica-operators \
 ```
 
 ---
-
-[:octicons-arrow-left-24: Advanced Topics](index.md "Advanced Topic Page")
-
-[:material-arrow-expand-up: Home](../index.md "Home Page")

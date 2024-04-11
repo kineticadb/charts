@@ -239,3 +239,4 @@ helm install -n kinetica-system kinetica-operators kinetica-operators/kinetica-o
 --set wbOperator.image.tag=v7.1.9-7.rc3
 ```
 
+---

@@ -63,3 +63,5 @@ Username as per the values file mentioned above is kadmin and password is Kineti
 ```bash
 /usr/local/bin/k3s-uninstall.sh
 ```
+
+---

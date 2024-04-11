@@ -356,10 +356,3 @@ data:
 2. This exposes the postgres proxy port on the default `5432` port. If you wish to change this to a non-standard port then it needs to be changed here but also in the Helm `values.yaml` to match.<br/>
 3. This port is the Table Monitor port and should always be exposed alongside the Postgres Proxy.
 ---
-
-[:octicons-arrow-left-24: Ingress Configuration](ingress_configuration.md "Ingress Configuration")
-
-[:octicons-arrow-up-24:  Advanced Topics](index.md "Advanced Topics")
-
----
-

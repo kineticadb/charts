@@ -134,4 +134,4 @@ kubectl -n gpudb edit $(kubectl -n gpudb get wb -o name)
 Create a record in your DNS server pointing to the LoadBalancer DNS. Then edit the KineticaCluster Custom Resource and Workbench Custom Resource with the correct domain name, as mentioned above.
 
 
-
+---

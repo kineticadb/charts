@@ -35,3 +35,5 @@ helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-o
 You should be able to access the workbench at [http://local.kinetica](http://local.kinetica)
 
 Username as per the values file mentioned above is kadmin and password is Kinetica1234!
+
+---

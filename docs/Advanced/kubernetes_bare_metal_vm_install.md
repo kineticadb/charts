@@ -396,4 +396,3 @@ kubectl -n gpudb get po gpudb-0 -w
     `LoadBalancer` are stuck in the `Pending` state.
 
 ---
-[:material-arrow-expand-up:  Home](../index.md "Home Page")

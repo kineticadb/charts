@@ -26,4 +26,4 @@ tags:
     [:octicons-arrow-right-24: GPU](installation_gpu.md)
 </div>
 
-[:material-arrow-expand-up: Home](../index.md "Home Page")
+---

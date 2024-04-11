@@ -112,10 +112,4 @@ ip a
     Continue installing your new VMs by following 
     [**Bare Metal/VM Installation**](kubernetes_bare_metal_vm_install.md "Install Kubernetes and Kinetica")
 
-
-
-
-
-
-
-
+---

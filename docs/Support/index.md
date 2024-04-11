@@ -33,6 +33,4 @@ tags:
     [:octicons-arrow-right-24: FAQ](../Help/faq.md)
 </div>
 
-[//]: # (* [Help & Tutorials]&#40;../Help/help_and_tutorials.md&#41;)
-
-[//]: # (* [Troubleshooting]&#40;../Troubleshooting/troubleshooting.md&#41;)
+---

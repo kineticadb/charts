@@ -55,6 +55,8 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     --8<-- "docs/GettingStarted/helm_repo_add.md"
 
+    --8<-- "docs/GettingStarted/local_kinetica_etc_hosts.md"
+
     ``` sh title="Get & install the Kinetica-Operators Chart"
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.kind.yaml
 
@@ -117,16 +119,8 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     Review the values file `charts/kinetica-operators/values.onPrem.k3s.yaml`. 
     This is trying to install the operators and a simple db with workbench installation 
     for a non production try out.
-    
-    As you can see it is trying to create an ingress pointing towards `local.kinetica`. 
-    If you have a domain pointing to your machine, replace it with the correct domain name.
-    
-    If you are on a local machine which is not having a domain name, 
-    you add the following entry to your `/etc/hosts` file or equivalent.
-    
-    ```shell title="Configure local acces - /etc/hosts"
-    127.0.0.1  local.kinetica
-    ```
+
+    --8<-- "docs/GettingStarted/local_kinetica_etc_hosts.md"
    
     #### K3S - Install the  Kinetica-Operators Chart (CPU)
 

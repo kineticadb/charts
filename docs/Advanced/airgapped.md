@@ -157,3 +157,5 @@ Please select the method to transfer the images: -
     ``` shell title="Import the Images"
     docker import --platformlinux/amd64 kinetica-k8s-cpu-{{kinetica_full_version}}.tar registry:repository/kinetica-k8s-cpu:v7.2.0-3.rc-3
     ```
+
+---

@@ -66,3 +66,4 @@ i.e. what is in the `.spec.gpudbCluster.clusterName` in the KineticaCluster CR.
 | `/tablecolumninlineview`  | `cluster-name-reveal-service` | `reveal` (8088/TCP)         |
 | `/sqlmetricinlineview`  | `cluster-name-reveal-service` | `reveal` (8088/TCP)         |
 
+---

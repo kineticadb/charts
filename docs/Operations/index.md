@@ -39,6 +39,4 @@ hide:
     [:octicons-arrow-right-24: Backup & Restore](backup_and_restore.md)
 </div>
 
-[//]: # (* [Metrics & Monitoring]&#40;../Monitoring/metrics_and_monitoring.md&#41;)
-
-[//]: # (* [OpenTelemetry]&#40;&#41;)
+---

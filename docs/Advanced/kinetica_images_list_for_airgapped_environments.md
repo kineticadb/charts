@@ -56,3 +56,5 @@
 
     1. It is preferable on an Intel AVX512 enabled CPU to use the kinetica-k8s-cpu-avx512 container image
     2. With a supported nVidia GPU.
+
+---
