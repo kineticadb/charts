@@ -107,6 +107,8 @@ We can put the DB on the GPU nodes and our infrastructure components on CPU only
         kubectl label node k8snode2 app.kinetica.com/pool=compute-gpu
     ```
 
+    --8<-- "docs/GettingStarted/note_additional_gpu_sqlassistant.md"
+
     ---
 
 !!! warning "Pods Not Scheduling"

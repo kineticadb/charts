@@ -13,12 +13,14 @@ follow this generic guide to install the Kinetica Operators, Database and Workbe
 !!! warning "Preparation & Prequisites"
     Please make sure you have followed the [Preparation & Prequisites steps](preparation_and_prerequisites.md)
 
-### Install the helm chart
+### Install via the `kinetica-operators` Helm Chart
+
+#### GPU Cluster with Remote SQLAssistant
 
 Run the following Helm install command after substituting values from
 [section 3](preparation_and_prerequisites.md#3-determine-the-following-prior-to-the-chart-install)
 
-``` sh title="Helm install kinetica-operators"
+``` sh title="Helm install kinetica-operators (No On-Prem SQLAssistant)"
 helm -n kinetica-system install \
 kinetica-operators kinetica-operators/kinetica-operators \
 --create-namespace \
@@ -27,6 +29,24 @@ kinetica-operators kinetica-operators/kinetica-operators \
 --set dbAdminUser.password="PASSWORD" \
 --set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
 ```
+
+#### GPU Cluster with On-Prem SQLAssistant 
+
+or to enable SQLAssistant to be deployed and run 'On-Prem' i.e. in the same cluster
+
+``` sh hl_lines="8" title="Helm install kinetica-operators (With On-Prem SQLAssistant)"
+helm -n kinetica-system install \
+kinetica-operators kinetica-operators/kinetica-operators \
+--create-namespace \
+--values values.onPrem.k8s.yaml \
+--set db.gpudbCluster.license="LICENSE-KEY" \
+--set dbAdminUser.password="PASSWORD" \
+--set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
+--set db.gpudbCluster.config.ai.apiProvider = "kineticallm"
+```
+
+
+--8<-- "docs/GettingStarted/note_additional_gpu_sqlassistant.md"
 
 ### Check installation progress
 
