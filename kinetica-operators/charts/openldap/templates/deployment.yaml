@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: {{ .Values.openldapNamespace | default "gpudb"}}
-  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
-  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
   name:  {{ template "openldap.fullname" . }}
   labels:
     app: {{ template "openldap.name" . }}

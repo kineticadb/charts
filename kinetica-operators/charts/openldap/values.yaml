@@ -19,7 +19,7 @@ global:
   sslLdapPort: 636
   enableTls: false
 replicaCount: 1
-
+openldapNamespace: gpudb
 # Define deployment strategy - IMPORTANT: use rollingUpdate: null when use Recreate strategy.
 # It prevents from merging with existing map keys which are forbidden.
 strategy: {}

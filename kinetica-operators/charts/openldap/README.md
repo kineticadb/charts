@@ -17,7 +17,8 @@ It will confirm that we can do an ldapsearch with the default credentials
     
 ```bash
 openldapPassword=$(kubectl -n gpudb get secrets openldap -o json | jq '.data.LDAP_ADMIN_PASSWORD' | tr -d '"' | base64 -d)
-command="kubectl -n gpudb exec -it $(kubectl -n gpudb get pods -l app=openldap -o name) -- ldapsearch -x -H ldap://localhost -b dc=kinetica,dc=com -D "cn=admin,dc=kinetica,dc=com" -w ${openldapPassword}"
+openldapPort=$(kubectl -n gpudb get cm openldap-env -o json| jq '.data.LDAP_PORT_NUMBER'| tr -d '"')
+command="kubectl -n gpudb exec -it $(kubectl -n gpudb get pods -l app=openldap -o name) -- ldapsearch -x -H ldap://localhost:${openldapPort} -b dc=kinetica,dc=com -D "cn=admin,dc=kinetica,dc=com" -w ${openldapPassword}"
 eval $command
 
 # just the schema names

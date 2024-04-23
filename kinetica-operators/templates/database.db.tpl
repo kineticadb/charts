@@ -4,12 +4,29 @@
     {{- if (lookup "v1" "Service" "stats" "stats-loki") }}
       {{- $externalLoki = true }}
     {{- end }}
+    {{- $payAsYouGo := .Values.db.payAsYouGo }}
+    {{- if eq (typeOf .Values.db.payAsYouGo) "string" }}
+      {{- $payAsYouGo = false }}
+      {{- if eq .Values.db.payAsYouGo "true" }}
+        {{- $payAsYouGo = true }}
+      {{- end }}
+    {{- end}}
    
-    {{- if not .Values.db.payAsYouGo }}
+    {{- if not $payAsYouGo }}
         {{- if or (not .Values.db.gpudbCluster.license) (eq .Values.db.gpudbCluster.license "payg") }}
             {{- fail "License Key is needed for BYOL, use --set db.gpudbCluster.license=your_license_key" }}
         {{- end }}
     {{- end }}
+    
+    {{- $gpuAcceleration := .Values.db.gpudbCluster.gpuAcceleration }}
+    {{- if eq (typeOf .Values.db.gpudbCluster.gpuAcceleration) "string" }}
+      {{- $gpuAcceleration = false }}
+      {{- if eq .Values.db.gpudbCluster.gpuAcceleration "true" }}
+        {{- $gpuAcceleration = true }}
+      {{- end }}
+    {{- end }}
+    
+
 apiVersion: app.kinetica.com/v1
 kind: KineticaCluster
 metadata:
@@ -28,7 +45,7 @@ spec:
     inactivityDuration: {{ .Values.db.autoSuspend.inactivityDuration }}
   {{- end }}
   debug: {{ default false .Values.db.debug }}
-  payAsYouGo: {{ .Values.db.payAsYouGo }}
+  payAsYouGo: {{ $payAsYouGo }}
   {{- if and (eq .Values.environment "marketPlace") (eq .Values.provider "eks") }}
   awsConfig:
     clusterName: {{ required "Name of eks cluster is requried" .Values.db.awsConfig.clusterName }}
@@ -111,7 +128,7 @@ spec:
       environment: {{ .Values.db.gpudbCluster.letsEncrypt.environment | default "staging" }}
     podManagementPolicy: Parallel
     license: {{ .Values.db.gpudbCluster.license | default "payg" }}
-    {{- if .Values.db.gpudbCluster.gpuAcceleration  }}
+    {{- if $gpuAcceleration  }}
     image: "{{ .Values.db.gpudbCluster.image.cuda.image.repository }}:{{ .Values.db.gpudbCluster.image.cuda.image.tag}}"
     {{- else }}
     image: "{{ .Values.db.gpudbCluster.image.standard.image.repository }}:{{ .Values.db.gpudbCluster.image.standard.image.tag}}"

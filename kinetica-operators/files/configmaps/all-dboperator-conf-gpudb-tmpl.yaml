@@ -2519,11 +2519,15 @@ gpudb_conf.tmpl: |
 
   fluentbit_address = ${gaia.host0.address}
   fluentbit_port = 5170
-gpudb_conf_cold_storage_az_blob.tmpl: |-
+gpudb_conf_cold_storage_az_blob.tmpl: |
   tier.cold0.default.type = azure
-  tier.cold0.default.wait_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.WaitTimeout }}
-  tier.cold0.default.connection_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ConnectionTimeout }}
+
   tier.cold0.default.base_path = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.BasePath }}
+  tier.cold0.default.connection_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ConnectionTimeout }}
+  tier.cold0.default.use_https = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.UseHttps }}
+  tier.cold0.default.use_managed_credentials = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.UseManagedCredentials }}
+  tier.cold0.default.wait_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.WaitTimeout }}
+
   tier.cold0.default.azure_container_name = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ContainerName}}
   tier.cold0.default.azure_storage_account_name = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.StorageAccountName}}
   tier.cold0.default.azure_storage_account_key = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.StorageAccountKey}}
@@ -2532,7 +2536,6 @@ gpudb_conf_cold_storage_az_blob.tmpl: |-
   {{ if .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ClientID }}tier.cold0.default.azure_client_id = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ClientID }}{{ end }}
   {{ if .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ClientSecret }}tier.cold0.default.azure_client_secret = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.ClientSecret }}{{ end }}
   {{ if .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.TenantID }}tier.cold0.default.azure_tenant_id = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.TenantID }}{{ end }}
-  {{ if .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.UseManagedCredentials }}tier.cold0.default.use_managed_credentials = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageAzure.UseManagedCredentials }}{{ end }}
 gpudb_conf_cold_storage_disk.tmpl: |-
   tier.cold0.default.type = disk
   tier.cold0.default.base_path = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageDisk.BasePath}}
@@ -2547,17 +2550,22 @@ gpudb_conf_cold_storage_hdfs.tmpl: |
   tier.cold0.default.hdfs_principal = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageHDFS.URI}}
   tier.cold0.default.hdfs_use_kerberos = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageHDFS.UseKerberos}}
   tier.cold0.default.hdfs_kerberos_keytab = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageHDFS.KerberosKeytab}}
-gpudb_conf_cold_storage_s3.tmpl: |2-
+gpudb_conf_cold_storage_s3.tmpl: |2
 
   tier.cold0.default.type = s3
-  tier.cold0.default.use_managed_credentials = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.UseManagedCredentials }}
+
   tier.cold0.default.base_path = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.BasePath }}
-  tier.cold0.default.wait_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.WaitTimeout }}
-  tier.cold0.default.s3_region = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Region }}
   tier.cold0.default.connection_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.ConnectionTimeout }}
-  tier.cold0.default.s3_bucket_name = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.BucketName }}
+  tier.cold0.default.use_https = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.UseHttps }}
+  tier.cold0.default.use_managed_credentials = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.UseManagedCredentials }}
+  tier.cold0.default.wait_timeout = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.WaitTimeout }}
+
   tier.cold0.default.s3_aws_access_key_id = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.AWSAccessKeyId }}
   tier.cold0.default.s3_aws_secret_access_key = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.AWSSecretAccessKey }}
+  tier.cold0.default.s3_bucket_name = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.BucketName }}
+  tier.cold0.default.s3_endpoint = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Endpoint }}
+  tier.cold0.default.s3_region = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Region }}
+  tier.cold0.default.s3_use_virtual_addressing = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.UseVirtualAddressing }}
 
   {{ if .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.AWSRoleARN }}tier.cold0.default.s3_aws_role_arn = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.AWSRoleARN }}{{ end }}
   {{/*  's3_encryption_type'     :   This is optional and valid values are sse-s3 (Encryption key is managed by Amazon S3) and sse-kms (Encryption key is managed by AWS Key Management Service (kms)) */}}

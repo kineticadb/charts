@@ -7,9 +7,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
-  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
-  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
+  namespace: {{ .Values.openldapNamespace | default "gpudb"}}  
   name: {{ template "openldap.fullname" . }}-env
   labels:
     app: {{ template "openldap.name" . }}

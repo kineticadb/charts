@@ -13,7 +13,7 @@ nodes:
     image: kindest/node:v1.29.1@sha256:a0cc28af37cf39b019e2b448c54d1a3f789de32536cb5a5db61a49623e527144
     kubeadmConfigPatches:
       - |
-        kind: JoinConfiguration
+        kind: InitConfiguration
         nodeRegistration:
           kubeletExtraArgs:
             node-labels: "ingress-ready=true"

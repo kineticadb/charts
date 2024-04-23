@@ -3,7 +3,6 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   namespace: {{ .Values.openldapNamespace | default "gpudb"}}
-  namespace: {{ .Values.openldapNamespace | default "gpudb"}}
   name: {{ template "openldap.fullname" . }}
   labels:
     app: {{ template "openldap.name" . }}
