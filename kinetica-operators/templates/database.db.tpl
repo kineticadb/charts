@@ -222,6 +222,8 @@ spec:
           coldStorageType: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageType }}
           {{- if eq .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageType "s3" }}
           coldStorageS3:
+            region: "{{ .Values.clusterRegion }}"
+            endpoint: "s3.{{ .Values.clusterRegion }}.amazonaws.com"
             basePath: "gpudb/cold-storage/"
             bucketName: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageS3.bucketName }}
           {{- end }}
