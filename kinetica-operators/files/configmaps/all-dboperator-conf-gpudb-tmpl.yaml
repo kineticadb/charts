@@ -1039,12 +1039,11 @@ gpudb_conf.tmpl: |
   # URL of Ranger REST API.  E.g., https://localhost:6080/
   # Leave blank for no Ranger Server
   #security.external.ranger.url =
-  #security.external.ranger.url = {{ .Cluster.Spec.GPUDBCluster.Config.Security.ExternalSecurity.Ranger.ExtURL }}
   {{ if .Cluster.Spec.GPUDBCluster.Config.Security.ExternalSecurity.Ranger.ExtURL }}security.external.ranger.url = {{ .Cluster.Spec.GPUDBCluster.Config.Security.ExternalSecurity.Ranger.ExtURL }}{{ else }}security.external.ranger.url = {{ end }}
 
   # Name of the service created on the Ranger Server to manage this Kinetica instance
   #security.external.ranger.service_name = kinetica
-  security.external.ranger.service_name = {{ .Cluster.Spec.GPUDBCluster.Config.Security.ExternalSecurity.Ranger.Name }}
+  security.external.ranger.service_name = {{ if .Cluster.Spec.GPUDBCluster.Config.Security.ExternalSecurity.Ranger.Name }}{{ .Cluster.Spec.GPUDBCluster.Config.Security.ExternalSecurity.Ranger.Name }}{{ else }}kinetica{{ end }}
 
   # Maximum minutes to hold on to data from Ranger
   #security.external.ranger.cache_minutes = 60
@@ -1620,11 +1619,11 @@ gpudb_conf.tmpl: |
 
   # Table of contents size for IndexedDb object file store
   # Removed in 7.2
-  # indexdb_toc_size = {{ .Cluster.Spec.GPUDBCluster.Config.Persistence.IndexDBTOCSize }}
+  # indexdb_toc_size = {{ if .Cluster.Spec.GPUDBCluster.Config.Persistence.IndexDBTOCSize }}{{ .Cluster.Spec.GPUDBCluster.Config.Persistence.IndexDBTOCSize }}{{ end }}
 
   # Maximum number of open files for IndexedDb object file store
   # Removed in 7.2
-  # indexdb_max_open_files = {{ .Cluster.Spec.GPUDBCluster.Config.Persistence.IndexDBMaxOpenFiles }}
+  # indexdb_max_open_files = {{ if .Cluster.Spec.GPUDBCluster.Config.Persistence.IndexDBMaxOpenFiles }}{{ .Cluster.Spec.GPUDBCluster.Config.Persistence.IndexDBMaxOpenFiles }}{{ end }}
 
   # Disable detection of sparse file support and use the full file length
   # which may be an over-estimate of the actual usage in the persist tier.
@@ -2563,7 +2562,7 @@ gpudb_conf_cold_storage_s3.tmpl: |2
   tier.cold0.default.s3_aws_access_key_id = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.AWSAccessKeyId }}
   tier.cold0.default.s3_aws_secret_access_key = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.AWSSecretAccessKey }}
   tier.cold0.default.s3_bucket_name = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.BucketName }}
-  tier.cold0.default.s3_endpoint = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Endpoint }}
+  tier.cold0.default.s3_endpoint = {{ if .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Endpoint }}{{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Endpoint }}{{ end }}
   tier.cold0.default.s3_region = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.Region }}
   tier.cold0.default.s3_use_virtual_addressing = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.ColdStorageTier.ColdStorageS3.UseVirtualAddressing }}
 
