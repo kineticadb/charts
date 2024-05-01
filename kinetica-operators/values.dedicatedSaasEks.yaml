@@ -67,24 +67,16 @@ ingressNginx:
       repository: docker.io/kineticadevcloud/kinetica-default-backend
       tag: v0.0.1
       digest: ""
-    nodeSelector:
-      access: public
     extraEnvs:
       - name: DEBUG
         value: "false"
   controller:
-    nodeSelector:
-      access: public
     allowSnippetAnnotations: true
     service:
       annotations:
         'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
         'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': tcp
         'service.beta.kubernetes.io/aws-load-balancer-type': nlb
-    admissionWebhooks:
-      patch:
-        nodeSelector:
-          access: public
 gpuOperator:
   install: false
   "gpu-operator":
