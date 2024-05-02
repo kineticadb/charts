@@ -4,17 +4,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: amazon-cloudwatch
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: gpudb
   labels:
     app.kubernetes.io/name: kinetica-operators

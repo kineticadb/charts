@@ -1,6 +1,0 @@
-cluster.name: "{{ .Values.clusterName }}"
-http.port: '2020'
-http.server: "On"
-logs.region: "{{ .Values.clusterRegion }}"
-read.head: "Off"
-read.tail: "On"

@@ -159,7 +159,7 @@ initTLSSecret:
   image:
     registry: docker.io
     repository: alpine/openssl
-    tag: latest
+    tag: 3.1.4
     ## @param image.pullPolicy openssl image pull policy
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
