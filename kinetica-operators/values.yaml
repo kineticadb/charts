@@ -42,7 +42,7 @@ wbOperator:
   install: true
   image:
     repository: "docker.io/kineticadevcloud/workbench-operator"
-    tag: "v7.2.0-7.dev-1-operator"
+    tag: "v7.2.0-7.dev-2-operator"
     digest: ""
 dbOperator:
   install: true
@@ -50,7 +50,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "docker.io/kineticadevcloud/kinetica-k8s-operator"
-    tag: "v7.2.0-7.dev-1-operator"
+    tag: "v7.2.0-7.dev-2-operator"
     digest: ""
 
 nodeSelector: {}
@@ -122,7 +122,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
       - name: openldap-create-directory-structure
-        image: "docker.io/kineticadevcloud/busybox:v7.2.0-7.dev-1"
+        image: "docker.io/kineticadevcloud/busybox:v7.2.0-7.dev-2"
         command:
           [
             "sh",
@@ -177,7 +177,7 @@ db:
   hostManagerMonitor:
     image:
       repository: "docker.io/kineticadevcloud/kinetica-k8s-monitor"
-      tag: "v7.2.0-7.dev-1"
+      tag: "v7.2.0-7.dev-2"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -199,11 +199,11 @@ db:
         busybox:
           image:
             repository: "docker.io/kineticadevcloud/busybox"
-            tag: "v7.2.0-7.dev-1"
+            tag: "v7.2.0-7.dev-2"
         socat:
           image:
             repository: "docker.io/kineticadevcloud/socat"
-            tag: "v7.2.0-7.dev-1"
+            tag: "v7.2.0-7.dev-2"
   stats:
     isEnabled: false
   gadmin:
@@ -231,16 +231,16 @@ db:
       cuda:
         image:
           repository: "docker.io/kineticadevcloud/kinetica-k8s-cuda"
-          tag: "v7.2.0-7.dev-1-amd64"
+          tag: "v7.2.0-7.dev-2-amd64"
       standard:
         image:
-          # you should be able to use docker.io/kineticadevcloud/kinetica-k8s-cpu-avx512:v7.2.0-7.dev-1 also
+          # you should be able to use docker.io/kineticadevcloud/kinetica-k8s-cpu-avx512:v7.2.0-7.dev-2 also
           repository: "docker.io/kineticadevcloud/kinetica-k8s-cpu"
-          tag:  "v7.2.0-7.dev-1"
+          tag:  "v7.2.0-7.dev-2"
     metricsRegistryRepositoryTag:
       image:
         repository: "docker.io/kineticadevcloud/fluent-bit"
-        tag: "v7.2.0-7.dev-1"
+        tag: "v7.2.0-7.dev-2"
     config:
       postgresProxy:
          enablePostgresProxy: true
@@ -281,7 +281,7 @@ dbWorkbench:
     
   image:
     repository: "docker.io/kineticadevcloud/workbench"
-    tag: "v7.2.0-7.dev-1"
+    tag: "v7.2.0-7.dev-2"
   
 
   
