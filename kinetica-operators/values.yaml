@@ -41,16 +41,16 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.0-7.dev-5-operator"
+    repository: "docker.io/kineticastagingcloud/workbench-operator"
+    tag: "v7.2.0-7.rc-5-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.0-7.dev-5-operator"
+    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
+    tag: "v7.2.0-7.rc-5-operator"
     digest: ""
 
 nodeSelector: {}
@@ -122,7 +122,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
       - name: openldap-create-directory-structure
-        image: "kinetica.azurecr.io/dev/busybox:v7.2.0-7.dev-5"
+        image: "docker.io/kineticastagingcloud/busybox:v7.2.0-7.rc-5"
         command:
           [
             "sh",
@@ -176,8 +176,8 @@ db:
   
   hostManagerMonitor:
     image:
-      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.0-7.dev-5"
+      repository: "docker.io/kineticastagingcloud/kinetica-k8s-monitor"
+      tag: "v7.2.0-7.rc-5"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -198,12 +198,12 @@ db:
   supportingImages:
         busybox:
           image:
-            repository: "kinetica.azurecr.io/dev/busybox"
-            tag: "v7.2.0-7.dev-5"
+            repository: "docker.io/kineticastagingcloud/busybox"
+            tag: "v7.2.0-7.rc-5"
         socat:
           image:
-            repository: "kinetica.azurecr.io/dev/socat"
-            tag: "v7.2.0-7.dev-5"
+            repository: "docker.io/kineticastagingcloud/socat"
+            tag: "v7.2.0-7.rc-5"
   stats:
     isEnabled: false
   gadmin:
@@ -230,17 +230,17 @@ db:
     image:
       cuda:
         image:
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.0-7.dev-5-amd64"
+          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cuda"
+          tag: "v7.2.0-7.rc-5-amd64"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.0-7.dev-5 also
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu"
-          tag:  "v7.2.0-7.dev-5"
+          # you should be able to use docker.io/kineticastagingcloud/kinetica-k8s-cpu-avx512:v7.2.0-7.rc-5 also
+          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cpu"
+          tag:  "v7.2.0-7.rc-5"
     metricsRegistryRepositoryTag:
       image:
-        repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.0-7.dev-5"
+        repository: "docker.io/kineticastagingcloud/fluent-bit"
+        tag: "v7.2.0-7.rc-5"
     config:
       postgresProxy:
          enablePostgresProxy: true
@@ -280,8 +280,8 @@ dbWorkbench:
   nodeSelector: {}
     
   image:
-    repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.0-7.dev-5"
+    repository: "docker.io/kineticastagingcloud/workbench"
+    tag: "v7.2.0-7.rc-5"
   
 
   
