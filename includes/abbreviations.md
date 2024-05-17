@@ -6,3 +6,4 @@
 *[CSI]: Kubernetes Container Storage Interface
 *[CNI]: Kubernetes Container Network Interface
 *[VRAM]: VRAM is, in principle, the same thing as CPU system RAM but for the use of the GPU.
+*[OTEL]: OpenTelemetry
