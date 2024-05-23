@@ -4,6 +4,7 @@ hide:
   - toc
 tags:
   - Getting Started
+  - Installation
 ---
 # :material-shovel: Preparation & Prerequisites
 

@@ -1,10 +1,20 @@
-# :simple-prometheus: MetricsCollection & Display
+---
+hide:
+  - navigation
+tags:
+  - Operations
+  - Monitoring
+---
+# :simple-prometheus: Metrics Collection & Display
 
 It is possible to forward/server the Kinetica on Kubernetes metrics via an OpenTelemetry [OTEL] collector. 
 
-By default an OpenTeleletry Collector is deployed in the `kinetica-system` namespace as part of the Helm install of the
+By default an OpenTelemetry Collector is deployed in the `kinetica-system` namespace as part of the Helm install of the
 the kinetica-operators Helm chart along with a Kubernetes ConfigMap to configure this collector. The ConfigMap is in the 
 `kinetica-system` namespace and is called `otel-collector-conf`.
+
+!!! note "Detailed `otel-collector-conf` setup"
+    For more details on the Kinetica installed OTEL Collector please see [here](../Operations/otel.md).
 
 There are many supported mechanisms to expose the metrics here are a few possibilities: -
 
@@ -12,7 +22,7 @@ There are many supported mechanisms to expose the metrics here are a few possibi
 * `prometheusexporter` - allows the metrics to be scraped by a Prometheus server
 
 !!! tip
-    For a full list of supported OTEL exporters, including those for AWS, Azure and many databases please 
+    For a full list of supported OTEL exporters, including those for Grafana Cloud, AWS, Azure and many databases please 
     see [here](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter)
 
 ## `prometheusremotewriteexporter` Prometheus OTEL Remote Write Exporter

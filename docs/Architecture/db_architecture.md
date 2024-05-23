@@ -1,3 +1,10 @@
+---
+hide:
+  - navigation
+  - toc
+tags:
+  - Architecture
+---
 # :material-database: Architecture
 
 Kinetica is a distributed, vectorized, memory-first, columnar database with tiered storage
@@ -73,4 +80,3 @@ Sharding logic is embedded directly within client APIs enabling linear scale-out
 from the node where the data lives.
 
 ----
-

@@ -3,6 +3,7 @@ hide:
   - navigation
   - toc
 tags:
+  - EKS
   - Getting Started
   - Storage
 ---

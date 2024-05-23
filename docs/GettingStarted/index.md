@@ -3,7 +3,8 @@ hide:
   - navigation
   - toc
 tags:
-- Getting Started
+  - Getting Started
+  - Installation
 ---
 # Getting Started
 

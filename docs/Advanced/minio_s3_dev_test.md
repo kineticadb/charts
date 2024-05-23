@@ -3,10 +3,12 @@ hide:
   - navigation
 tags:
   - Advanced
+  - Development  
+  - Installation
   - Storage
 status: new
 ---
-# Using [Minio](https://min.io/) for S3 Storage in Dev/Test :material-new-box:
+# :simple-minio: Using [Minio](https://min.io/) for S3 Storage in Dev/Test :material-new-box:
 
 !!! note "If you require a new Minio installation"
     Please follow the installation instructions found 
@@ -60,7 +62,7 @@ Kubernetes service called `minio` exposed on port `443`.
 In the `coldStorageS3` we need to add an `endpoint` field which contains the `minio`
 service name and the namespace `gpudb` i.e. `minio.gpudb.svc.cluster.local`.
 
-```yaml title="`KineticaCluster coldStorageTier` S3 Configuration"
+```yaml title="KineticaCluster coldStorageTier S3 Configuration"
 spec:
   gpudbCluster:
     config:
@@ -80,10 +82,5 @@ spec:
       tieredStrategy:
         default: VRAM 1, RAM 5, PERSIST 5, COLD0 10
 ```
----
-
-### Velero Backups
-
-#### Coming Soon
 
 ---

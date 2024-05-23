@@ -3,7 +3,9 @@ hide:
   - navigation
 tags:
   - Advanced  
+  - Configuration
   - Ingress
+icon: simple-nginx
 ---
 # :simple-nginx: `ingress-nginx` Ingress Configuration
 

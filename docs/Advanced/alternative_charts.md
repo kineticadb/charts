@@ -3,7 +3,8 @@ hide:
   - navigation
   - toc
 tags:
-- Advanced
+    - Advanced
+    - Installation
 ---
 # :simple-helm: Using Alternative Helm Charts
 

@@ -2,8 +2,10 @@
 hide:
   - navigation
   - toc
+tags:
+  - Operations
 ---
-# Operations
+# Operational Management
 
 <div class="grid cards" markdown>
 -   :simple-prometheus:{ .lg .middle } __Metrics__
@@ -12,7 +14,7 @@ hide:
 
     Collecting and storing metrics as time series data.
     <br/><br/><br/>
-    [:octicons-arrow-right-24: Metrics](../Monitoring/metrics_and_monitoring.md)
+    [:octicons-arrow-right-24: Metrics](../Monitoring/metrics.md)
 
 -   :material-text-box:{ .lg .middle } __Logs__
 
@@ -37,6 +39,26 @@ hide:
     Backup & Restore of the Kinetica DB.
     <br/><br/><br/>
     [:octicons-arrow-right-24: Backup & Restore](backup_and_restore.md)
+    !!! note
+    This requires [Velero](https://velero.io/docs/v1.13/basic-install/ "Velero Installation Page") to be installed on the Kubernetes Cluster.
+
+
+-   :material-lightbulb-on:{ .lg .middle } __Reduce Costs__
+
+    ---
+
+    Suspend & Resume  Kinetica for Kubernetes.
+    <br/><br/><br/>
+    [:octicons-arrow-right-24: Suspend & Resume](suspend_resume.md)
+
+-   :material-scale-balance:{ .lg .middle } __Database Rebalancing__
+
+    ---
+
+    Kinetica for Kubernetes Data Sharding & Rebalancing.
+    <br/><br/>
+    [:octicons-arrow-right-24: Rebalancing](rebalance.md)
+
 </div>
 
 ---

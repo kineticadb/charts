@@ -2,6 +2,8 @@
 hide:
   - navigation
   - toc
+tags:
+  - Advanced
 ---
 # Advanced Topics
 
@@ -47,22 +49,13 @@ hide:
 
     [:octicons-arrow-right-24: min.io](minio_s3_dev_test.md "S3 Buckets for Dev/Test")
 
--   :material-backup-restore:{ .lg .middle } __Installing Velero for Backup/Restore__
-
-    ---
-
-    Install [Velero](https://velero.io/) in order to enable Kinetica for Kubernetes 
-    Backup/Restore functionality.
-    <br/><br/>
-    [:octicons-arrow-right-24: Velero](velero_backup_restore.md "Backup/Restore Engine")
-
 - :material-kubernetes:{ .lg .middle } __Creating Resources with Kubernetes APIs__ :material-new-box:
 
     ---
 
     Create Users, Roles, DB Schema etc. using Kubernertes CRs.
-    <br/><br/><br/><br/>
-    [:octicons-arrow-right-24: Resources](../KubernetesResources/index.md "Kinetica CR for Resource Management")
+    <br/><br/>
+    [:octicons-arrow-right-24: Resources](../Administration/index.md "Kinetica CR for Resource Management")
 
   -   :material-apple:{ .lg .middle } __Kinetica on OS X (Apple Silicon)__ :simple-arm: :material-dev-to: :material-new-box:
 
@@ -99,4 +92,3 @@ hide:
 </div>
 
 --- 
-

@@ -76,14 +76,6 @@ plugins:
       skip_classes:
         - skip-lightbox
       auto_caption: true
-  - blog:
-      post_date_format: medium
-      categories_allowed:
-        - Helm
-        - Kubernetes
-        - Kinetica DB
-        - Kinetica Workbench
-        - Kinetica
   - search
   - minify:
       minify_html: true
@@ -198,10 +190,10 @@ nav:
           - Metrics & Monitoring: Monitoring/metrics_and_monitoring.md
           - Logs: Monitoring/logs.md
           - OpenTelemetry: Operations/otel.md
-  - Creating Resources:
-      - KubernetesResources/index.md
-      - User Management: KubernetesResources/user_management.md
-      - Role Management: KubernetesResources/role_management.md
+  - Administration:
+      - Administration/index.md
+      - User Management: Administration/user_management.md
+      - Role Management: Administration/role_management.md
   - Architecture & Design:
       - Architecture/index.md
       - Architecture:
@@ -233,6 +225,8 @@ nav:
 extra:
   status:
     new: Recently added
+    deprecated: Will be removed in a future version
+    beta: Upcoming functionality (Dev Only)
   tag:
     Storage: storage
     Ingress: ingress
@@ -250,4 +244,3 @@ extra:
 
 watch:
     - includes
-

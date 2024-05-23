@@ -3,6 +3,7 @@ hide:
   - navigation
   - toc
 tags:
+  - AKS
   - Getting Started
 ---
 # Azure AKS Specifics

@@ -4,6 +4,8 @@ hide:
 tags:
   - Advanced
   - Ingress
+  - Installation
+status: new
 ---
 # Kubernetes Cluster LoadBalancer for Bare Metal/VM Installations
 
@@ -76,11 +78,9 @@ ip a
 In this example the network interface of the master node is `192.168.2.180` and the interface is
 `enp0s1`.
 
-We need to apply the `kube-vip` daemonset but first we 
-??? example "Install the kube-vip Daemonset"
-    ![kube_vip_install_daemonset.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_daemonset.gif)
+We need to apply the `kube-vip` daemonset but first we need to create the configuration
 
-```yaml title="Install the kube-vip Daemonset"
+```yaml title="Install the kube-vip Daemonset" linenums="1" hl_lines="5 7 12 16 38 62"
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -142,7 +142,7 @@ spec:
         - name: vip_retryperiod
           value: "1"
         - name: address
-          value: 192.168.3.199
+          value: 192.168.2.180
         - name: prometheus_server
           value: :2112
         image: ghcr.io/kube-vip/kube-vip:v0.7.2
@@ -163,6 +163,11 @@ spec:
         operator: Exists
   updateStrategy: {}
 ```
+
+Lines 5, 7, 12, 16, 38 and 62 need modifying to your environment.
+
+??? example "Install the kube-vip Daemonset"
+    ![kube_vip_install_daemonset.gif](..%2Fimages%2Fkube_vip%2Fkube_vip_install_daemonset.gif)
 
 !!! note "ARP or BGP"
     The Daemonset above uses ARP to communicate with the network it is also possible to use BGP.

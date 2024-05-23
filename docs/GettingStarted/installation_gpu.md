@@ -2,7 +2,7 @@
 hide:
   - navigation
 tags:
-  - Getting Started
+  - Installation
 icon: material/emoticon-happy
 ---
 # :simple-nvidia: Installation - CPU with GPU Acceleration

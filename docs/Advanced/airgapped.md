@@ -3,8 +3,9 @@ hide:
   - navigation
 tags:
   - Advanced
+  - Installation
 ---
-# Air-Gapped Environments
+# :material-connection: Air-Gapped Environments
 
 ## Obtaining the Kinetica Images
 

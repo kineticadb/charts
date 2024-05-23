@@ -2,6 +2,8 @@
 hide:
   - navigation
   - toc
+tags:
+  - Administration
 ---
 # :fontawesome-solid-user-group: Role Management
 

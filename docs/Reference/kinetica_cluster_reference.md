@@ -3,6 +3,8 @@ hide:
   - navigation
 tags:
   - Reference
+  - Installation
+  - Operations
 ---
 # :material-kubernetes: Core DB CRDs
 

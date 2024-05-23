@@ -4,14 +4,15 @@ hide:
 glightbox.auto_caption: true
 tags:
   - Advanced
+  - Development
 ---
 # :material-apple: Kinetica DB on Kubernetes :simple-arm:
 
-This walkthrough will show how to install Kinetica DB on a Mac running OS X.  
-The Kubernetes cluster will be running on VMs with Ubuntu Linux 22.04 ARM64. 
+This walkthrough will show how to install Kinetica DB on a Mac running OS X. The Kubernetes cluster will be
+running on VMs with Ubuntu Linux 22.04 ARM64. 
 
 This solution is equivalent to a production bare metal installation and does 
-not use Docker or QEMU but rather Apple native Virtualization.
+not use Docker, Podman or QEMU but rather Apple native Virtualization.
 
 The Kubernetes cluster will consist of one Master node `k8smaster1`
 and two Worker nodes `k8snode1` & `k8snode2`.
@@ -23,7 +24,7 @@ The virtualization platform is [UTM](https://mac.getutm.app/).
     Please contact [Kinetica Support](mailto:support@kinetica.com "Kinetica Support Email") to request a trial key.
 
 
-Download and install UTM.
+Download and install [UTM](https://mac.getutm.app/).
 
 ## Create the VMs
 

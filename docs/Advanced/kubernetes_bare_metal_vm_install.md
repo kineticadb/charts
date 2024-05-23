@@ -3,8 +3,23 @@ hide:
   - navigation
 tags:
   - Advanced
+  - Installation
+status: new
 ---
 # Bare Metal/VM Installation - `kubeadm`
+
+This walkthrough will show how to install Kinetica DB. For this example the Kubernetes cluster will be
+running on 3 VMs with Ubuntu Linux 22.04 (ARM64).
+
+This solution is equivalent to a production bare metal installation and does
+not use Docker, Podman or QEMU.
+
+The Kubernetes cluster requires 3 VMs consiting of one Master node `k8smaster1`
+and two Worker nodes `k8snode1` & `k8snode2`.
+ 
+!!! example "Purple Example Boxes"
+    The purple boxes in the instructions below can be expanded for a screen recording of the 
+    commands & their results.
 
 ## Kubernetes Node Installation
 

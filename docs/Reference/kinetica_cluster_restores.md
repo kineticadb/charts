@@ -3,6 +3,7 @@ hide:
   - navigation
 tags:
   - Reference
+  - Operations
 ---
 # Kinetica Cluster Restores Reference
 

@@ -2,9 +2,11 @@
 hide:
     - navigation
 tags:
+    - Development
     - Getting Started
+    - Installation
 ---
-# :material-clock-fast: Quickstart
+# :material-clock-fast: Quickstart :material-dev-to:
 
 For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Homepage") or
 [k3s](https://k3s.io "k3s Homepage").

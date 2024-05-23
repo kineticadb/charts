@@ -2,8 +2,10 @@
 hide:
   - navigation
   - toc
+tags:
+  - Administration
 ---
-# Managing the Kinetica System using Kubernetes Resources
+# Administration
 
 <div class="grid cards" markdown>
 -   :material-kubernetes:{ .lg .middle } __DB Clusters__
@@ -82,9 +84,7 @@ hide:
     !!! note
         This requires [Velero](https://velero.io/docs/v1.13/basic-install/ "Velero Installation Page") to be installed on the Kubernetes Cluster.
 
-    [:octicons-arrow-right-24: KineticaBackup](cluster_backup.md "DB Backup Management")
-
-[//]: # (    [:octicons-arrow-right-24: KineticaBackup]&#40;kinetica_cluster_backups.md "DB Backup Management"&#41;)
+    [:octicons-arrow-right-24: KineticaBackup](../Operations/backup_and_restore.md "DB Backup Management")
 
 -   :material-backup-restore:{ .lg .middle } __DB Restore__
 
@@ -94,9 +94,7 @@ hide:
     !!! note
         This requires [Velero](https://velero.io/docs/v1.13/basic-install/ "Velero Installation Page") to be installed on the Kubernetes Cluster.
 
-    :octicons-arrow-right-24: KineticaRestore
-
-[//]: # (    [:octicons-arrow-right-24: KineticaRestore]&#40;kinetica_cluster_restores.md "DB Restore Management"&#41;)
+    [:octicons-arrow-right-24: KineticaRestore](../Operations/backup_and_restore.md#restore "DB Restore Management")
 </div>
 
 [:material-arrow-expand-up:  Home](../index.md "Home Page")

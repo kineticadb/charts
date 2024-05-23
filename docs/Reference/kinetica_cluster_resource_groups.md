@@ -3,6 +3,7 @@ hide:
   - navigation
 tags:
   - Reference
+  - Administration
 ---
 # Kinetica Cluster Resource Groups CRD Reference
 

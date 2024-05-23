@@ -2,7 +2,7 @@
 hide:
   - navigation
 tags:
-  - Getting Started
+  - Installation
 ---
 
 # :simple-intel: :simple-amd: :simple-arm: Installation - CPU Only 

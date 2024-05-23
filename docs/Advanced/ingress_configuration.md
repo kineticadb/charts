@@ -3,11 +3,12 @@ hide:
   - navigation
   - toc
 tags:
+  - Advanced
+  - Configuration
   - Ingress
 
 status: new
-subtitle: Nullam urna elit, malesuada eget finibus ut, ac tortor
-icon: material/emoticon-happy
+subtitle: Configure Ingress to Kinetica for Kubernetes
 ---
 # :simple-ingress: Ingress Configuration
 

@@ -1,4 +1,17 @@
+---
+hide:
+  - navigation
+tags:
+  - Configuration
+  - Operations
+  - Monitoring
+---
 # OTEL Integration for Metric & Log Distribution
+
+!!! note title "Helm installed OTEL Collector"
+    By default an OpenTelemetry Collector is deployed in the `kinetica-system` namespace as part of the Helm install of the
+    the kinetica-operators Helm chart along with a Kubernetes ConfigMap to configure this collector. The ConfigMap is in the
+    `kinetica-system` namespace and is called `otel-collector-conf`.
 
 The Kinetica DB Operators send information to an OpenTelemetry collector. There are two choices
 

@@ -2,6 +2,9 @@
 hide:
   - navigation
   - toc
+tags:
+  - Getting Started
+  - Installation
 ---
 
 # Kinetica for Kubernetes Setup
