@@ -103,6 +103,24 @@ spec:
         {{- include "kinetica-operators.db.image" .Values.db.supportingImages.socat.image | nindent 8 }}
   stats:
     isEnabled: {{ .Values.db.stats.isEnabled }}
+    {{- if eq (kindOf .Values.db.stats.image)  "map"}}
+    {{- include "kinetica-operators.db.image" .Values.db.stats.image | nindent 4 }}
+    {{- end }}
+  grafana:
+    isEnabled: {{ .Values.db.grafana.isEnabled }}
+    {{- if eq (kindOf .Values.db.grafana.image)  "map"}}
+    {{- include "kinetica-operators.db.image" .Values.db.grafana.image | nindent 4 }}
+    {{- end }}
+  loki:
+    isEnabled: {{ .Values.db.loki.isEnabled }}
+    {{- if eq (kindOf .Values.db.loki.image)  "map"}}
+    {{- include "kinetica-operators.db.image" .Values.db.loki.image | nindent 4 }}
+    {{- end }}
+  prometheus:
+    isEnabled: {{ .Values.db.prometheus.isEnabled }}
+    {{- if eq (kindOf .Values.db.prometheus.image)  "map"}}
+    {{- include "kinetica-operators.db.image" .Values.db.prometheus.image | nindent 4 }}
+    {{- end }}
   gadmin:
     isEnabled: {{ .Values.db.gadmin.isEnabled }}
     containerPort:

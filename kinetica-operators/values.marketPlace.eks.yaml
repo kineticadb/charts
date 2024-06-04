@@ -1,160 +1,208 @@
-
 # environment refers to either of "onPrem" "saas" "marketPlace"
 # "saas" "marketPlace" are used by Kinetica only
 # for a customer trying to install the chart on his own wherever, it should be onPrem
-environment: "marketPlace"
-# onPrem Providers: "k3s" "kind" "eks" "aks" 
+environment: 'marketPlace'
+# onPrem Providers: "k3s" "kind" "eks" "aks"
 # saas Providers: eks
 # marketPlace Providers: aks eks
 provider: eks
 
 # clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
 # its used in the monitoring related configmaps
-clusterName: ""
-clusterRegion: ""
-
+# CHANGE
+clusterName: ''
+# CHANGE
+clusterRegion: ''
 kubeRbacProxy:
-    image:
-      repository: "quay.io/brancz/kube-rbac-proxy"
-      tag: "v0.14.2"
-
-kubeStateMetrics:
-  install: false
   image:
-    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
-    tag: "v2.10.1"
+    repository: 'quay.io/brancz/kube-rbac-proxy'
+    tag: 'v0.14.2'
 otelCollector:
   install: true
   image:
-    repository: "otel/opentelemetry-collector-contrib"
-    tag: "0.89.0"
-
-cloudwatchAgent:
-  image:
-    repository: "public.ecr.aws/cloudwatch-agent/cloudwatch-agent"
-    tag: "1.247350.0b251814"
-fluentBit:
-  image:
-    repository: "public.ecr.aws/aws-observability/aws-for-fluent-bit"
-    tag: "2.25.0"
-
-
-
+    repository: 'otel/opentelemetry-collector-contrib'
+    tag: '0.95.0'
 nodeSelector:
   app.kinetica.com/pool: infra
-tolerations: []
-affinity: {}
 
+wbOperator:
+  install: true
+  image:
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.0-8.dev-1-operator"
+    digest: ""
+dbOperator:
+  install: true
+  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
+  aadpodidbinding: ""
+  image:
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.0-8.dev-1-operator"
+    digest: ""
 certManager:
   install: true
-"cert-manager":
+'cert-manager':
+  image:
+    repository: 'quay.io/jetstack/cert-manager-controller'
+    tag: 'v1.13.3'
   installCRDs: 'true'
   namespace: kinetica-system
   nodeSelector:
     'app.kinetica.com/pool': 'infra'
   webhook:
+    image:
+      repository: 'quay.io/jetstack/cert-manager-webhook'
+      tag: 'v1.13.3'
     nodeSelector:
       'app.kinetica.com/pool': 'infra'
   cainjector:
+    image:
+      repository: 'quay.io/jetstack/cert-manager-cainjector'
+      tag: 'v1.13.3'
     nodeSelector:
       'app.kinetica.com/pool': 'infra'
   startupapicheck:
     nodeSelector:
       'app.kinetica.com/pool': 'infra'
-  
+
 ingressNginx:
   install: true
-"ingress-nginx":
+'ingress-nginx':
   defaultBackend:
-    enabled: true
-    image:
-      repository: docker.io/kineticadevcloud/kinetica-default-backend
-      tag: v0.0.1
-      digest: ""
-    nodeSelector:
-      access: public
-    extraEnvs:
-      - name: DEBUG
-        value: "false"
+    enabled: false
   controller:
-    nodeSelector:
-      access: public
+    kind: Deployment
     allowSnippetAnnotations: true
+    containerPort:
+      http: 80
+    config:
+      enable-real-ip: 'true'
+      use-forwarded-headers: 'true'
+      log-format-upstream: '$remote_addr - $request_id - [$proxy_add_x_forwarded_for] - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status'
+
     service:
+      externalTrafficPolicy: Local
+      targetPorts:
+        https: 80
       annotations:
         'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
-        'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': tcp
         'service.beta.kubernetes.io/aws-load-balancer-type': nlb
-    admissionWebhooks:
-      patch:
-        nodeSelector:
-          access: public
+        'service.beta.kubernetes.io/aws-load-balancer-nlb-target-type': ip
+        'service.beta.kubernetes.io/aws-load-balancer-alpn-policy': HTTP2Preferred
+        'service.beta.kubernetes.io/aws-load-balancer-scheme': internet-facing
+        'service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled': true
+        'service.beta.kubernetes.io/aws-load-balancer-ssl-ports': '443'
+        'service.beta.kubernetes.io/aws-load-balancer-ssl-cert': ''
+
+    metrics:
+      enabled: true
+      service:
+        annotations:
+          prometheus.io/scrape: 'true'
+          prometheus.io/port: '10254'
+      prometheusRule:
+        enabled: true
+        rules:
+          # These are just examples rules, please adapt them to your needs
+          - alert: NGINXConfigFailed
+            expr: count(nginx_ingress_controller_config_last_reload_successful == 0) > 0
+            for: 1s
+            labels:
+              severity: critical
+            annotations:
+              description: bad ingress config - nginx config test failed
+              summary: uninstall the latest ingress changes to allow config reloads to resume
+          - alert: NGINXCertificateExpiry
+            expr: (avg(nginx_ingress_controller_ssl_expire_time_seconds) by (host) - time()) < 604800
+            for: 1s
+            labels:
+              severity: critical
+            annotations:
+              description: ssl certificate(s) will expire in less then a week
+              summary: renew expiring certificates to avoid downtime
+          - alert: NGINXTooMany500s
+            expr: 100 * ( sum( nginx_ingress_controller_requests{status=~"5.+"} ) / sum(nginx_ingress_controller_requests) ) > 5
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              description: Too many 5XXs
+              summary: More than 5% of all requests returned 5XX, this requires your attention
+          - alert: NGINXTooMany400s
+            expr: 100 * ( sum( nginx_ingress_controller_requests{status=~"4.+"} ) / sum(nginx_ingress_controller_requests) ) > 5
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              description: Too many 4XXs
+              summary: More than 5% of all requests returned 4XX, this requires your attention
 gpuOperator:
   install: false
-  "gpu-operator":
-    mig:
-      strategy: single
-    driver:
-      enabled: true
-      version: "535.54.03"
-
-    toolkit:
-      enabled: true
 openldap:
-  namespace: "gpudb"
-  fullnameOverride: "openldap"
+  namespace: 'gpudb'
+  fullnameOverride: 'openldap'
+  image:
+    repository: 'bitnami/openldap'
+    tag: '2.6.7'
   global:
     ldapPort: 1389
   initContainers:
-      - name: openldap-create-directory-structure
-        image: busybox
-        command:
-          [
-            "sh",
-            "-c",
-            "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
-          ]
-        volumeMounts:
+    - name: openldap-create-directory-structure
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.0-8.dev-1"
+      command:
+        [
+          'sh',
+          '-c',
+          'mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami',
+        ]
+      volumeMounts:
         - name: data
           mountPath: /bitnami
   env:
-    LDAP_BACKEND: "mdb"
-    LDAP_ORGANISATION: "Kinetica DB Inc."
-    LDAP_DOMAIN: "kinetica.com"
-    LDAP_LOG_LEVEL: "128"
-    LDAP_ENABLE_TLS: "no"
+    LDAP_BACKEND: 'mdb'
+    LDAP_ORGANISATION: 'Kinetica DB Inc.'
+    LDAP_DOMAIN: 'kinetica.com'
+    LDAP_LOG_LEVEL: '128'
+    LDAP_ENABLE_TLS: 'no'
   affinity: {}
   podAntiAffinity: {}
   nodeSelector:
     'app.kinetica.com/pool': 'infra'
+  initTLSSecret:
+    image:
+      registry: 'docker.io'
+      repository: 'alpine/openssl'
+      tag: '3.1.4'
+
   persistence:
     enabled: true
-    existingClaim: ""
-    accessMode: "ReadWriteOnce"
-    size: "1Gi"
-    storageClass: "gp2"
+    existingClaim: ''
+    accessMode: 'ReadWriteOnce'
+    size: '1Gi'
+    storageClass: 'gp2'
 db:
   # do you want to provision a database
   create: true
-  name: kinetica-eks-sample
+  name: ''
   namespace: gpudb
   debug: false
   autoSuspend:
     enabled: false
-  # provide a boolean to say whether its payasyougo or not
-  payAsYouGo: true
-  
+
+  # CHANGE
+  payAsYouGo:
+
   awsConfig:
-    clusterName: "cluster0-02b29224cfa7"
+    # CHANGE
+    clusterName: ''
     marketplaceApp:
-      productCode: "3an8pb6mkca98s15xadbbckwi"
+      # CHANGE
+      productCode: ''
       publicKeyVersion: 1
-  
-  
   hostManagerMonitor:
     image:
-      repository: docker.io/kineticadevcloud/kinetica-k8s-monitor
-      tag: v7.2.0-beta11
+      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
+      tag: "v7.2.0-8.dev-1"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -173,16 +221,35 @@ db:
     namespace: gpudb
     port: 1389
   supportingImages:
-        busybox:
-          image:
-            repository: docker.io/busybox
-            tag: 1.29.2
-        socat:
-          image:
-            repository: docker.io/alpine/socat
-            tag: 1.7.4.1-r2
+      busybox:
+        image:
+          repository: "kinetica.azurecr.io/dev/busybox"
+          tag: "v7.2.0-8.dev-1"
+      socat:
+        image:
+          repository: "kinetica.azurecr.io/dev/socat"
+          tag: "v7.2.0-8.dev-1"
   stats:
-    isEnabled: false
+    isEnabled: true
+    image:      
+      repository: "kinetica.azurecr.io/dev/kagent"
+      tag: "v7.2.0-8.dev-1"
+  grafana:
+    isEnabled: true
+    image:      
+      repository: "kinetica.azurecr.io/dev/kagent"
+      tag: "v7.2.0-8.dev-1"
+  loki:
+    isEnabled: true
+    image:      
+      repository: "kinetica.azurecr.io/dev/kagent"
+      tag: "v7.2.0-8.dev-1"
+  prometheus:
+    isEnabled: true
+    image:      
+      repository: "kinetica.azurecr.io/dev/kagent"
+      tag: "v7.2.0-8.dev-1"
+
   gadmin:
     isEnabled: true
   reveal:
@@ -191,98 +258,86 @@ db:
     # this applies if you have labelled node pools for compute
     hasPools: true
     clusterSize:
-      tshirtSize: XS
-      tshirtType: SmallCPU
+      # CHANGE
+      tshirtSize: ''
+      # CHANGE
+      tshirtType: ''
+    # CHANGE
     ranksPerNode: 1
-    replicas: 1
+    # CHANGE
+    replicas:
     # provide an fqdn if you want to use a custom fqdn
-    fqdn: "4ukvzgx.cloud.kinetica.com"
+    fqdn: ''
     letsEncrypt:
-      enabled: true
-  
-      # only allowed values are production and production
-      environment: "staging"
-
-    license: "payg"
+      enabled: false
+    # CHANGE
+    license: ''
+    # CHANGE
     gpuAcceleration: false
     image:
       cuda:
         image:
-          repository: docker.io/kinetica/kinetica-k8s-cuda
-          tag: v7.1.9.23-ga
+          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
+          tag: "v7.2.0-8.dev-1"
       standard:
         image:
-          repository: kineticadevcloud/kinetica-k8s-cpu-avx512
-          tag:  v7.2.0-beta11
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.0-8.dev-1 also
+          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512"
+          tag:  "v7.2.0-8.dev-1"
     metricsRegistryRepositoryTag:
       image:
-        repository: amazon/aws-for-fluent-bit
-        tag: 2.25.0
+        repository: "kinetica.azurecr.io/dev/fluent-bit"
+        tag: "v7.2.0-8.dev-1"
     config:
       postgresProxy:
-         enablePostgresProxy: true
+        enablePostgresProxy: true
       kifs:
         enable: true
         mountPoint: /gpudb/kifs
       procs:
         enable: true
       textSearch:
-        enableTextSearch: false
+        enableTextSearch: true
       tieredStorage:
         globalTier:
           colocateDisks: true
-        
+
         persistTier:
           default:
-            limit: "2Ti"
-            provisioner: "kubernetes.io/aws-ebs"            
+            # CHANGE
+            limit: ''
+            provisioner: 'kubernetes.io/aws-ebs'
             volumeClaim:
               spec:
                 storageClassName: gp2
-           
+
         diskCacheTier:
           default:
-            limit: 128Gi
-            provisioner: "kubernetes.io/aws-ebs"
+            # CHANGE
+            limit: ''
+            provisioner: 'kubernetes.io/aws-ebs'
             volumeClaim:
               spec:
                 storageClassName: gp2
-           
+
         coldStorageTier:
           coldStorageType: s3
           coldStorageS3:
-            basePath: "gpudb/cold-storage/"
-            bucketName: ""
+            basePath: 'gpudb/cold-storage/'
+            # CHANGE
+            bucketName: ''
 
 dbAdminUser:
-    create: true
-    # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
-    name: "kadmin"
-    # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
-    password: "Kinetica1234!"
+  create: true
 dbWorkbench:
   create: true
-  deploymentInfo:
-    "application_id": ""
-    "userFirstname": ""
-    "userLastname": ""
-    "customer_email": ""
-    "name": "byolDev"
-    "product": "3an8pb6mkca98s15xadbbckwi"
-    "tshirtSize": "XS"
-    "tshirtType": "SmallCPU"
-    "awsApplicationLog": ""
-
-    
-    
-  fqdn: ""
+  # CHANGE
+  fqdn: ''
+  # CHANGE
+  deploymentInfo: '{}'
   letsEncrypt:
-    enabled: true
-    environment: "staging"
-    
+    enabled: false
+  nodeSelector: {}
   image:
-    repository:  registry.harbor.kinetica.com/kineticadevcloud/workbench
-    tag: release-v7.2.0-master-149a9137
-
-  
-  
+    repository: "kinetica.azurecr.io/dev/workbench"
+    tag: "v7.2.0-8.dev-1"
