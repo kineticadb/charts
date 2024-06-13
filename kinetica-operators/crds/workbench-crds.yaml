@@ -931,6 +931,11 @@ spec:
                 description: Specify the storage class to use on the Workbench stateful
                   set
                 type: string
+              useHttps:
+                default: false
+                description: When not using LetsEncrypt, whether the workbench is
+                  secured behind SSL or not.
+                type: boolean
               userIdleTimeout:
                 default: 60
                 description: The number of minutes that a user connection remains
@@ -938,6 +943,7 @@ spec:
                 type: integer
             required:
             - fqdn
+            - useHttps
             type: object
           status:
             description: WorkbenchStatus defines the observed state of Workbench

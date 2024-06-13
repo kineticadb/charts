@@ -2099,7 +2099,7 @@ gpudb_conf.tmpl: |
 
   # Timeout in seconds for subsequent requests to wait on a locked resource
   #tier.global.concurrent_wait_timeout = 120
-  tier.global.concurrent_wait_timeout =  {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.GlobalTier.ConcurrentWaitTimeout  }}
+  tier.global.concurrent_wait_timeout =  {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage .Cluster.Spec.GPUDBCluster.Config.TieredStorage.GlobalTier }}{{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.GlobalTier.ConcurrentWaitTimeout  }}{{ else }}120{{ end }}
 
   # ------------------------------------------------------------------------------
   # VRAM Tier
@@ -2174,10 +2174,10 @@ gpudb_conf.tmpl: |
   #                      threshold.
   #
   tier.ram.default.limit = {{ .RAMTierSize }}
-  {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier.Default.HighWatermark }}
+  {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier.Default.HighWatermark }}
   tier.ram.default.high_watermark = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier.Default.HighWatermark }}
   {{ else }}tier.ram.default.high_watermark = {{ end }}
-  {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier.Default.LowWatermark }}
+  {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier.Default.LowWatermark }}
   tier.ram.default.low_watermark = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.RAMTier.Default.LowWatermark }}
   {{ else }}tier.ram.default.low_watermark = {{ end }}
 
@@ -2302,8 +2302,8 @@ gpudb_conf.tmpl: |
 
   tier.persist.default.path = ${gaia.persist_directory}
   tier.persist.default.limit = {{ .PersistSize }}
-  tier.persist.default.high_watermark = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.PersistTier.Default.HighWatermark }}
-  tier.persist.default.low_watermark = {{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.PersistTier.Default.LowWatermark }}
+  tier.persist.default.high_watermark = {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage .Cluster.Spec.GPUDBCluster.Config.TieredStorage.PersistTier }}{{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.PersistTier.Default.HighWatermark }}{{ end }}
+  tier.persist.default.low_watermark = {{ if and .Cluster.Spec.GPUDBCluster.Config.TieredStorage .Cluster.Spec.GPUDBCluster.Config.TieredStorage.PersistTier }}{{ .Cluster.Spec.GPUDBCluster.Config.TieredStorage.PersistTier.Default.LowWatermark }}{{ end }}
 
 
   # ------------------------------------------------------------------------------
