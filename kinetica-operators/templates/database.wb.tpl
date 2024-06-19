@@ -22,6 +22,7 @@ spec:
     enabled: {{ .Values.dbWorkbench.letsEncrypt.enabled }}
     environment: {{  .Values.dbWorkbench.letsEncrypt.environment | default "staging"}}
   {{- end}}
+  useHttps: {{ .Values.dbWorkbench.useHttps | default false}}
   image: "{{ .Values.dbWorkbench.image.repository }}:{{.Values.dbWorkbench.image.tag}}"
   storageClass: {{ .Values.db.name }}-storageclass
 ---

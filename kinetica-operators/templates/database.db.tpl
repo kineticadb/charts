@@ -101,32 +101,42 @@ spec:
         {{- include "kinetica-operators.db.image" .Values.db.supportingImages.busybox.image | nindent 8 }}
     socat:
         {{- include "kinetica-operators.db.image" .Values.db.supportingImages.socat.image | nindent 8 }}
+  {{- if eq (kindOf .Values.db.stats)  "map"}}
   stats:
     isEnabled: {{ .Values.db.stats.isEnabled }}
+    {{- if eq (kindOf .Values.db.alertManager)  "map"}}
     alertManager:
       isEnabled: {{ .Values.db.alertManager.isEnabled }}
       {{- if eq (kindOf .Values.db.alertManager.image)  "map"}}
       image:
         {{- include "kinetica-operators.db.image" .Values.db.alertManager.image | nindent 8 }}
       {{- end }}
+    {{- end }}
+    {{- if eq (kindOf .Values.db.grafana)  "map"}}
     grafana:
       isEnabled: {{ .Values.db.grafana.isEnabled }}
       {{- if eq (kindOf .Values.db.grafana.image)  "map"}}
       image:
         {{- include "kinetica-operators.db.image" .Values.db.grafana.image | nindent 8 }}
       {{- end }}
+    {{- end }}
+    {{- if eq (kindOf .Values.db.loki)  "map"}}
     loki:
       isEnabled: {{ .Values.db.loki.isEnabled }}
       {{- if eq (kindOf .Values.db.loki.image)  "map"}}
       image:
         {{- include "kinetica-operators.db.image" .Values.db.loki.image | nindent 8 }}
       {{- end }}
+    {{- end }}
+    {{- if eq (kindOf .Values.db.prometheus)  "map"}}
     prometheus:
       isEnabled: {{ .Values.db.prometheus.isEnabled }}
       {{- if eq (kindOf .Values.db.prometheus.image)  "map"}}
       image:
         {{- include "kinetica-operators.db.image" .Values.db.prometheus.image | nindent 8 }}
       {{- end }}
+    {{- end }}
+  {{- end }}
   gadmin:
     isEnabled: {{ .Values.db.gadmin.isEnabled }}
     containerPort:
