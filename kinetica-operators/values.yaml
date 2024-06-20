@@ -41,16 +41,16 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.0-8.dev-7-operator"
+    repository: "docker.io/kineticastagingcloud/workbench-operator"
+    tag: "v7.2.0-8.rc-7-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.0-8.dev-7-operator"
+    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
+    tag: "v7.2.0-8.rc-7-operator"
     digest: ""
 
 nodeSelector: {}
@@ -122,7 +122,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
       - name: openldap-create-directory-structure
-        image: "kinetica.azurecr.io/dev/busybox:v7.2.0-8.dev-7"
+        image: "docker.io/kineticastagingcloud/busybox:v7.2.0-8.rc-7"
         command:
           [
             "sh",
@@ -176,8 +176,8 @@ db:
   
   hostManagerMonitor:
     image:
-      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.0-8.dev-7"
+      repository: "docker.io/kineticastagingcloud/kinetica-k8s-monitor"
+      tag: "v7.2.0-8.rc-7"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -198,34 +198,34 @@ db:
   supportingImages:
         busybox:
           image:
-            repository: "kinetica.azurecr.io/dev/busybox"
-            tag: "v7.2.0-8.dev-7"
+            repository: "docker.io/kineticastagingcloud/busybox"
+            tag: "v7.2.0-8.rc-7"
         socat:
           image:
-            repository: "kinetica.azurecr.io/dev/socat"
-            tag: "v7.2.0-8.dev-7"
+            repository: "docker.io/kineticastagingcloud/socat"
+            tag: "v7.2.0-8.rc-7"
   # stats:
   #   isEnabled: false
   # alertManager:
   #   isEnabled: false
   #   image:      
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-8.dev-7"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.0-8.rc-7"
   # grafana:
   #   isEnabled: false
   #   image:      
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-8.dev-7"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.0-8.rc-7"
   # loki:
   #   isEnabled: false
   #   image:      
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-8.dev-7"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.0-8.rc-7"
   # prometheus:
   #   isEnabled: false
   #   image:      
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-8.dev-7"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.0-8.rc-7"
   gadmin:
     isEnabled: true
   reveal:
@@ -250,17 +250,17 @@ db:
     image:
       cuda:
         image:
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.0-8.dev-7-amd64"
+          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cuda"
+          tag: "v7.2.0-8.rc-7-amd64"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.0-8.dev-7 also
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu"
-          tag:  "v7.2.0-8.dev-7"
+          # you should be able to use docker.io/kineticastagingcloud/kinetica-k8s-cpu-avx512:v7.2.0-8.rc-7 also
+          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cpu"
+          tag:  "v7.2.0-8.rc-7"
     metricsRegistryRepositoryTag:
       image:
-        repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.0-8.dev-7"
+        repository: "docker.io/kineticastagingcloud/fluent-bit"
+        tag: "v7.2.0-8.rc-7"
     config:
       postgresProxy:
          enablePostgresProxy: true
@@ -300,8 +300,8 @@ dbWorkbench:
   nodeSelector: {}
     
   image:
-    repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.0-8.dev-7"
+    repository: "docker.io/kineticastagingcloud/workbench"
+    tag: "v7.2.0-8.rc-7"
   
 
   
