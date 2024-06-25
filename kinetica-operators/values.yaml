@@ -41,16 +41,16 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kinetica/workbench-operator"
-    tag: "v7.2.0-8.ga-7-operator"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.0-9.dev-4-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kinetica/kinetica-k8s-operator"
-    tag: "v7.2.0-8.ga-7-operator"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.0-9.dev-4-operator"
     digest: ""
 
 nodeSelector: {}
@@ -122,7 +122,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
       - name: openldap-create-directory-structure
-        image: "docker.io/kinetica/busybox:v7.2.0-8.ga-7"
+        image: "kinetica.azurecr.io/dev/busybox:v7.2.0-9.dev-4"
         command:
           [
             "sh",
@@ -176,8 +176,8 @@ db:
   
   hostManagerMonitor:
     image:
-      repository: "docker.io/kinetica/kinetica-k8s-monitor"
-      tag: "v7.2.0-8.ga-7"
+      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
+      tag: "v7.2.0-9.dev-4"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -198,34 +198,34 @@ db:
   supportingImages:
         busybox:
           image:
-            repository: "docker.io/kinetica/busybox"
-            tag: "v7.2.0-8.ga-7"
+            repository: "kinetica.azurecr.io/dev/busybox"
+            tag: "v7.2.0-9.dev-4"
         socat:
           image:
-            repository: "docker.io/kinetica/socat"
-            tag: "v7.2.0-8.ga-7"
+            repository: "kinetica.azurecr.io/dev/socat"
+            tag: "v7.2.0-9.dev-4"
   # stats:
   #   isEnabled: false
   # alertManager:
   #   isEnabled: false
   #   image:      
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.0-8.ga-7"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.0-9.dev-4"
   # grafana:
   #   isEnabled: false
   #   image:      
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.0-8.ga-7"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.0-9.dev-4"
   # loki:
   #   isEnabled: false
   #   image:      
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.0-8.ga-7"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.0-9.dev-4"
   # prometheus:
   #   isEnabled: false
   #   image:      
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.0-8.ga-7"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.0-9.dev-4"
   gadmin:
     isEnabled: true
   reveal:
@@ -250,17 +250,17 @@ db:
     image:
       cuda:
         image:
-          repository: "docker.io/kinetica/kinetica-k8s-cuda"
-          tag: "v7.2.0-8.ga-7-amd64"
+          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
+          tag: "v7.2.0-9.dev-4-amd64"
       standard:
         image:
-          # you should be able to use docker.io/kinetica/kinetica-k8s-cpu-avx512:v7.2.0-8.ga-7 also
-          repository: "docker.io/kinetica/kinetica-k8s-cpu"
-          tag:  "v7.2.0-8.ga-7"
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.0-9.dev-4 also
+          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu"
+          tag:  "v7.2.0-9.dev-4"
     metricsRegistryRepositoryTag:
       image:
-        repository: "docker.io/kinetica/fluent-bit"
-        tag: "v7.2.0-8.ga-7"
+        repository: "kinetica.azurecr.io/dev/fluent-bit"
+        tag: "v7.2.0-9.dev-4"
     config:
       postgresProxy:
          enablePostgresProxy: true
@@ -300,8 +300,8 @@ dbWorkbench:
   nodeSelector: {}
     
   image:
-    repository: "docker.io/kinetica/workbench"
-    tag: "v7.2.0-8.ga-7"
+    repository: "kinetica.azurecr.io/dev/workbench"
+    tag: "v7.2.0-9.dev-4"
   
 
   
