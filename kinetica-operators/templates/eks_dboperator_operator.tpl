@@ -839,7 +839,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp:
   name: kineticaoperator-manager-role
   labels:
     app.kubernetes.io/name: kinetica-operators

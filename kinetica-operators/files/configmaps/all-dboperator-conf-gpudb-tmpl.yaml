@@ -1396,6 +1396,13 @@ gpudb_conf.tmpl: |
   # This parameter should be matched with the map tiler of clients' vector tile renderer.
   vectortile_map_tiler = {{ .Cluster.Spec.GPUDBCluster.Config.Visualization.VectorTileMapTiler }}
 
+  # Hidden parameter: Avoid trying to generate vector tiles on huge amounts of geometry.
+  max_vertices_per_chunk = {{ if .Cluster.Spec.GPUDBCluster.Config.Visualization.MaxVerticesPerChunk }}{{ .Cluster.Spec.GPUDBCluster.Config.Visualization.MaxVerticesPerChunk }}{{ else }}2000000{{ end }}
+
+  # Hidden parameter: Control the maximum number of features returned per tile (per chunk);
+  # features beyond this count will be skipped.
+  max_features_per_tile = {{ if .Cluster.Spec.GPUDBCluster.Config.Visualization.MaxFeaturesPerTile }}{{ .Cluster.Spec.GPUDBCluster.Config.Visualization.MaxFeaturesPerTile }}{{ else }}200000{{ end }}
+
   # Longitude and latitude ranges of geospatial data for which level-of-details
   # representations are being generated. The parameter order is:
   #
