@@ -1,27 +1,27 @@
 # environment refers to either of "onPrem" "saas" "marketPlace"
 # "saas" "marketPlace" are used by Kinetica only
 # for a customer trying to install the chart on his own wherever, it should be onPrem
-environment: 'marketPlace'
+environment: "marketPlace"
 # onPrem Providers: "k3s" "kind" "eks" "aks"
 # saas Providers: eks
 # marketPlace Providers: aks eks
-provider: eks
+provider: aks
 
 # clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
 # its used in the monitoring related configmaps
 # CHANGE
-clusterName: ''
+clusterName: ""
 # CHANGE
-clusterRegion: ''
+clusterRegion: ""
 kubeRbacProxy:
   image:
-    repository: 'quay.io/brancz/kube-rbac-proxy'
-    tag: 'v0.14.2'
+    repository: "quay.io/brancz/kube-rbac-proxy"
+    tag: "v0.14.2"
 otelCollector:
   install: true
   image:
-    repository: 'otel/opentelemetry-collector-contrib'
-    tag: '0.95.0'
+    repository: "otel/opentelemetry-collector-contrib"
+    tag: "0.95.0"
 nodeSelector:
   app.kinetica.com/pool: infra
 
@@ -33,41 +33,41 @@ wbOperator:
     digest: ""
 dbOperator:
   install: true
-  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
-  aadpodidbinding: ""
+  # optional: AzureWorkloadIdentityClientID is required when environment is marketPlace and provider is aks
+  AzureWorkloadIdentityClientID: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
     tag: "v7.2.0-11.dev-3-operator"
     digest: ""
 certManager:
   install: true
-'cert-manager':
+"cert-manager":
   image:
-    repository: 'quay.io/jetstack/cert-manager-controller'
-    tag: 'v1.13.3'
-  installCRDs: 'true'
+    repository: "quay.io/jetstack/cert-manager-controller"
+    tag: "v1.13.3"
+  installCRDs: "true"
   namespace: kinetica-system
   nodeSelector:
-    'app.kinetica.com/pool': 'infra'
+    "app.kinetica.com/pool": "infra"
   webhook:
     image:
-      repository: 'quay.io/jetstack/cert-manager-webhook'
-      tag: 'v1.13.3'
+      repository: "quay.io/jetstack/cert-manager-webhook"
+      tag: "v1.13.3"
     nodeSelector:
-      'app.kinetica.com/pool': 'infra'
+      "app.kinetica.com/pool": "infra"
   cainjector:
     image:
-      repository: 'quay.io/jetstack/cert-manager-cainjector'
-      tag: 'v1.13.3'
+      repository: "quay.io/jetstack/cert-manager-cainjector"
+      tag: "v1.13.3"
     nodeSelector:
-      'app.kinetica.com/pool': 'infra'
+      "app.kinetica.com/pool": "infra"
   startupapicheck:
     nodeSelector:
-      'app.kinetica.com/pool': 'infra'
+      "app.kinetica.com/pool": "infra"
 
 ingressNginx:
   install: true
-'ingress-nginx':
+"ingress-nginx":
   defaultBackend:
     enabled: false
   controller:
@@ -76,8 +76,8 @@ ingressNginx:
     containerPort:
       http: 80
     config:
-      enable-real-ip: 'true'
-      use-forwarded-headers: 'true'
+      enable-real-ip: "true"
+      use-forwarded-headers: "true"
       log-format-upstream: '$remote_addr - $request_id - [$proxy_add_x_forwarded_for] - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status'
 
     service:
@@ -85,21 +85,13 @@ ingressNginx:
       targetPorts:
         https: 80
       annotations:
-        'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
-        'service.beta.kubernetes.io/aws-load-balancer-type': nlb
-        'service.beta.kubernetes.io/aws-load-balancer-nlb-target-type': ip
-        'service.beta.kubernetes.io/aws-load-balancer-alpn-policy': HTTP2Preferred
-        'service.beta.kubernetes.io/aws-load-balancer-scheme': internet-facing
-        'service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled': true
-        'service.beta.kubernetes.io/aws-load-balancer-ssl-ports': '443'
-        'service.beta.kubernetes.io/aws-load-balancer-ssl-cert': ''
-
+        service.beta.kubernetes.io/azure-load-balancer-internal: "${AZURE_LOAD_BALANCER_INTERNAL}"
     metrics:
       enabled: true
       service:
         annotations:
-          prometheus.io/scrape: 'true'
-          prometheus.io/port: '10254'
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "10254"
       prometheusRule:
         enabled: true
         rules:
@@ -139,11 +131,11 @@ ingressNginx:
 gpuOperator:
   install: false
 openldap:
-  namespace: 'gpudb'
-  fullnameOverride: 'openldap'
+  namespace: "gpudb"
+  fullnameOverride: "openldap"
   image:
-    repository: 'bitnami/openldap'
-    tag: '2.6.7'
+    repository: "bitnami/openldap"
+    tag: "2.6.7"
   global:
     ldapPort: 1389
   initContainers:
@@ -151,39 +143,39 @@ openldap:
       image: "kinetica.azurecr.io/dev/busybox:v7.2.0-11.dev-3"
       command:
         [
-          'sh',
-          '-c',
-          'mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami',
+          "sh",
+          "-c",
+          "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
         ]
       volumeMounts:
         - name: data
           mountPath: /bitnami
   env:
-    LDAP_BACKEND: 'mdb'
-    LDAP_ORGANISATION: 'Kinetica DB Inc.'
-    LDAP_DOMAIN: 'kinetica.com'
-    LDAP_LOG_LEVEL: '128'
-    LDAP_ENABLE_TLS: 'no'
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+    LDAP_ENABLE_TLS: "no"
   affinity: {}
   podAntiAffinity: {}
   nodeSelector:
-    'app.kinetica.com/pool': 'infra'
+    "app.kinetica.com/pool": "infra"
   initTLSSecret:
     image:
-      registry: 'docker.io'
-      repository: 'alpine/openssl'
-      tag: '3.1.4'
+      registry: "docker.io"
+      repository: "alpine/openssl"
+      tag: "3.1.4"
 
   persistence:
     enabled: true
-    existingClaim: ''
-    accessMode: 'ReadWriteOnce'
-    size: '1Gi'
-    storageClass: 'gp2'
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    storageClass: "gp2"
 db:
   # do you want to provision a database
   create: true
-  name: ''
+  name: ""
   namespace: gpudb
   debug: false
   autoSuspend:
@@ -194,10 +186,10 @@ db:
 
   awsConfig:
     # CHANGE
-    clusterName: ''
+    clusterName: ""
     marketplaceApp:
       # CHANGE
-      productCode: ''
+      productCode: ""
       publicKeyVersion: 1
   hostManagerMonitor:
     image:
@@ -221,34 +213,34 @@ db:
     namespace: gpudb
     port: 1389
   supportingImages:
-      busybox:
-        image:
-          repository: "kinetica.azurecr.io/dev/busybox"
-          tag: "v7.2.0-11.dev-3"
-      socat:
-        image:
-          repository: "kinetica.azurecr.io/dev/socat"
-          tag: "v7.2.0-11.dev-3"
+    busybox:
+      image:
+        repository: "kinetica.azurecr.io/dev/busybox"
+        tag: "v7.2.0-11.dev-3"
+    socat:
+      image:
+        repository: "kinetica.azurecr.io/dev/socat"
+        tag: "v7.2.0-11.dev-3"
   # stats:
   #   isEnabled: true
   # alertManager:
   #   isEnabled: true
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
   #     tag: "v7.2.0-11.dev-3"
   # grafana:
   #   isEnabled: true
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
   #     tag: "v7.2.0-11.dev-3"
   # loki:
   #   isEnabled: true
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
   #     tag: "v7.2.0-11.dev-3"
   # prometheus:
   #   isEnabled: true
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
   #     tag: "v7.2.0-11.dev-3"
 
@@ -261,19 +253,19 @@ db:
     hasPools: true
     clusterSize:
       # CHANGE
-      tshirtSize: ''
+      tshirtSize: ""
       # CHANGE
-      tshirtType: ''
+      tshirtType: ""
     # CHANGE
     ranksPerNode: 1
     # CHANGE
     replicas:
     # provide an fqdn if you want to use a custom fqdn
-    fqdn: ''
+    fqdn: ""
     letsEncrypt:
       enabled: false
     # CHANGE
-    license: ''
+    license: ""
     # CHANGE
     gpuAcceleration: false
     image:
@@ -285,7 +277,7 @@ db:
         image:
           # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.0-11.dev-3 also
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512"
-          tag:  "v7.2.0-11.dev-3"
+          tag: "v7.2.0-11.dev-3"
     metricsRegistryRepositoryTag:
       image:
         repository: "kinetica.azurecr.io/dev/fluent-bit"
@@ -307,8 +299,8 @@ db:
         persistTier:
           default:
             # CHANGE
-            limit: ''
-            provisioner: 'kubernetes.io/aws-ebs'
+            limit: ""
+            provisioner: "kubernetes.io/aws-ebs"
             volumeClaim:
               spec:
                 storageClassName: gp2
@@ -316,8 +308,8 @@ db:
         diskCacheTier:
           default:
             # CHANGE
-            limit: ''
-            provisioner: 'kubernetes.io/aws-ebs'
+            limit: ""
+            provisioner: "kubernetes.io/aws-ebs"
             volumeClaim:
               spec:
                 storageClassName: gp2
@@ -325,18 +317,18 @@ db:
         coldStorageTier:
           coldStorageType: s3
           coldStorageS3:
-            basePath: 'gpudb/cold-storage/'
+            basePath: "gpudb/cold-storage/"
             # CHANGE
-            bucketName: ''
+            bucketName: ""
 
 dbAdminUser:
   create: true
 dbWorkbench:
   create: true
   # CHANGE
-  fqdn: ''
+  fqdn: ""
   # CHANGE
-  deploymentInfo: '{}'
+  deploymentInfo: "{}"
   letsEncrypt:
     enabled: false
   useHttps: true

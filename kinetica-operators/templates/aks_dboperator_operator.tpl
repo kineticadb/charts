@@ -4,6 +4,9 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
+  annotations:
+    azure.workload.identity/client-id: '{{ .Values.dbOperator.AzureWorkloadIdentityClientID
+      }}'
   name: kineticaoperator-kineticacluster-operator
   namespace: kinetica-system
   labels:
@@ -1744,7 +1747,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    aadpodidbinding: '{{ .Values.dbOperator.aadpodidbinding }}'
     app.kubernetes.io/name: kineticaoperator-controller-manager
     app.kubernetes.io/managed-by: Porter
     app.kubernetes.io/instance: '{{ .Release.Name }}'
@@ -1770,10 +1772,25 @@ spec:
         app.kubernetes.io/component: db-operator
         app.kubernetes.io/name: kineticaoperator-controller-manager
         app.kubernetes.io/part-of: kinetica
+        azure.workload.identity/use: 'true'
         component: kineticaoperator-controller-manager
         control-plane: controller-manager
     spec:
       containers:
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --v=0
+        image: '{{ .Values.kubeRbacProxy.image.repository }}:{{ .Values.kubeRbacProxy.image.tag
+          }}'
+        imagePullPolicy: IfNotPresent
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
       - args:
         - --metrics-addr=127.0.0.1:8080
         - --enable-leader-election
@@ -1818,27 +1835,10 @@ spec:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
         volumeMounts:
-        - mountPath: /etc/managed-id
-          name: managed-id
-          readOnly: true
         - mountPath: /etc/config/
           name: gpudb-tmpl
         - mountPath: /etc/manager/manager-config
           name: kineticaoperator-config-map
-      - args:
-        - --secure-listen-address=0.0.0.0:8443
-        - --upstream=http://127.0.0.1:8080/
-        - --v=0
-        image: '{{ .Values.kubeRbacProxy.image.repository }}:{{ .Values.kubeRbacProxy.image.tag
-          }}'
-        imagePullPolicy: IfNotPresent
-        name: kube-rbac-proxy
-        ports:
-        - containerPort: 8443
-          name: https
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
       securityContext:
         fsGroup: 2000
         runAsGroup: 3000
@@ -1847,9 +1847,6 @@ spec:
       serviceAccountName: kineticaoperator-kineticacluster-operator
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: managed-id
-        secret:
-          secretName: managed-id
       - configMap:
           name: gpudb-tmpl
         name: gpudb-tmpl
