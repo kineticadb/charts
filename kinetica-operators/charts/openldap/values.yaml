@@ -22,7 +22,8 @@ replicaCount: 1
 openldapNamespace: gpudb
 # Define deployment strategy - IMPORTANT: use rollingUpdate: null when use Recreate strategy.
 # It prevents from merging with existing map keys which are forbidden.
-strategy: {}
+strategy:
+  {}
   # type: RollingUpdate
   # rollingUpdate:
   #   maxSurge: 1
@@ -45,10 +46,10 @@ existingSecret: ""
 # settings for enabling TLS
 tls:
   enabled: false
-  secret: ""  # The name of a kubernetes.io/tls type secret to use for TLS
+  secret: "" # The name of a kubernetes.io/tls type secret to use for TLS
   CA:
     enabled: false
-    secret: ""  # The name of a generic secret to use for custom CA certificate (ca.crt)
+    secret: "" # The name of a generic secret to use for custom CA certificate (ca.crt)
 ## Add additional labels to all resources
 extraLabels: {}
 ## Add additional annotations to pods
@@ -57,7 +58,7 @@ service:
   annotations: {}
 
   ldapPort: 389
-  sslLdapPort: 636  # Only used if tls.enabled is true
+  sslLdapPort: 636 # Only used if tls.enabled is true
   ## List of IP addresses at which the service is available
   ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
   ##
@@ -73,8 +74,7 @@ env:
   LDAP_ORGANISATION: "Kinetica DB Inc"
   LDAP_DOMAIN: "kinetica.com"
   LDAP_TLS_ENFORCE: "false"
-  LDAPTLS_REQCERT: "never"  
-  LDAP_SKIP_DEFAULT_TREE: "no"
+  LDAPTLS_REQCERT: "never"
 
 # Default Passwords to use, stored as a secret. If unset, passwords are auto-generated.
 # You can override these at install time with
@@ -84,8 +84,8 @@ env:
 
 # Custom openldap configuration files used to override default settings
 # customLdifFiles:
-  # 01-default-users.ldif: |-
-    # Predefine users here
+# 01-default-users.ldif: |-
+# Predefine users here
 
 ## Persist data to a persistent volume
 persistence:
@@ -98,8 +98,9 @@ persistence:
   ##   GKE, AWS & OpenStack)
   ##
   # storageClass: "-"
-  accessMode: ReadWriteOnce
-   # existingClaim: ""  
+  accessMode:
+    ReadWriteOnce
+    # existingClaim: ""
   size: 1Mi
   storageClass: "local-path"
 
@@ -131,16 +132,16 @@ startupProbe:
   timeoutSeconds: 1
   successThreshold: 1
   failureThreshold: 30
-initResources: {}
- # requests:
- #   cpu: "100m"
- #   memory: "128Mi"
- # limits:
- #   cpu: "100m"
- #   memory: "128Mi"
+initResources:
+  {}
+  # requests:
+  #   cpu: "100m"
+  #   memory: "128Mi"
+  # limits:
+  #   cpu: "100m"
+  #   memory: "128Mi"
 
 nodeSelector: {}
-  
 
 tolerations: []
 
@@ -167,7 +168,7 @@ initTLSSecret:
     ##
     pullPolicy: IfNotPresent
   # The name of a kubernetes.io/tls type secret to use for TLS
-  secret: "" 
+  secret: ""
   ## init-tls-secret container's resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   ## @param initTlsSecret.resources.limits The resources limits for the init container
@@ -186,5 +187,3 @@ test:
   image:
     repository: dduportal/bats
     tag: 0.4.0
-
-

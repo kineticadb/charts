@@ -29,7 +29,7 @@ wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.0-11.dev-3-operator"
+    tag: "v7.2.0-11.dev-4-operator"
     digest: ""
 dbOperator:
   install: true
@@ -37,7 +37,7 @@ dbOperator:
   AzureWorkloadIdentityClientID: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.0-11.dev-3-operator"
+    tag: "v7.2.0-11.dev-4-operator"
     digest: ""
 certManager:
   install: true
@@ -82,10 +82,9 @@ ingressNginx:
 
     service:
       externalTrafficPolicy: Local
-      targetPorts:
-        https: 80
       annotations:
         service.beta.kubernetes.io/azure-load-balancer-internal: "${AZURE_LOAD_BALANCER_INTERNAL}"
+        service.beta.kubernetes.io/azure-dns-label-name: "${AZURE_DNS_LABEL_NAME}"
     metrics:
       enabled: true
       service:
@@ -140,7 +139,7 @@ openldap:
     ldapPort: 1389
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/busybox:v7.2.0-11.dev-3"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.0-11.dev-4"
       command:
         [
           "sh",
@@ -155,7 +154,7 @@ openldap:
     LDAP_ORGANISATION: "Kinetica DB Inc."
     LDAP_DOMAIN: "kinetica.com"
     LDAP_LOG_LEVEL: "128"
-    LDAP_ENABLE_TLS: "no"
+
   affinity: {}
   podAntiAffinity: {}
   nodeSelector:
@@ -171,7 +170,7 @@ openldap:
     existingClaim: ""
     accessMode: "ReadWriteOnce"
     size: "1Gi"
-    storageClass: "gp2"
+    storageClass: "managed-premium"
 db:
   # do you want to provision a database
   create: true
@@ -184,17 +183,17 @@ db:
   # CHANGE
   payAsYouGo:
 
-  awsConfig:
-    # CHANGE
-    clusterName: ""
+  azureConfig:
     marketplaceApp:
       # CHANGE
-      productCode: ""
-      publicKeyVersion: 1
+      planId: ""
+      resourceUri: ""
+    appInsights:
+      key: ""
   hostManagerMonitor:
     image:
       repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.0-11.dev-3"
+      tag: "v7.2.0-11.dev-4"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -216,33 +215,33 @@ db:
     busybox:
       image:
         repository: "kinetica.azurecr.io/dev/busybox"
-        tag: "v7.2.0-11.dev-3"
+        tag: "v7.2.0-11.dev-4"
     socat:
       image:
         repository: "kinetica.azurecr.io/dev/socat"
-        tag: "v7.2.0-11.dev-3"
+        tag: "v7.2.0-11.dev-4"
   # stats:
   #   isEnabled: true
   # alertManager:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-3"
+  #     tag: "v7.2.0-11.dev-4"
   # grafana:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-3"
+  #     tag: "v7.2.0-11.dev-4"
   # loki:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-3"
+  #     tag: "v7.2.0-11.dev-4"
   # prometheus:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-3"
+  #     tag: "v7.2.0-11.dev-4"
 
   gadmin:
     isEnabled: true
@@ -263,7 +262,7 @@ db:
     # provide an fqdn if you want to use a custom fqdn
     fqdn: ""
     letsEncrypt:
-      enabled: false
+      enabled: true
     # CHANGE
     license: ""
     # CHANGE
@@ -272,16 +271,16 @@ db:
       cuda:
         image:
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.0-11.dev-3"
+          tag: "v7.2.0-11.dev-4"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.0-11.dev-3 also
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.0-11.dev-4 also
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512"
-          tag: "v7.2.0-11.dev-3"
+          tag: "v7.2.0-11.dev-4"
     metricsRegistryRepositoryTag:
       image:
         repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.0-11.dev-3"
+        tag: "v7.2.0-11.dev-4"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -300,26 +299,29 @@ db:
           default:
             # CHANGE
             limit: ""
-            provisioner: "kubernetes.io/aws-ebs"
+            provisioner: "disk.csi.azure.com"
             volumeClaim:
               spec:
-                storageClassName: gp2
+                storageClassName: managed-premium
 
         diskCacheTier:
           default:
             # CHANGE
             limit: ""
-            provisioner: "kubernetes.io/aws-ebs"
+            provisioner: "disk.csi.azure.com"
             volumeClaim:
               spec:
-                storageClassName: gp2
+                storageClassName: managed-premium
 
         coldStorageTier:
-          coldStorageType: s3
-          coldStorageS3:
-            basePath: "gpudb/cold-storage/"
+          coldStorageType: azure_blob
+          coldStorageAzure:
+            basePath: "gpudb/cold_storage/"
             # CHANGE
-            bucketName: ""
+            containerName: ""
+            sasToken: ""
+            storageAccountKey: ""
+            storageAccountName: ""
 
 dbAdminUser:
   create: true
@@ -328,11 +330,11 @@ dbWorkbench:
   # CHANGE
   fqdn: ""
   # CHANGE
+  # should have something like the following
+  # {"name": "plan-01", "product": "lucid-01-preview", "publisher": "kinetica", "version": "1.0.1", "managed_resource_group_id": "/subscriptions/000000000/resourceGroups/mrg-lucid-01-preview-20240730051440", "customer_email": "somebody@somewhere.com", "secondary_email": "somebodyelse@somewhere.com", "application_id": "/subscriptions/00000/resourceGroups/lucid-073001/providers/Microsoft.Solutions/applications/cluster-9589", "contactFirstName": "John", "contactLastName": "Some", "tshirtSize": "XS", "tshirtType": "SmallCPU"}
   deploymentInfo: "{}"
   letsEncrypt:
-    enabled: false
-  useHttps: true
-  nodeSelector: {}
+    enabled: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.0-11.dev-3"
+    tag: "v7.2.0-11.dev-4"
