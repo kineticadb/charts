@@ -3923,6 +3923,8 @@ spec:
                           useManagedCredentials:
                             default: true
                             type: boolean
+                        required:
+                        - useManagedCredentials
                         type: object
                       ml:
                         default:
