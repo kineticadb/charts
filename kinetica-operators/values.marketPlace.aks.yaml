@@ -1,64 +1,25 @@
-# environment refers to either of "onPrem" "saas" "marketPlace"
-# "saas" "marketPlace" are used by Kinetica only
-# for a customer trying to install the chart on his own wherever, it should be onPrem
 environment: "marketPlace"
-# onPrem Providers: "k3s" "kind" "eks" "aks"
-# saas Providers: eks
-# marketPlace Providers: aks eks
 provider: aks
-
-# clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
-# its used in the monitoring related configmaps
-# CHANGE
-clusterName: ""
-# CHANGE
-clusterRegion: ""
-kubeRbacProxy:
-  image:
-    repository: "quay.io/brancz/kube-rbac-proxy"
-    tag: "v0.14.2"
-otelCollector:
-  install: true
-  image:
-    repository: "otel/opentelemetry-collector-contrib"
-    tag: "0.95.0"
 nodeSelector:
   app.kinetica.com/pool: infra
-
 wbOperator:
   install: true
-  image:
-    repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.0-11.dev-5-operator"
-    digest: ""
 dbOperator:
   install: true
-  # optional: azureWorkloadIdentityClientId is required when environment is marketPlace and provider is aks
-  azureWorkloadIdentityClientId: ""
-  image:
-    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.0-11.dev-5-operator"
-    digest: ""
+  azureWorkloadIdentityClientId: "${AZURE_WORKLOAD_IDENTITY_CLIENTID}"
+  webhookUrl: "${WEBHOOK_URL}"
+
 certManager:
   install: true
 "cert-manager":
-  image:
-    repository: "quay.io/jetstack/cert-manager-controller"
-    tag: "v1.13.3"
   installCRDs: "true"
   namespace: kinetica-system
   nodeSelector:
     "app.kinetica.com/pool": "infra"
   webhook:
-    image:
-      repository: "quay.io/jetstack/cert-manager-webhook"
-      tag: "v1.13.3"
     nodeSelector:
       "app.kinetica.com/pool": "infra"
   cainjector:
-    image:
-      repository: "quay.io/jetstack/cert-manager-cainjector"
-      tag: "v1.13.3"
     nodeSelector:
       "app.kinetica.com/pool": "infra"
   startupapicheck:
@@ -84,7 +45,7 @@ ingressNginx:
       externalTrafficPolicy: Local
       annotations:
         service.beta.kubernetes.io/azure-load-balancer-internal: "${AZURE_LOAD_BALANCER_INTERNAL}"
-        service.beta.kubernetes.io/azure-dns-label-name: "${AZURE_DNS_LABEL_NAME}"
+        service.beta.kubernetes.io/azure-dns-label-name: "${KINETICA_CLUSTER_NAME}"
     metrics:
       enabled: true
       service:
@@ -127,36 +88,10 @@ ingressNginx:
             annotations:
               description: Too many 4XXs
               summary: More than 5% of all requests returned 4XX, this requires your attention
-gpuOperator:
-  install: false
+
 openldap:
   namespace: "gpudb"
   fullnameOverride: "openldap"
-  image:
-    repository: "bitnami/openldap"
-    tag: "2.6.7"
-  global:
-    ldapPort: 1389
-  initContainers:
-    - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/busybox:v7.2.0-11.dev-5"
-      command:
-        [
-          "sh",
-          "-c",
-          "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
-        ]
-      volumeMounts:
-        - name: data
-          mountPath: /bitnami
-  env:
-    LDAP_BACKEND: "mdb"
-    LDAP_ORGANISATION: "Kinetica DB Inc."
-    LDAP_DOMAIN: "kinetica.com"
-    LDAP_LOG_LEVEL: "128"
-
-  affinity: {}
-  podAntiAffinity: {}
   nodeSelector:
     "app.kinetica.com/pool": "infra"
   initTLSSecret:
@@ -164,7 +99,6 @@ openldap:
       registry: "docker.io"
       repository: "alpine/openssl"
       tag: "3.1.4"
-
   persistence:
     enabled: true
     existingClaim: ""
@@ -174,113 +108,37 @@ openldap:
 db:
   # do you want to provision a database
   create: true
-  name: ""
+  name: "${KINETICA_CLUSTER_NAME}"
   namespace: gpudb
   debug: false
   autoSuspend:
     enabled: false
 
-  # CHANGE
-  payAsYouGo:
+  payAsYouGo: "${PAYGO}"
 
   azureConfig:
-    marketplaceApp:
-      # CHANGE
-      planId: ""
-      resourceUri: ""
+    managedApp:
+      planId: "${PLAN_ID}"
+      resourceUri: "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/Microsoft.Solutions/applications/${MANAGED_APP_NAME}"
     appInsights:
-      key: ""
-  hostManagerMonitor:
-    image:
-      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.0-11.dev-5"
-  # you may use nginx if you want the operator to create the nginx records
-  # if you want to manage your own ingress controller/gateway api, provide "none"
-  # TODO: As of now, if you want the operator to create nginx records, do the following
-  # 1. first install nginx sub chart by providing the release namespace as nginx
-  # helm -n nginx install nginx charts/kinetica-operators/charts/ingress-nginx --values values
-  # you can refer to the correct ingress-ngix values in the corresponding values file in the operators values files
-  # This is needed now as the operator as of now, looks for its nginx in the nginx namespace
-  # if you enable ingress-nginx and install the operators, it will install all in the kinetica-system namespace
-  ingressController: nginx
-  ldap:
-    baseDN: dc=kinetica,dc=com
-    bindDN: cn=admin,dc=kinetica,dc=com
-    host: openldap
-    isInLocalK8S: true
-    isLDAPS: false
-    namespace: gpudb
-    port: 1389
-  supportingImages:
-    busybox:
-      image:
-        repository: "kinetica.azurecr.io/dev/busybox"
-        tag: "v7.2.0-11.dev-5"
-    socat:
-      image:
-        repository: "kinetica.azurecr.io/dev/socat"
-        tag: "v7.2.0-11.dev-5"
-  # stats:
-  #   isEnabled: true
-  # alertManager:
-  #   isEnabled: true
-  #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-5"
-  # grafana:
-  #   isEnabled: true
-  #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-5"
-  # loki:
-  #   isEnabled: true
-  #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-5"
-  # prometheus:
-  #   isEnabled: true
-  #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.0-11.dev-5"
+      key: "${APP_INSIGHTS_KEY}"
 
-  gadmin:
-    isEnabled: true
-  reveal:
-    isEnabled: true
   gpudbCluster:
     # this applies if you have labelled node pools for compute
     hasPools: true
     clusterSize:
-      # CHANGE
-      tshirtSize: ""
-      # CHANGE
-      tshirtType: ""
-    # CHANGE
-    ranksPerNode: 1
-    # CHANGE
-    replicas:
-    # provide an fqdn if you want to use a custom fqdn
-    fqdn: ""
+      tshirtSize: "${TSHIRT_SIZE}"
+      tshirtType: "${TSHIRT_TYPE}"
+
+    ranksPerNode: ${RANKS_PER_NODE}
+    replicas: ${RANKS}
+    fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
     letsEncrypt:
       enabled: true
-    # CHANGE
-    license: ""
-    # CHANGE
-    gpuAcceleration: false
-    image:
-      cuda:
-        image:
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.0-11.dev-5"
-      standard:
-        image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.0-11.dev-5 also
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512"
-          tag: "v7.2.0-11.dev-5"
-    metricsRegistryRepositoryTag:
-      image:
-        repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.0-11.dev-5"
+      environment: "production"
+
+    license: "${KINETICA_LICENSE}"
+    gpuAcceleration: "${GPU_ACCELERATION}"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -297,17 +155,14 @@ db:
 
         persistTier:
           default:
-            # CHANGE
-            limit: ""
+            limit: "${PERSIST_TIER_LIMIT}"
             provisioner: "disk.csi.azure.com"
             volumeClaim:
               spec:
                 storageClassName: managed-premium
-
         diskCacheTier:
           default:
-            # CHANGE
-            limit: ""
+            limit: "${DISK_TIER_LIMIT}"
             provisioner: "disk.csi.azure.com"
             volumeClaim:
               spec:
@@ -317,24 +172,20 @@ db:
           coldStorageType: azure_blob
           coldStorageAzure:
             basePath: "gpudb/cold_storage/"
-            # CHANGE
-            containerName: ""
-            sasToken: ""
-            storageAccountKey: ""
-            storageAccountName: ""
+            useManagedCredentials: false
+            containerName: "${COLD_CONTAINER_NAME}"
+            sasToken: "${COLD_SAS_TOKEN}"
+            storageAccountKey: "${STORAGE_ACCOUNT_KEY}"
+            storageAccountName: "${STORAGE_ACCOUNT_NAME}"
 
 dbAdminUser:
   create: true
+  name: "${DB_ADMIN_USER}"
+  password: "${DB_ADMIN_PASSWORD}"
 dbWorkbench:
   create: true
-  # CHANGE
-  fqdn: ""
-  # CHANGE
-  # should have something like the following
-  # {"name": "plan-01", "product": "lucid-01-preview", "publisher": "kinetica", "version": "1.0.1", "managed_resource_group_id": "/subscriptions/000000000/resourceGroups/mrg-lucid-01-preview-20240730051440", "customer_email": "somebody@somewhere.com", "secondary_email": "somebodyelse@somewhere.com", "application_id": "/subscriptions/00000/resourceGroups/lucid-073001/providers/Microsoft.Solutions/applications/cluster-9589", "contactFirstName": "John", "contactLastName": "Some", "tshirtSize": "XS", "tshirtType": "SmallCPU"}
-  deploymentInfo: "{}"
+  fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
+  deploymentInfo: '{"name": "${PLAN_ID}", "product": "${PRODUCT_NAME}", "publisher": "kinetica", "version": "${PLAN_VERSION}", "managed_resource_group_id": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}", "customer_email": "${CONTACT_EMAIL}", "application_id": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/microsoft.solutions/applications/${MANAGED_APP_NAME}", "contactFirstName": "${CONTACT_FIRST_NAME}", "contactLastName": "${CONTACT_LAST_NAME}", "tshirtSize": "${TSHIRT_SIZE}", "tshirtType": "${TSHIRT_TYPE}"}'
   letsEncrypt:
     enabled: true
-  image:
-    repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.0-11.dev-5"
+    environment: "production"
