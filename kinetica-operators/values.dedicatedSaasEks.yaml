@@ -1,8 +1,9 @@
+
 # environment refers to either of "onPrem" "saas" "marketPlace"
 # "saas" "marketPlace" are used by Kinetica only
 # for a customer trying to install the chart on his own wherever, it should be onPrem
 environment: "saas"
-# onPrem Providers: "k3s" "kind" "eks" "aks"
+# onPrem Providers: "k3s" "kind" "eks" "aks" 
 # saas Providers: eks
 # marketPlace Providers: aks eks
 provider: eks
@@ -13,9 +14,9 @@ clusterName: "cluster-001"
 clusterRegion: ""
 
 kubeRbacProxy:
-  image:
-    repository: "quay.io/brancz/kube-rbac-proxy"
-    tag: "v0.14.2"
+    image:
+      repository: "quay.io/brancz/kube-rbac-proxy"
+      tag: "v0.14.2"
 
 kubeStateMetrics:
   install: true
@@ -34,6 +35,7 @@ fluentBit:
     repository: "docker.io/fluent/fluent-bit"
     tag: "2.2"
 
+
 nodeSelector:
   app.kinetica.com/pool: infra
 tolerations: []
@@ -42,20 +44,20 @@ affinity: {}
 certManager:
   install: true
 "cert-manager":
-  installCRDs: "true"
+  installCRDs: 'true'
   namespace: kinetica-system
   nodeSelector:
-    "app.kinetica.com/pool": "infra"
+    'app.kinetica.com/pool': 'infra'
   webhook:
     nodeSelector:
-      "app.kinetica.com/pool": "infra"
+      'app.kinetica.com/pool': 'infra'
   cainjector:
     nodeSelector:
-      "app.kinetica.com/pool": "infra"
+      'app.kinetica.com/pool': 'infra'
   startupapicheck:
     nodeSelector:
-      "app.kinetica.com/pool": "infra"
-
+      'app.kinetica.com/pool': 'infra'
+  
 ingressNginx:
   install: true
 "ingress-nginx":
@@ -72,9 +74,9 @@ ingressNginx:
     allowSnippetAnnotations: true
     service:
       annotations:
-        "service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout": 3600
-        "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": tcp
-        "service.beta.kubernetes.io/aws-load-balancer-type": nlb
+        'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
+        'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': tcp
+        'service.beta.kubernetes.io/aws-load-balancer-type': nlb
 gpuOperator:
   install: false
   "gpu-operator":
@@ -92,15 +94,15 @@ openldap:
   global:
     ldapPort: 1389
   initContainers:
-    - name: openldap-create-directory-structure
-      image: busybox
-      command:
-        [
-          "sh",
-          "-c",
-          "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
-        ]
-      volumeMounts:
+      - name: openldap-create-directory-structure
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
+          ]
+        volumeMounts:
         - name: data
           mountPath: /bitnami
   env:
@@ -108,14 +110,15 @@ openldap:
     LDAP_ORGANISATION: "Kinetica DB Inc."
     LDAP_DOMAIN: "kinetica.com"
     LDAP_LOG_LEVEL: "128"
-
+    LDAP_ENABLE_TLS: "no"
   affinity: {}
   podAntiAffinity: {}
   nodeSelector:
-    "app.kinetica.com/pool": "infra"
+    'app.kinetica.com/pool': 'infra'
   persistence:
     enabled: true
     existingClaim: ""
     accessMode: "ReadWriteOnce"
     size: "1Gi"
     storageClass: "cluster-001-storageclass"
+

@@ -264,7 +264,6 @@ spec:
           {{- if eq .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageType "azure_blob" }}
           coldStorageAzure:
             basePath: "gpudb/cold_storage/"
-            useManagedCredentials: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageAzure.useManagedCredentials }}
             containerName: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageAzure.containerName }}
             sasToken: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageAzure.sasToken }}
             storageAccountKey: {{ .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier.coldStorageAzure.storageAccountKey }}

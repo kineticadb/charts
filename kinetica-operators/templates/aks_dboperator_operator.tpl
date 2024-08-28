@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   annotations:
-    azure.workload.identity/client-id: '{{ .Values.dbOperator.azureWorkloadIdentityClientId
+    azure.workload.identity/client-id: '{{ .Values.dbOperator.AzureWorkloadIdentityClientID
       }}'
   name: kineticaoperator-kineticacluster-operator
   namespace: kinetica-system
