@@ -1,0 +1,243 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  install:
+    createNamespace: true
+  releaseName: cert-manager
+  targetNamespace: kinetica-system
+  interval: 1m
+  chart:
+    spec:
+      chart: ./kinetica-operators/charts/cert-manager
+      sourceRef:
+        kind: GitRepository
+        name: github-kineticadb
+        namespace: flux-system
+  values:
+    installCRDs: "true"
+    namespace: kinetica-system
+    nodeSelector:
+      "app.kinetica.com/pool": "infra"
+    webhook:
+      nodeSelector:
+        "app.kinetica.com/pool": "infra"
+    cainjector:
+      nodeSelector:
+        "app.kinetica.com/pool": "infra"
+    startupapicheck:
+      nodeSelector:
+        "app.kinetica.com/pool": "infra"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kinetica-operators
+  namespace: flux-system
+spec:
+  install:
+    createNamespace: true
+  interval: 1m
+  releaseName: kinetica-operators
+  targetNamespace: kinetica-system
+  dependsOn:
+    - name: cert-manager
+  chart:
+    spec:
+      chart: ./kinetica-operators
+      sourceRef:
+        kind: GitRepository
+        name: github-kineticadb
+        namespace: flux-system
+  values:
+    environment: "marketPlace"
+    provider: aks
+    nodeSelector:
+      app.kinetica.com/pool: infra
+    wbOperator:
+      install: true
+    dbOperator:
+      install: true
+      azureWorkloadIdentityClientId: "${AZURE_WORKLOAD_IDENTITY_CLIENTID}"
+      webhookUrl: "${WEBHOOK_URL}"
+
+    certManager:
+      install: false
+    "cert-manager":
+      installCRDs: "true"
+      namespace: kinetica-system
+      nodeSelector:
+        "app.kinetica.com/pool": "infra"
+      webhook:
+        nodeSelector:
+          "app.kinetica.com/pool": "infra"
+      cainjector:
+        nodeSelector:
+          "app.kinetica.com/pool": "infra"
+      startupapicheck:
+        nodeSelector:
+          "app.kinetica.com/pool": "infra"
+
+    ingressNginx:
+      install: true
+    "ingress-nginx":
+      defaultBackend:
+        enabled: false
+      controller:
+        kind: Deployment
+        allowSnippetAnnotations: true
+        containerPort:
+          http: 80
+        config:
+          enable-real-ip: "true"
+          use-forwarded-headers: "true"
+          log-format-upstream: '$remote_addr - $request_id - [$proxy_add_x_forwarded_for] - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status'
+
+        service:
+          externalTrafficPolicy: Local
+          annotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "${AZURE_LOAD_BALANCER_INTERNAL}"
+        metrics:
+          enabled: true
+          service:
+            annotations:
+              prometheus.io/scrape: "true"
+              prometheus.io/port: "10254"
+          prometheusRule:
+            enabled: true
+            rules:
+              - alert: NGINXConfigFailed
+                expr: count(nginx_ingress_controller_config_last_reload_successful == 0) > 0
+                for: 1s
+                labels:
+                  severity: critical
+                annotations:
+                  description: bad ingress config - nginx config test failed
+                  summary: uninstall the latest ingress changes to allow config reloads to resume
+              - alert: NGINXCertificateExpiry
+                expr: (avg(nginx_ingress_controller_ssl_expire_time_seconds) by (host) - time()) < 604800
+                for: 1s
+                labels:
+                  severity: critical
+                annotations:
+                  description: ssl certificate(s) will expire in less then a week
+                  summary: renew expiring certificates to avoid downtime
+              - alert: NGINXTooMany500s
+                expr: 100 * ( sum( nginx_ingress_controller_requests{status=~"5.+"} ) / sum(nginx_ingress_controller_requests) ) > 5
+                for: 1m
+                labels:
+                  severity: warning
+                annotations:
+                  description: Too many 5XXs
+                  summary: More than 5% of all requests returned 5XX, this requires your attention
+              - alert: NGINXTooMany400s
+                expr: 100 * ( sum( nginx_ingress_controller_requests{status=~"4.+"} ) / sum(nginx_ingress_controller_requests) ) > 5
+                for: 1m
+                labels:
+                  severity: warning
+                annotations:
+                  description: Too many 4XXs
+                  summary: More than 5% of all requests returned 4XX, this requires your attention
+
+    openldap:
+      namespace: "gpudb"
+      fullnameOverride: "openldap"
+      nodeSelector:
+        "app.kinetica.com/pool": "infra"
+      initTLSSecret:
+        image:
+          registry: "docker.io"
+          repository: "alpine/openssl"
+          tag: "3.1.4"
+      persistence:
+        enabled: true
+        existingClaim: ""
+        accessMode: "ReadWriteOnce"
+        size: "1Gi"
+        storageClass: "managed-premium"
+    db:
+      # do you want to provision a database
+      create: true
+      name: "${KINETICA_CLUSTER_NAME}"
+      namespace: gpudb
+      debug: false
+      autoSuspend:
+        enabled: false
+
+      payAsYouGo: "${PAYGO}"
+
+      azureConfig:
+        managedApp:
+          planId: "${PLAN_ID}"
+          resourceUri: "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/Microsoft.Solutions/applications/${MANAGED_APP_NAME}"
+        appInsights:
+          key: "${APP_INSIGHTS_KEY}"
+
+      gpudbCluster:
+        # this applies if you have labelled node pools for compute
+        hasPools: true
+        clusterSize:
+          tshirtSize: "${TSHIRT_SIZE}"
+          tshirtType: "${TSHIRT_TYPE}"
+
+        ranksPerNode: ${RANKS_PER_NODE}
+        replicas: ${RANKS}
+        fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
+        letsEncrypt:
+          enabled: true
+          environment: "production"
+
+        license: "${KINETICA_LICENSE}"
+        gpuAcceleration: "${GPU_ACCELERATION}"
+        config:
+          postgresProxy:
+            enablePostgresProxy: true
+          kifs:
+            enable: true
+            mountPoint: /gpudb/kifs
+          procs:
+            enable: true
+          textSearch:
+            enableTextSearch: true
+          tieredStorage:
+            globalTier:
+              colocateDisks: true
+
+            persistTier:
+              default:
+                limit: "${PERSIST_TIER_LIMIT}"
+                provisioner: "disk.csi.azure.com"
+                volumeClaim:
+                  spec:
+                    storageClassName: managed-premium
+            diskCacheTier:
+              default:
+                limit: "${DISK_TIER_LIMIT}"
+                provisioner: "disk.csi.azure.com"
+                volumeClaim:
+                  spec:
+                    storageClassName: managed-premium
+
+            coldStorageTier:
+              coldStorageType: azure_blob
+              coldStorageAzure:
+                basePath: "gpudb/cold_storage/"
+                useManagedCredentials: false
+                containerName: "${COLD_CONTAINER_NAME}"
+                sasToken: "${COLD_SAS_TOKEN}"
+                storageAccountKey: "${STORAGE_ACCOUNT_KEY}"
+                storageAccountName: "${STORAGE_ACCOUNT_NAME}"
+
+    dbAdminUser:
+      create: true
+      name: "${DB_ADMIN_USER}"
+      password: "${DB_ADMIN_PASSWORD}"
+    dbWorkbench:
+      create: true
+      fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
+      deploymentInfo: '{"name": "${PLAN_ID}", "product": "${PRODUCT_NAME}", "publisher": "kinetica", "version": "${PLAN_VERSION}", "managed_resource_group_id": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}", "customer_email": "${CONTACT_EMAIL}", "application_id": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/microsoft.solutions/applications/${MANAGED_APP_NAME}", "contactFirstName": "${CONTACT_FIRST_NAME}", "contactLastName": "${CONTACT_LAST_NAME}", "tshirtSize": "${TSHIRT_SIZE}", "tshirtType": "${TSHIRT_TYPE}"}'
+      letsEncrypt:
+        enabled: true
+        environment: "production"
