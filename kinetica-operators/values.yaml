@@ -1,9 +1,8 @@
-
 # environment refers to either of "onPrem" "saas" "marketPlace"
 # "saas" "marketPlace" are used by Kinetica only
 # for a customer trying to install the chart on his own wherever, it should be onPrem
 environment: ""
-# onPrem Providers: "k3s" "kind" "eks" "aks" 
+# onPrem Providers: "k3s" "kind" "eks" "aks"
 # saas Providers: eks
 # marketPlace Providers: aks eks
 provider: ""
@@ -17,9 +16,9 @@ letsEncryptEmail: devops@kinetica.com
 global:
   defaultStorageClass: ""
 kubeRbacProxy:
-    image:
-      repository: "quay.io/brancz/kube-rbac-proxy"
-      tag: "v0.14.2"
+  image:
+    repository: "quay.io/brancz/kube-rbac-proxy"
+    tag: "v0.14.2"
 
 kubeStateMetrics:
   install: false
@@ -37,12 +36,11 @@ fluentBit:
     repository: "docker.io/fluent/fluent-bit"
     tag: "2.2"
 
-
 wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.1-0.dev-1-operator"
+    tag: "v7.2.1-0.dev-2-operator"
     digest: ""
 dbOperator:
   install: true
@@ -50,7 +48,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.1-0.dev-1-operator"
+    tag: "v7.2.1-0.dev-2-operator"
     digest: ""
 
 nodeSelector: {}
@@ -60,7 +58,7 @@ affinity: {}
 certManager:
   install: true
 "cert-manager":
-  installCRDs: 'true'
+  installCRDs: "true"
   namespace: kinetica-system
   nodeSelector: {}
   webhook:
@@ -70,7 +68,6 @@ certManager:
   startupapicheck:
     nodeSelector: {}
 
-  
 ingressNginx:
   install: true
 "ingress-nginx":
@@ -82,7 +79,7 @@ ingressNginx:
       repository: docker.io/kineticadevcloud/kinetica-default-backend
       tag: v0.0.1
       digest: ""
-    nodeSelector: {}      
+    nodeSelector: {}
     extraEnvs:
       - name: DEBUG
         value: "false"
@@ -90,14 +87,11 @@ ingressNginx:
     nodeSelector: {}
     allowSnippetAnnotations: true
     service:
-      annotations:
-        'service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout': 3600
-        'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': tcp
-        'service.beta.kubernetes.io/aws-load-balancer-type': nlb
+      annotations: {}
     admissionWebhooks:
       enabled: true
       patch:
-        enabled: true  
+        enabled: true
         image:
           repository: k8s.gcr.io/ingress-nginx/kube-webhook-certgen
           tag: v1.1.1
@@ -121,15 +115,15 @@ openldap:
   image:
     tag: "2.6.7"
   initContainers:
-      - name: openldap-create-directory-structure
-        image: "kinetica.azurecr.io/dev/busybox:v7.2.1-0.dev-1"
-        command:
-          [
-            "sh",
-            "-c",
-            "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
-          ]
-        volumeMounts:
+    - name: openldap-create-directory-structure
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.1-0.dev-2"
+      command:
+        [
+          "sh",
+          "-c",
+          "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
+        ]
+      volumeMounts:
         - name: data
           mountPath: /bitnami
   env:
@@ -137,7 +131,6 @@ openldap:
     LDAP_ORGANISATION: "Kinetica DB Inc."
     LDAP_DOMAIN: "kinetica.com"
     LDAP_LOG_LEVEL: "128"
-    LDAP_ENABLE_TLS: "no"
   affinity: {}
   podAntiAffinity: {}
   nodeSelector: {}
@@ -173,11 +166,11 @@ db:
       resourceUri: ""
     appInsights:
       key: ""
-  
+
   hostManagerMonitor:
     image:
       repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.1-0.dev-1"
+      tag: "v7.2.1-0.dev-2"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -196,36 +189,36 @@ db:
     namespace: gpudb
     port: 1389
   supportingImages:
-        busybox:
-          image:
-            repository: "kinetica.azurecr.io/dev/busybox"
-            tag: "v7.2.1-0.dev-1"
-        socat:
-          image:
-            repository: "kinetica.azurecr.io/dev/socat"
-            tag: "v7.2.1-0.dev-1"
+    busybox:
+      image:
+        repository: "kinetica.azurecr.io/dev/busybox"
+        tag: "v7.2.1-0.dev-2"
+    socat:
+      image:
+        repository: "kinetica.azurecr.io/dev/socat"
+        tag: "v7.2.1-0.dev-2"
   # stats:
   #   isEnabled: false
   # alertManager:
   #   isEnabled: false
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.1-0.dev-1"
+  #     tag: "v7.2.1-0.dev-2"
   # grafana:
   #   isEnabled: false
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.1-0.dev-1"
+  #     tag: "v7.2.1-0.dev-2"
   # loki:
   #   isEnabled: false
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.1-0.dev-1"
+  #     tag: "v7.2.1-0.dev-2"
   # prometheus:
   #   isEnabled: false
-  #   image:      
+  #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.1-0.dev-1"
+  #     tag: "v7.2.1-0.dev-2"
   gadmin:
     isEnabled: true
   reveal:
@@ -251,19 +244,19 @@ db:
       cuda:
         image:
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.1-0.dev-1-amd64"
+          tag: "v7.2.1-0.dev-2"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.1-0.dev-1 also
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.1-0.dev-2 also
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu"
-          tag:  "v7.2.1-0.dev-1"
+          tag: "v7.2.1-0.dev-2"
     metricsRegistryRepositoryTag:
       image:
         repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.1-0.dev-1"
+        tag: "v7.2.1-0.dev-2"
     config:
       postgresProxy:
-         enablePostgresProxy: true
+        enablePostgresProxy: true
       kifs:
         enable: true
         mountPoint: /gpudb/kifs
@@ -281,28 +274,23 @@ db:
             volumeClaim:
               spec:
                 storageClassName: ""
-        
 
 dbAdminUser:
-    create: false
-    # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
-    name: "kadmin"
-    # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
-    password: ""
+  create: false
+  # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
+  name: "kadmin"
+  # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
+  password: ""
 dbWorkbench:
   create: false
-  deploymentInfo: '{}'
+  deploymentInfo: "{}"
   fqdn: "local.kinetica"
   letsEncrypt:
     enabled: false
     environment: "staging"
 
   nodeSelector: {}
-    
+
   image:
     repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.1-0.dev-1"
-  
-
-  
-  
+    tag: "v7.2.1-0.dev-2"
