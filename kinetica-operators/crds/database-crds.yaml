@@ -1306,7 +1306,6 @@ spec:
           metadata:
             type: object
           spec:
-            default: {}
             description: RestoreSpec defines the specification for a Velero restore.
             properties:
               backupName:
@@ -5674,7 +5673,6 @@ spec:
                             encryptDataAtRest: true
                         properties:
                           coldStorageTier:
-                            default: {}
                             description: |-
                               Cold Storage Tiers can be used to extend the storage capacity of the Persist Tier.
                               Assign a tier strategy with cold storage to objects that will be infrequently
@@ -15469,7 +15467,6 @@ spec:
             description: KineticaRoleSpec defines the desired state of KineticaRole
             properties:
               alter_role:
-                default: {}
                 description: AlterRoleRequest Kinetica DB REST API Request Format
                   Object.
                 properties:
@@ -15508,7 +15505,6 @@ spec:
                   belongs to.
                 type: string
               role:
-                default: {}
                 description: AddRoleRequest Kinetica DB REST API Request Format Object.
                 properties:
                   name:
