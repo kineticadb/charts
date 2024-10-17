@@ -5726,7 +5726,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -6135,7 +6134,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -6556,7 +6554,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -6964,7 +6961,6 @@ spec:
                                         anyOf:
                                         - type: integer
                                         - type: string
-                                        default: 1Gi
                                         description: |-
                                           * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                                across all resource groups.
@@ -7420,7 +7416,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -7851,7 +7846,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -8234,7 +8228,6 @@ spec:
                                       anyOf:
                                       - type: integer
                                       - type: string
-                                      default: 1Gi
                                       description: |-
                                         * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                              across all resource groups.
@@ -8646,7 +8639,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -9029,7 +9021,6 @@ spec:
                                       anyOf:
                                       - type: integer
                                       - type: string
-                                      default: 1Gi
                                       description: |-
                                         * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                              across all resource groups.
@@ -9454,7 +9445,6 @@ spec:
                                     anyOf:
                                     - type: integer
                                     - type: string
-                                    default: 1Gi
                                     description: |-
                                       * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                            across all resource groups.
@@ -9494,7 +9484,6 @@ spec:
                                       anyOf:
                                       - type: integer
                                       - type: string
-                                      default: 1Gi
                                       description: |-
                                         * 'limit'          : The maximum (bytes) per rank that can be allocated
                                                              across all resource groups.
