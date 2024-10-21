@@ -2,8 +2,8 @@ apiVersion: v1
 entries:
   kinetica-operators:
   - apiVersion: v2
-    appVersion: v7.2.2-2.ga-3
-    created: "2024-10-15T19:37:31.921954216Z"
+    appVersion: v7.2.2-2.ga-4
+    created: "2024-10-21T15:18:15.966274289Z"
     dependencies:
     - name: openldap
       repository: ""
@@ -17,7 +17,7 @@ entries:
       name: gpu-operator
       repository: ""
     description: A Helm chart for deploying Kinetica Operators
-    digest: 31c942c2ed8a5fe90e692184cbfa55a58ecac44354bf991cf4d526c009178a50
+    digest: 7efb4bfa8f53d4fefb4a7312857d52bc78269a9f680e3fc5daf097260c346763
     name: kinetica-operators
     type: application
     urls:
@@ -1783,4 +1783,4 @@ entries:
     urls:
     - https://kineticadb.github.io/charts/7.2/kinetica-operators-0.0.0.tgz
     version: 0.0.0
-generated: "2024-10-21T13:50:42.143823786Z"
+generated: "2024-10-21T15:18:15.910924747Z"
