@@ -16,7 +16,7 @@ follow this generic guide to install the Kinetica Operators, Database and Workbe
 ### Install the helm chart
 
 Run the following Helm install command after substituting values from
-[section 3](preparation_and_prerequisites.md#3-determine-the-following-prior-to-the-chart-install)
+[Preparation & Prequisites](preparation_and_prerequisites.md#3-determine-the-following-prior-to-the-chart-install)
 
 ``` sh title="Helm install kinetica-operators"
 helm -n kinetica-system install \
