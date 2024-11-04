@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kinetica-support-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "support-bundle.labels" . | nindent 4 }}
+    troubleshoot.io/kind: support-bundle
+data:
+  {{- if .Values.configMap.cluster }}
+  cluster: "{{ .Values.configMap.cluster }}"
+  {{- else }}
+  {{- $configmap := (lookup "v1" "ConfigMap" "{{ .Release.Namespace }}" "{{ include 'support-bundle.fullname' . }}") }}
+  {{- if $configmap }}
+  {{- $cluster := get $configmap.data "cluster" }}
+  cluster: {{ $cluster | quote }}
+  {{- else }}
+  cluster: ""
+  {{- end }}
+  {{- end }}
+  support-bundle-spec: |
+    apiVersion: troubleshoot.sh/v1beta2
+    kind: SupportBundle
+    metadata:
+      name: kinetica-support-bundle-definition
+    spec:
+      hostCollectors:
+        - hostOS: {}
+      collectors:
+        - nodeMetrics: {}
+        - clusterInfo: {}
+        - clusterResources:
+            namespaces:
+            - gpudb
+            - kinetica-system
+        - logs:
+            selector:
+              - app=gpudb
+            namespace: kinetica-system
+            limits:
+              maxAge: 720h
+              maxLines: 10000
+        - logs:
+            selector:
+              - app=gpudb
+            namespace: gpudb
+            limits:
+              maxAge: 720h
+              maxLines: 10000
+        - configMap:
+            selector:
+              - app.kubernetes.io/name=gpudb
+        - secret:
+            namespace: gpudb
+            name: my-secret
+            includeValue: false
+            key: password
+      analyzers:
+        - clusterVersion:
+            outcomes:
+              - fail:
+                  when: "< 1.25.0"
+                  message: The application requires Kubernetes 1.25.0 or later
+                  uri: https://kubernetes.io
+              - warn:
+                  when: "< 1.27.0"
+                  message: Your cluster meets the minimum version of Kubernetes, but we recommend you update to 1.27.0 or later.
+                  uri: https://kubernetes.io
+              - pass:
+                  message: Your cluster meets the recommended and required versions of Kubernetes.
+        - customResourceDefinition:
+            customResourceDefinitionName: kineticaclusters
+        - clusterPodStatuses:
+            name: unhealthy
+            namespaces:
+              - kinetica-system
+              - gpudb
+            outcomes:
+              - fail:
+                  when: "== CrashLoopBackOff"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in a CrashLoopBackOff state." }}
+              - fail:
+                  when: "== ImagePullBackOff"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in a ImagePullBackOff state." }}
+              - fail:
+                  when: "== Pending"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in a Pending state." }}
+              - fail:
+                  when: "== Evicted"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in a Evicted state." }}
+              - fail:
+                  when: "== Terminating"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in a Terminating state." }}
+              - fail:
+                  when: "== Init:Error"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in an Init:Error state." }}
+              - fail:
+                  when: "== Init:CrashLoopBackOff"
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is in an Init:CrashLoopBackOff state." }}
+              - fail:
+                  when: "!= Healthy" # Catch all unhealthy pods. A pod is considered healthy if it has a status of Completed, or Running and all of its containers are ready.
+                  message: {{ printf "Pod {{ .Namespace }}/{{ .Name }} is unhealthy with a status of {{ .Status.Reason }}." }}

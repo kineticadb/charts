@@ -50,8 +50,6 @@
   {{- end }}
 {{- end}}
 
-
-
 {{- $dbOperator := $values.dbOperator }}
 {{- $wbOperator := $values.wbOperator }}
 
@@ -133,7 +131,25 @@
   {{- include "kinetica-operators.all-wboperator-rbac" $data }}
   {{- include "kinetica-operators.all-wboperator-operator" $data }}
 {{- end}}
+
 ---
+
+{{- if ($values.openshift) }}
+  {{- if $dbOperator.install }}
+    {{- include "kinetica-operators.oscp-dbopr-scc" $data }}
+  {{- end}}
+
+  {{- if ($values.otelCollector.install) }}
+    {{- include "kinetica-operators.oscp-otel-scc" $data }}
+  {{- end}}
+
+  {{- if ($values.ingressNginx.install) }}
+    {{- include "kinetica-operators.oscp-ingress-nginx-scc" $data }}
+  {{- end}}
+{{- end}}
+
+---
+
 {{- if ($values.db.create) }}
   {{- include "kinetica-operators.db" $data}}
   {{- if $values.dbAdminUser.create }}
