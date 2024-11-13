@@ -1,0 +1,9 @@
+apiVersion: v2
+name: genai-operator
+description: Installs the genai operator for Kinetica
+
+type: application
+
+version: 72.2.3-dev.2
+
+appVersion: v7.2.2-3.dev-2

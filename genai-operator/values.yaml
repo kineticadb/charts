@@ -1,0 +1,15 @@
+kubeRbacProxy:
+  image:
+    repository: "quay.io/brancz/kube-rbac-proxy"
+    tag: "v0.14.2"
+
+image:
+  repository: kinetica.azurecr.io/dev/genai-operator
+  pullPolicy: IfNotPresent
+  tag: "v7.2.2-3.dev-2"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
