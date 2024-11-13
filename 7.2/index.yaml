@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  genai-operator:
+  - apiVersion: v2
+    appVersion: v7.2.2-3.dev-2
+    created: "2024-11-13T00:12:53.290898537Z"
+    description: Installs the genai operator for Kinetica
+    digest: 26153f490ee2c0e2adfb65181ca61a83f419ea63f405ee2bd23b2d80444a2e4a
+    name: genai-operator
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/7.2/genai-operator-72.2.3-dev.2.tgz
+    version: 72.2.3-dev.2
   kinetica-operators:
   - apiVersion: v2
     appVersion: v7.2.2-3.ga-2
@@ -1883,4 +1894,4 @@ entries:
     urls:
     - https://kineticadb.github.io/charts/7.2/kinetica-operators-0.0.0.tgz
     version: 0.0.0
-generated: "2024-11-12T23:51:18.80756507Z"
+generated: "2024-11-13T00:12:53.275792601Z"
