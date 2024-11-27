@@ -7,7 +7,7 @@ tags:
 
 # :simple-intel: :simple-amd: :simple-arm: Installation - CPU Only 
 
-For managed Kubernetes solutions (AKS, EKS, GKE) or on-prem (kubeadm) Kubernetes variants, 
+For managed Kubernetes solutions (AKS, EKS, GKE), OpenShift or on-prem (kubeadm) Kubernetes variants, 
 follow this generic guide to install the Kinetica Operators, Database and Workbench.
 
 !!! warning "Preparation & Prequisites"
@@ -84,6 +84,20 @@ returned to the system prompt. Once running, you can quit this kubectl watch com
      Create a record in your DNS server pointing to the LoadBalancer DNS. 
      Then edit the KineticaCluster Custom Resource and Workbench Custom Resource with 
      the correct domain name, as mentioned above.
+
+=== "OpenShift"
+    OpenShift Container Platform version 4 is supported. If you are installing on this 
+    flavor of Kubernetes, SecurityContextConstraints are required for some of the Kinetica
+    components. To install these add the folowing set to the main Helm install kinetica-operators
+    command above:
+
+    ```sh title=""
+    --set openshift="true"
+    ```
+
+    !!! note 
+        The defaultStorageClass must still be set for installation to proceed. Run `oc get sc` 
+        to determine available choices.
 
 === "local - dev"
     Installing on a local machine which does not have a domain name,
