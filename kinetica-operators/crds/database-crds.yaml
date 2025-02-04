@@ -3368,6 +3368,11 @@ spec:
                               memory: 48Gi
                               nvidia.com/gpu: '2'
                         properties:
+                          URIScheme:
+                            default: HTTP
+                            description: URIScheme - Whether to connect via HTTP or
+                              HTTPS
+                            type: string
                           apiKey:
                             type: string
                           apiProvider:
@@ -3390,6 +3395,13 @@ spec:
                             default: false
                             description: EnableRAG -
                             type: boolean
+                          port:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            default: '8050'
+                            description: Port - Network Port
+                            x-kubernetes-int-or-string: true
                           resources:
                             default:
                               limits:
