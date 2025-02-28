@@ -19,19 +19,6 @@ The field `spec.ingressController: nginx` should be set to `spec.ingressControll
 It is then necessary to create the required Ingress CRs by hand. Below is a list
 of the Ingress paths that need to be exposed along with sample ingress-nginx CRs.
 
-## Additional Required Deployment Arguments
-
-```  yaml title="ingress-nginx-deployment.yaml" hl_lines="8"
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ingress-nginx-controller
-  namespace: kinetica-system
-spec:
-  containers:
-    args: '--tcp-services-configmap=kinetica-system/tcp-services'
-```
-
 ## Required Ingress Routes
 
 ### Ingress Routes
@@ -370,4 +357,18 @@ data:
 1. Change the namespace to the namespace your ingress-nginx controller is running in. e.g. `ingress-nginx` <br/>
 2. This exposes the postgres proxy port on the default `5432` port. If you wish to change this to a non-standard port then it needs to be changed here but also in the Helm `values.yaml` to match.<br/>
 3. This port is the Table Monitor port and should always be exposed alongside the Postgres Proxy.
+
+Additionally, this config map must be added as an argument in the ingress-nginx controller deployment.
+
+```  yaml title="ingress-nginx-deployment.yaml" hl_lines="8"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-nginx-controller
+  namespace: kinetica-system
+spec:
+  containers:
+    args: '--tcp-services-configmap=kinetica-system/tcp-services'
+```
+
 ---
