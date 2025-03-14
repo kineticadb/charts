@@ -61,7 +61,7 @@ Please check your Kubernetes installation or access credentials (kubeconfig).
 
 [//]: # (:octicons-x-circle-fill-24:)
 
-### Label the Kubernetes    Nodes
+### Label the Kubernetes Nodes
 
 Kinetica requires some of the Kubernetes Nodes to be labeled as it splits some of the 
 components into different deployment 'pools'. This enables different physical node types to be present
@@ -102,10 +102,10 @@ We can put the DB on the GPU nodes and our infrastructure components on CPU only
     ```
 
     whilst the Kubernetes cluster nodes selected to host the Kinetica DB Pods 
-    require the following label `app.kinetica.com/pool=compute-gpu`.
+    require the following label `app.kinetica.com/pool=compute`.
 
     ``` shell title="Label the Database Nodes"
-        kubectl label node k8snode2 app.kinetica.com/pool=compute-gpu
+        kubectl label node k8snode2 app.kinetica.com/pool=compute
     ```
 
     --8<-- "docs/GettingStarted/note_additional_gpu_sqlassistant.md"
