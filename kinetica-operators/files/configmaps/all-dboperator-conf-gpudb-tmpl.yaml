@@ -2008,6 +2008,8 @@ gpudb_conf.tmpl: |
 
   # ==============================================================================
   # AI
+  # Enable RAG
+  ai.enable_rag = {{ .Cluster.Spec.GPUDBCluster.Config.AI.EnableRAG }}
 
   # AI API provider type. The default is "sqlgpt"
   #ai.api.provider = sqlgpt
@@ -2020,6 +2022,13 @@ gpudb_conf.tmpl: |
   # AI API key.
   #ai.api.key =
   ai.api.key = {{ if .Cluster.Spec.GPUDBCluster.Config.AI.APIKey }}{{.Cluster.Spec.GPUDBCluster.Config.AI.APIKey}}{{ else }}{{ end }}
+
+  # AI Embedding model name.
+  ai.api.embeddings_model = {{ if .Cluster.Spec.GPUDBCluster.Config.AI.EmbeddingsModel }}{{.Cluster.Spec.GPUDBCluster.Config.AI.EmbeddingsModel}}{{ else }}sqlgpt{{ end }}
+
+  # AI API connection timeout in seconds
+  ai.api.connection_timeout = {{ if .Cluster.Spec.GPUDBCluster.Config.AI.ConnectionTimeout }}{{.Cluster.Spec.GPUDBCluster.Config.AI.ConnectionTimeout}}{{ else }}60{{ end }}
+
 
   # ==============================================================================
   # External Files

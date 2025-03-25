@@ -839,7 +839,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp:
   name: kineticaoperator-manager-role
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -854,43 +853,11 @@ rules:
   - events
   - namespaces
   - nodes
-  - persistentvolumeclaims
   - persistentvolumes
   - pods
   - secrets
-  - services
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ''
-  resources:
-  - configmaps
-  - events
-  - namespaces
-  - pods
-  - secrets
-  - services
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ''
-  resources:
-  - configmaps
-  - namespaces
-  - secrets
   - serviceaccounts
+  - services
   verbs:
   - create
   - delete
@@ -918,26 +885,6 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - configmaps/status
-  - events/status
-  - namespaces/status
-  - pods/status
-  - secrets/status
-  - services/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - ''
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
-- apiGroups:
-  - ''
-  resources:
   - persistentvolumeclaims
   verbs:
   - create
@@ -947,14 +894,6 @@ rules:
   - list
   - patch
   - update
-  - watch
-- apiGroups:
-  - ''
-  resources:
-  - persistentvolumes
-  verbs:
-  - get
-  - list
   - watch
 - apiGroups:
   - admissionregistration.k8s.io
@@ -971,17 +910,6 @@ rules:
   - watch
 - apiGroups:
   - apiextensions.k8s.io
-  resources:
-  - customresourcedefinitions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
   - apiextensions.k8s.io/v1
   resources:
   - customresourcedefinitions
@@ -997,295 +925,19 @@ rules:
   - app.kinetica.com
   resources:
   - kineticacluster
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusteradmins
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusteradmins/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusteradmins/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterbackups
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterbackups/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterbackups/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterelasticities
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterelasticities/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterresourcegroups
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterresourcegroups/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterrestores
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterrestores/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusters
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusters/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusters/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterschedules
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterschedules/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterschemas
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterschemas/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaclusterupgrades
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterupgrades/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticagrants
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticagrants/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaoperatorupgrades
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaoperatorupgrades/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticareleaseversions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticareleaseversions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticaroles
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaroles/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
   - kineticausers
   verbs:
   - create
@@ -1298,6 +950,27 @@ rules:
 - apiGroups:
   - app.kinetica.com
   resources:
+  - kineticaclusteradmins/finalizers
+  - kineticaclusterbackups/finalizers
+  - kineticaclusters/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticaclusteradmins/status
+  - kineticaclusterbackups/status
+  - kineticaclusterelasticities/status
+  - kineticaclusterresourcegroups/status
+  - kineticaclusterrestores/status
+  - kineticaclusters/status
+  - kineticaclusterschedules/status
+  - kineticaclusterschemas/status
+  - kineticaclusterupgrades/status
+  - kineticagrants/status
+  - kineticaoperatorupgrades/status
+  - kineticareleaseversions/status
+  - kineticaroles/status
   - kineticausers/status
   verbs:
   - get
@@ -1308,6 +981,7 @@ rules:
   resources:
   - daemonsets
   - deployments
+  - replicasets
   - statefulsets
   verbs:
   - create
@@ -1322,50 +996,7 @@ rules:
   resources:
   - daemonsets/status
   - deployments/status
-  - statefulsets/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  - replicasets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  - statefulsets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments/status
   - replicasets/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - apps
-  resources:
-  - deployments/status
   - statefulsets/status
   verbs:
   - get
@@ -1485,21 +1116,6 @@ rules:
   - watch
 - apiGroups:
   - rbac.authorization.k8s.io/v1
-  resources:
-  - clusterrolebindings
-  - clusterroles
-  - rolebindings
-  - roles
-  verbs:
-  - create
-  - delete
-  - escalate
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
   - rbac.authorization.k8s.io/v1beta1
   resources:
   - clusterrolebindings
@@ -1539,57 +1155,8 @@ rules:
   - velero.io
   resources:
   - backups
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - velero.io
-  resources:
-  - backups/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - velero.io
-  resources:
   - deletebackuprequests
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - velero.io
-  resources:
   - restores
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - velero.io
-  resources:
-  - restores/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - velero.io
-  resources:
   - schedules
   verbs:
   - create
@@ -1602,6 +1169,8 @@ rules:
 - apiGroups:
   - velero.io
   resources:
+  - backups/status
+  - restores/status
   - schedules/status
   verbs:
   - get

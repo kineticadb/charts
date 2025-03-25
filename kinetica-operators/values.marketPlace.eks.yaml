@@ -28,16 +28,16 @@ nodeSelector:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kinetica/workbench-operator"
-    tag: "v7.2.2-10.ga-2-operator"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.2-12.dev-2-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kinetica/kinetica-k8s-operator"
-    tag: "v7.2.2-10.ga-2-operator"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.2-12.dev-2-operator"
     digest: ""
 certManager:
   install: true
@@ -148,7 +148,7 @@ openldap:
     ldapPort: 1389
   initContainers:
     - name: openldap-create-directory-structure
-      image: "docker.io/kinetica/busybox:v7.2.2-10.ga-2"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-12.dev-2"
       command:
         [
           "sh",
@@ -201,8 +201,8 @@ db:
       publicKeyVersion: 1
   hostManagerMonitor:
     image:
-      repository: "docker.io/kinetica/kinetica-k8s-monitor"
-      tag: "v7.2.2-10.ga-2"
+      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
+      tag: "v7.2.2-12.dev-2"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -223,34 +223,34 @@ db:
   supportingImages:
     busybox:
       image:
-        repository: "docker.io/kinetica/busybox"
-        tag: "v7.2.2-10.ga-2"
+        repository: "kinetica.azurecr.io/dev/busybox"
+        tag: "v7.2.2-12.dev-2"
     socat:
       image:
-        repository: "docker.io/kinetica/socat"
-        tag: "v7.2.2-10.ga-2"
+        repository: "kinetica.azurecr.io/dev/socat"
+        tag: "v7.2.2-12.dev-2"
   # stats:
   #   isEnabled: true
   # alertManager:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-10.ga-2"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-12.dev-2"
   # grafana:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-10.ga-2"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-12.dev-2"
   # loki:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-10.ga-2"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-12.dev-2"
   # prometheus:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-10.ga-2"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-12.dev-2"
 
   gadmin:
     isEnabled: true
@@ -279,17 +279,17 @@ db:
     image:
       cuda:
         image:
-          repository: "docker.io/kinetica/kinetica-k8s-cuda"
-          tag: "v7.2.2-10.ga-2"
+          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
+          tag: "v7.2.2-12.dev-2"
       standard:
         image:
-          # you should be able to use docker.io/kinetica/kinetica-k8s-cpu:v7.2.2-10.ga-2 also
-          repository: "docker.io/kinetica/kinetica-k8s-cpu-avx512"
-          tag: "v7.2.2-10.ga-2"
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.2-12.dev-2 also
+          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512"
+          tag: "v7.2.2-12.dev-2"
     metricsRegistryRepositoryTag:
       image:
-        repository: "docker.io/kinetica/fluent-bit"
-        tag: "v7.2.2-10.ga-2"
+        repository: "kinetica.azurecr.io/dev/fluent-bit"
+        tag: "v7.2.2-12.dev-2"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -342,5 +342,5 @@ dbWorkbench:
   useHttps: true
   nodeSelector: {}
   image:
-    repository: "docker.io/kinetica/workbench"
-    tag: "v7.2.2-10.ga-2"
+    repository: "kinetica.azurecr.io/dev/workbench"
+    tag: "v7.2.2-12.dev-2"
