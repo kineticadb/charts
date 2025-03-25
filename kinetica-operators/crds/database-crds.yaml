@@ -3361,17 +3361,6 @@ spec:
                         default:
                           apiProvider: sqlgpt
                           apiUrl: https://sqlgpt.io/api/sql/suggest
-                          resources:
-                            limits:
-                              cpu: 16000m
-                              ephemeral-storage: 70Gi
-                              memory: 48Gi
-                              nvidia.com/gpu: '2'
-                            requests:
-                              cpu: 16000m
-                              ephemeral-storage: 70Gi
-                              memory: 48Gi
-                              nvidia.com/gpu: '2'
                         properties:
                           URIScheme:
                             default: HTTP
