@@ -241,7 +241,7 @@ spec:
             volumeClaim:
               spec:
                 storageClassName: {{ default .Values.global.defaultStorageClass .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.storageClassName }}
-                accessModes: {{ default .Values.global.accessModes .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.accessModes }}
+                accessModes: ["ReadWriteOnce"]
         {{- end }}
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier) "map" }}
         diskCacheTier:
@@ -251,6 +251,7 @@ spec:
             volumeClaim:
               spec:
                 storageClassName: {{ default .Values.global.defaultStorageClass .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier.default.volumeClaim.spec.storageClassName }}
+                accessModes: ["ReadWriteOnce"]
         {{- end }}
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.coldStorageTier) "map" }}
         coldStorageTier:
