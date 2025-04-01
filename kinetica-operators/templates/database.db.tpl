@@ -241,6 +241,7 @@ spec:
             volumeClaim:
               spec:
                 storageClassName: {{ default .Values.global.defaultStorageClass .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.storageClassName }}
+                accessModes: {{ default .Values.global.accessModes .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.accessModes }}
         {{- end }}
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.diskCacheTier) "map" }}
         diskCacheTier:
