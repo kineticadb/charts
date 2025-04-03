@@ -6029,6 +6029,10 @@ spec:
                                     type: integer
                                   name:
                                     type: string
+                                  parameters:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
                                   path:
                                     default: default
                                     description: A base directory to use as a space
@@ -7873,6 +7877,10 @@ spec:
                                     type: integer
                                   name:
                                     type: string
+                                  parameters:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
                                   path:
                                     default: default
                                     description: A base directory to use as a space
@@ -9729,6 +9737,10 @@ spec:
                                     type: integer
                                   name:
                                     type: string
+                                  parameters:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
                                   path:
                                     default: default
                                     description: A base directory to use as a space
@@ -11572,6 +11584,10 @@ spec:
                                         type: integer
                                       name:
                                         type: string
+                                      parameters:
+                                        additionalProperties:
+                                          type: string
+                                        type: object
                                       path:
                                         default: default
                                         description: A base directory to use as a
@@ -13484,6 +13500,10 @@ spec:
                                     type: integer
                                   name:
                                     type: string
+                                  parameters:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
                                   path:
                                     default: default
                                     description: A base directory to use as a space
@@ -15350,6 +15370,10 @@ spec:
                                     type: integer
                                   name:
                                     type: string
+                                  parameters:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
                                   path:
                                     default: default
                                     description: A base directory to use as a space
@@ -17168,6 +17192,10 @@ spec:
                                       type: integer
                                     name:
                                       type: string
+                                    parameters:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
                                     path:
                                       default: default
                                       description: A base directory to use as a space
@@ -19031,6 +19059,10 @@ spec:
                                     type: integer
                                   name:
                                     type: string
+                                  parameters:
+                                    additionalProperties:
+                                      type: string
+                                    type: object
                                   path:
                                     default: default
                                     description: A base directory to use as a space
@@ -20849,6 +20881,10 @@ spec:
                                       type: integer
                                     name:
                                       type: string
+                                    parameters:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
                                     path:
                                       default: default
                                       description: A base directory to use as a space
