@@ -39,6 +39,15 @@ openldap:
     size: 1Mi
     storageClass: ""
 
+supportBundle:
+  install: true
+  "support-bundle":
+    configMap:
+    # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
+    #       affects the filename of the support-bundles that are created to create
+    #       additional tracability.
+      cluster: "kinetica-k3s-sample"
+
 db:
   create: true
   name: kinetica-k8s-sample
