@@ -149,10 +149,16 @@ spec:
       name: reveal
       protocol: TCP
       containerPort: 8088
+  generateIngressRecords: {{ .Values.db.generateIngressRecords }}
   gpudbCluster:
+    {{- if eq .Values.db.gpudbCluster.useTShirt true }}
+    useTShirt: {{ .Values.db.gpudbCluster.useTShirt }}
     clusterSize:
       tshirtSize: {{ .Values.db.gpudbCluster.clusterSize.tshirtSize }}
       tshirtType: {{ .Values.db.gpudbCluster.clusterSize.tshirtType }}
+    {{- else }}
+    useTShirt: false
+    {{- end }}
     ranksPerNode: {{ .Values.db.gpudbCluster.ranksPerNode }}
     replicas: {{ .Values.db.gpudbCluster.replicas }}
     hasPools: {{ .Values.db.gpudbCluster.hasPools }}

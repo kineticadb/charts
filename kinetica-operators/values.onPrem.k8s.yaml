@@ -14,7 +14,7 @@ tolerations: []
 affinity: {}
 
 ingressNginx:
-  install: true
+  install: false
 "ingress-nginx":
   controller:
     kind: Deployment
@@ -51,7 +51,10 @@ supportBundle:
 db:
   create: true
   name: kinetica-k8s-sample
+  generateIngressRecords: true
   gpudbCluster:
+    replicas: 3
+    useTShirt: false
     # You need a license key. Please contact support@kinetica.com
     license: ""
     config:
