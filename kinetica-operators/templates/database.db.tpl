@@ -178,26 +178,26 @@ spec:
     resources:
       {{- if eq (kindOf .Values.db.gpudbCluster.resources.limits) "map" }}
       limits: 
-        {{- if eq (kindOf .Values.db.gpudbCluster.resources.limits.cpu) "string" }}
-        cpu: {{ .Values.db.gpudbCluster.resources.limits.cpu }}
+        {{- if hasKey .Values.db.gpudbCluster.resources.limits "cpu" }}
+        cpu: {{ .Values.db.gpudbCluster.resources.limits.cpu | toString | quote }}
         {{- end }}
         {{- if hasKey .Values.db.gpudbCluster.resources.limits "ephemeral-storage" }}
         ephemeral-storage: {{ get .Values.db.gpudbCluster.resources.limits "ephemeral-storage" }}
         {{- end }}
-        {{- if eq (kindOf .Values.db.gpudbCluster.resources.limits.memory) "string" }}
-        memory: {{ .Values.db.gpudbCluster.resources.limits.memory }}
+        {{- if hasKey .Values.db.gpudbCluster.resources.limits "memory" }}
+        memory: {{ .Values.db.gpudbCluster.resources.limits.memory | toString | quote }}
         {{- end }}
       {{- end }}
       {{- if eq (kindOf .Values.db.gpudbCluster.resources.requests) "map" }}
       requests:
-        {{- if eq (kindOf .Values.db.gpudbCluster.resources.requests.cpu) "string" }}
-        cpu: {{ .Values.db.gpudbCluster.resources.requests.cpu }}
+        {{- if hasKey .Values.db.gpudbCluster.resources.requests "cpu" }}
+        cpu: {{ .Values.db.gpudbCluster.resources.requests.cpu | toString | quote }}
         {{- end }}
         {{- if hasKey .Values.db.gpudbCluster.resources.requests "ephemeral-storage" }}
         ephemeral-storage: {{ get .Values.db.gpudbCluster.resources.requests "ephemeral-storage" }}
         {{- end }}
-        {{- if eq (kindOf .Values.db.gpudbCluster.resources.requests.memory) "string" }}
-        memory: {{ .Values.db.gpudbCluster.resources.requests.memory }}
+        {{- if hasKey .Values.db.gpudbCluster.resources.requests "memory" }}
+        memory: {{ .Values.db.gpudbCluster.resources.requests.memory | toString | quote }}
         {{- end }}
       {{- end }}
     {{- end }}  
