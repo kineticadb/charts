@@ -40,16 +40,16 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.2-14.dev-6-operator"
+    repository: "docker.io/kineticastagingcloud/workbench-operator"
+    tag: "v7.2.2-14.rc-6-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.2-14.dev-6-operator"
+    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
+    tag: "v7.2.2-14.rc-6-operator"
     digest: ""
 
 nodeSelector: {}
@@ -77,8 +77,8 @@ ingressNginx:
   defaultBackend:
     enabled: true
     image:
-      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
-      tag: "v7.2.2-14.dev-6"
+      repository: "docker.io/kineticastagingcloud/kinetica-default-backend"
+      tag: "v7.2.2-14.rc-6"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -119,7 +119,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-14.dev-6"
+      image: "docker.io/kineticastagingcloud/busybox:v7.2.2-14.rc-6"
       command:
         [
           "sh",
@@ -149,11 +149,11 @@ supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: "kinetica.azurecr.io/dev"
+    registry: "docker.io/kineticastagingcloud"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.2-14.dev-6"
+    tag: "v7.2.2-14.rc-6"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -190,8 +190,8 @@ db:
 
   hostManagerMonitor:
     image:
-      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.2-14.dev-6"
+      repository: "docker.io/kineticastagingcloud/kinetica-k8s-monitor"
+      tag: "v7.2.2-14.rc-6"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -212,34 +212,34 @@ db:
   supportingImages:
     busybox:
       image:
-        repository: "kinetica.azurecr.io/dev/busybox"
-        tag: "v7.2.2-14.dev-6"
+        repository: "docker.io/kineticastagingcloud/busybox"
+        tag: "v7.2.2-14.rc-6"
     socat:
       image:
-        repository: "kinetica.azurecr.io/dev/socat"
-        tag: "v7.2.2-14.dev-6"
+        repository: "docker.io/kineticastagingcloud/socat"
+        tag: "v7.2.2-14.rc-6"
   # stats:
   #   isEnabled: false
   # alertManager:
   #   isEnabled: false
   #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-14.dev-6"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.2-14.rc-6"
   # grafana:
   #   isEnabled: false
   #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-14.dev-6"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.2-14.rc-6"
   # loki:
   #   isEnabled: false
   #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-14.dev-6"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.2-14.rc-6"
   # prometheus:
   #   isEnabled: false
   #   image:
-  #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-14.dev-6"
+  #     repository: "docker.io/kineticastagingcloud/kagent"
+  #     tag: "v7.2.2-14.rc-6"
   gadmin:
     isEnabled: true
   reveal:
@@ -266,17 +266,17 @@ db:
     image:
       cuda:
         image:
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.2-14.dev-6"
+          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cuda"
+          tag: "v7.2.2-14.rc-6"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.2-14.dev-6 also
-          repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu"
-          tag: "v7.2.2-14.dev-6"
+          # you should be able to use docker.io/kineticastagingcloud/kinetica-k8s-cpu-avx512:v7.2.2-14.rc-6 also
+          repository: "docker.io/kineticastagingcloud/kinetica-k8s-cpu"
+          tag: "v7.2.2-14.rc-6"
     metricsRegistryRepositoryTag:
       image:
-        repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.2-14.dev-6"
+        repository: "docker.io/kineticastagingcloud/fluent-bit"
+        tag: "v7.2.2-14.rc-6"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -317,5 +317,5 @@ dbWorkbench:
   nodeSelector: {}
 
   image:
-    repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.2-14.dev-6"
+    repository: "docker.io/kineticastagingcloud/workbench"
+    tag: "v7.2.2-14.rc-6"
