@@ -5661,6 +5661,8 @@ spec:
                                 default: {}
                                 description: ColdStorageAzure
                                 properties:
+                                  allowVolumeExpansion:
+                                    type: boolean
                                   basePath:
                                     description: "'base_path'             : A base
                                       path based on the provider type for this tier."
@@ -5710,6 +5712,10 @@ spec:
                                                            threshold.
                                     format: int32
                                     type: integer
+                                  mountOptions:
+                                    items:
+                                      type: string
+                                    type: array
                                   name:
                                     type: string
                                   parameters:
@@ -7519,6 +7525,8 @@ spec:
                                 default: {}
                                 description: ColdStorageDisk
                                 properties:
+                                  allowVolumeExpansion:
+                                    type: boolean
                                   basePath:
                                     description: "'base_path'             : A base
                                       path based on the provider type for this tier."
@@ -7558,6 +7566,10 @@ spec:
                                                            threshold.
                                     format: int32
                                     type: integer
+                                  mountOptions:
+                                    items:
+                                      type: string
+                                    type: array
                                   name:
                                     type: string
                                   parameters:
@@ -9377,6 +9389,8 @@ spec:
                                     type: string
                                   accountPrivateKey:
                                     type: string
+                                  allowVolumeExpansion:
+                                    type: boolean
                                   basePath:
                                     description: "'base_path'             : A base
                                       path based on the provider type for this tier."
@@ -9418,6 +9432,10 @@ spec:
                                                            threshold.
                                     format: int32
                                     type: integer
+                                  mountOptions:
+                                    items:
+                                      type: string
+                                    type: array
                                   name:
                                     type: string
                                   parameters:
@@ -11224,6 +11242,8 @@ spec:
                                     default: {}
                                     description: ColdStorageDisk
                                     properties:
+                                      allowVolumeExpansion:
+                                        type: boolean
                                       basePath:
                                         description: "'base_path'             : A
                                           base path based on the provider type for
@@ -11265,6 +11285,10 @@ spec:
                                                                threshold.
                                         format: int32
                                         type: integer
+                                      mountOptions:
+                                        items:
+                                          type: string
+                                        type: array
                                       name:
                                         type: string
                                       parameters:
@@ -13114,6 +13138,8 @@ spec:
                                 default: {}
                                 description: ColdStorageS3
                                 properties:
+                                  allowVolumeExpansion:
+                                    type: boolean
                                   awsAccessKeyId:
                                     type: string
                                   awsRoleARN:
@@ -13181,6 +13207,10 @@ spec:
                                                            threshold.
                                     format: int32
                                     type: integer
+                                  mountOptions:
+                                    items:
+                                      type: string
+                                    type: array
                                   name:
                                     type: string
                                   parameters:
@@ -15021,6 +15051,8 @@ spec:
                                 default: {}
                                 description: DiskTierStorageLimit
                                 properties:
+                                  allowVolumeExpansion:
+                                    type: boolean
                                   highWatermark:
                                     default: 90
                                     description: |-
@@ -15051,6 +15083,10 @@ spec:
                                                            threshold.
                                     format: int32
                                     type: integer
+                                  mountOptions:
+                                    items:
+                                      type: string
+                                    type: array
                                   name:
                                     type: string
                                   parameters:
@@ -16843,6 +16879,8 @@ spec:
                                   default: {}
                                   description: DiskTierStorageLimit
                                   properties:
+                                    allowVolumeExpansion:
+                                      type: boolean
                                     highWatermark:
                                       default: 90
                                       description: |-
@@ -16873,6 +16911,10 @@ spec:
                                                              threshold.
                                       format: int32
                                       type: integer
+                                    mountOptions:
+                                      items:
+                                        type: string
+                                      type: array
                                     name:
                                       type: string
                                     parameters:
@@ -18710,6 +18752,8 @@ spec:
                                 default: {}
                                 description: DiskTierStorageLimit
                                 properties:
+                                  allowVolumeExpansion:
+                                    type: boolean
                                   highWatermark:
                                     default: 90
                                     description: |-
@@ -18740,6 +18784,10 @@ spec:
                                                            threshold.
                                     format: int32
                                     type: integer
+                                  mountOptions:
+                                    items:
+                                      type: string
+                                    type: array
                                   name:
                                     type: string
                                   parameters:
@@ -20532,6 +20580,8 @@ spec:
                                   default: {}
                                   description: DiskTierStorageLimit
                                   properties:
+                                    allowVolumeExpansion:
+                                      type: boolean
                                     highWatermark:
                                       default: 90
                                       description: |-
@@ -20562,6 +20612,10 @@ spec:
                                                              threshold.
                                       format: int32
                                       type: integer
+                                    mountOptions:
+                                      items:
+                                        type: string
+                                      type: array
                                     name:
                                       type: string
                                     parameters:
