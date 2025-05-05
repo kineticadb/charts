@@ -20,7 +20,7 @@ global:
 upsertKineticaCrds:
   image:
     repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
-    tag: "v7.2.2-15.dev-3"
+    tag: "v7.2.2-15.dev-5"
 
 kubeRbacProxy:
   image:
@@ -47,7 +47,7 @@ wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.2-15.dev-3-operator"
+    tag: "v7.2.2-15.dev-5-operator"
     digest: ""
 dbOperator:
   install: true
@@ -55,7 +55,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.2-15.dev-3-operator"
+    tag: "v7.2.2-15.dev-5-operator"
     digest: ""
 
 nodeSelector: {}
@@ -84,7 +84,7 @@ ingressNginx:
     enabled: true
     image:
       repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
-      tag: "v7.2.2-15.dev-3"
+      tag: "v7.2.2-15.dev-5"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -125,7 +125,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-15.dev-3"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-15.dev-5"
       command:
         [
           "sh",
@@ -159,7 +159,7 @@ supportBundle:
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.2-15.dev-3"
+    tag: "v7.2.2-15.dev-5"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -197,7 +197,7 @@ db:
   hostManagerMonitor:
     image:
       repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.2-15.dev-3"
+      tag: "v7.2.2-15.dev-5"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -219,33 +219,33 @@ db:
     busybox:
       image:
         repository: "kinetica.azurecr.io/dev/busybox"
-        tag: "v7.2.2-15.dev-3"
+        tag: "v7.2.2-15.dev-5"
     socat:
       image:
         repository: "kinetica.azurecr.io/dev/socat"
-        tag: "v7.2.2-15.dev-3"
+        tag: "v7.2.2-15.dev-5"
   # stats:
   #   isEnabled: false
   # alertManager:
   #   isEnabled: false
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-15.dev-3"
+  #     tag: "v7.2.2-15.dev-5"
   # grafana:
   #   isEnabled: false
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-15.dev-3"
+  #     tag: "v7.2.2-15.dev-5"
   # loki:
   #   isEnabled: false
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-15.dev-3"
+  #     tag: "v7.2.2-15.dev-5"
   # prometheus:
   #   isEnabled: false
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-15.dev-3"
+  #     tag: "v7.2.2-15.dev-5"
   gadmin:
     isEnabled: true
   reveal:
@@ -273,16 +273,16 @@ db:
       cuda:
         image:
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.2-15.dev-3"
+          tag: "v7.2.2-15.dev-5"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.2-15.dev-3 also
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512:v7.2.2-15.dev-5 also
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu"
-          tag: "v7.2.2-15.dev-3"
+          tag: "v7.2.2-15.dev-5"
     metricsRegistryRepositoryTag:
       image:
         repository: "kinetica.azurecr.io/dev/fluent-bit"
-        tag: "v7.2.2-15.dev-3"
+        tag: "v7.2.2-15.dev-5"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -324,4 +324,4 @@ dbWorkbench:
 
   image:
     repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.2-15.dev-3"
+    tag: "v7.2.2-15.dev-5"

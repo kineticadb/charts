@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
-    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook: pre-upgrade
     helm.sh/hook-delete-policy: hook-succeeded
     helm.sh/hook-weight: '-5'
 spec:
