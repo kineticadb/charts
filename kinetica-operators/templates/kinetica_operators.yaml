@@ -18,8 +18,6 @@
 {{- $allowedSaasProviders := list "eks"  }}
 {{- $allowedMarketPlaceProviders := list "aks" "eks" }}
 
-
-
 {{- if not (has $values.environment $allowedEnvironments) }}
   {{- fail (printf "%s - %s - %s - " "Not an allowed environment" $values.environment "Allowed are " ($allowedEnvironments  | join "/")) }}
 {{- end }}
@@ -92,11 +90,15 @@
   
 {{- $values = merge (dict "dbOperator" $dbOperator) (dict "wbOperator" $wbOperator) $values}}
 {{- $data := merge (dict "Files" $files) (dict "Values" $values) (dict "Capabilities" $capabilities) (dict "Chart" $chart) (dict "Release" $release) (dict "Template" $template)}}
+
+{{- include "kinetica-operators.crds" $data }}
+
 ---
 
 {{- if and (not $dbOperator.install) $wbOperator.install }}
   {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
 {{- end }}
+
 ---
 {{- if $dbOperator.install }}
   {{- include "kinetica-operators.all-dboperator-conf" $data }}
