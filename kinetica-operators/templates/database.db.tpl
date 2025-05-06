@@ -242,6 +242,10 @@ spec:
         {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.persistTier) "map" }}
         persistTier:
           default:
+            allowVolumeExpansion: {{ default true .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.allowVolumeExpansion }}
+            {{- if eq (kindOf .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.parameters) "map" }}
+            parameters: {{ toYaml .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.parameters | nindent 14 }}
+            {{- end }}
             provisioner: {{ default .Values.storageProvisioner .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.provisioner }}
             limit: {{ .Values.db.gpudbCluster.config.tieredStorage.persistTier.default.limit }}
             volumeClaim:
