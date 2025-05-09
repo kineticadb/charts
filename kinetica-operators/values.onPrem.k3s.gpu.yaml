@@ -80,8 +80,9 @@ openldap:
     accessMode: "ReadWriteOnce"
     size: 1Mi
     storageClass: "local-path"
-db:
-  create: true
+
+kineticacluster:
+  install: true
   name: kinetica-k3s-sample
   gpudbCluster:
     clusterSize:

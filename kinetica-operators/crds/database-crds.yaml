@@ -22676,6 +22676,11 @@ spec:
                               of geospatial data. Enabling this option increases memory usage on ingestion.
                             type: boolean
                           lodDataExtent:
+                            default:
+                            - -180
+                            - -90
+                            - 180
+                            - 90
                             description: |-
                               Longitude and latitude ranges of geospatial data for which level-of-details
                               representations are being generated. The parameter order is:
@@ -22685,7 +22690,6 @@ spec:
                               The default values span over the world, but the level-of-details rendering
                               becomes more efficient when the precise extent of geospatial data is
                               specified.
-                              kubebuilder:default:={ -180, -90, 180, 90 }
                             items:
                               format: int32
                               type: integer
@@ -22951,7 +22955,7 @@ spec:
                     - containerPort
                     type: object
                   image:
-                    default: kinetica/kinetica-k8s-intel:v7.1.6.0
+                    default: kinetica/kinetica-k8s-cpu:v7.2.2-8.ga-1
                     description: Set the name of the container image to use.
                     type: string
                   imagePullPolicy:
@@ -23054,8 +23058,8 @@ spec:
                   metricsRegistryRepositoryTag:
                     default:
                       registry: docker.io
-                      repository: kineticadevcloud/fluent-bit
-                      tag: v7.1.5.2
+                      repository: kinetica/fluent-bit
+                      tag: v7.2.2-8.ga-1
                     description: Metrics - DB Metrics scrape & forward configuration
                       for `fluent-bit`.
                     properties:
@@ -23094,7 +23098,7 @@ spec:
                           the repository.
                         type: string
                       repository:
-                        default: kineticadevcloud/
+                        default: kinetica/
                         description: The image repository path.
                         type: string
                       semVer:
@@ -23107,7 +23111,7 @@ spec:
                         description: The image sha.
                         type: string
                       tag:
-                        default: v7.1.5.2
+                        default: v7.2.2.8-ga.1
                         description: The image tag.
                         type: string
                     type: object
@@ -23775,7 +23779,7 @@ spec:
                           the repository.
                         type: string
                       repository:
-                        default: kineticadevcloud/
+                        default: kinetica/
                         description: The image repository path.
                         type: string
                       semVer:
@@ -23788,7 +23792,7 @@ spec:
                         description: The image sha.
                         type: string
                       tag:
-                        default: v7.1.5.2
+                        default: v7.2.2.8-ga.1
                         description: The image tag.
                         type: string
                     type: object
@@ -24624,7 +24628,7 @@ spec:
                               the repository.
                             type: string
                           repository:
-                            default: kineticadevcloud/
+                            default: kinetica/
                             description: The image repository path.
                             type: string
                           semVer:
@@ -24637,7 +24641,7 @@ spec:
                             description: The image sha.
                             type: string
                           tag:
-                            default: v7.1.5.2
+                            default: v7.2.2.8-ga.1
                             description: The image tag.
                             type: string
                         type: object
@@ -25370,7 +25374,7 @@ spec:
                               the repository.
                             type: string
                           repository:
-                            default: kineticadevcloud/
+                            default: kinetica/
                             description: The image repository path.
                             type: string
                           semVer:
@@ -25383,7 +25387,7 @@ spec:
                             description: The image sha.
                             type: string
                           tag:
-                            default: v7.1.5.2
+                            default: v7.2.2.8-ga.1
                             description: The image tag.
                             type: string
                         type: object
@@ -26109,7 +26113,7 @@ spec:
                               the repository.
                             type: string
                           repository:
-                            default: kineticadevcloud/
+                            default: kinetica/
                             description: The image repository path.
                             type: string
                           semVer:
@@ -26122,7 +26126,7 @@ spec:
                             description: The image sha.
                             type: string
                           tag:
-                            default: v7.1.5.2
+                            default: v7.2.2.8-ga.1
                             description: The image tag.
                             type: string
                         type: object
@@ -26855,7 +26859,7 @@ spec:
                               the repository.
                             type: string
                           repository:
-                            default: kineticadevcloud/
+                            default: kinetica/
                             description: The image repository path.
                             type: string
                           semVer:
@@ -26868,7 +26872,7 @@ spec:
                             description: The image sha.
                             type: string
                           tag:
-                            default: v7.1.5.2
+                            default: v7.2.2.8-ga.1
                             description: The image tag.
                             type: string
                         type: object
@@ -27517,7 +27521,7 @@ spec:
                           the repository.
                         type: string
                       repository:
-                        default: kineticadevcloud/
+                        default: kinetica/
                         description: The image repository path.
                         type: string
                       semVer:
@@ -27530,7 +27534,7 @@ spec:
                         description: The image sha.
                         type: string
                       tag:
-                        default: v7.1.5.2
+                        default: v7.2.2.8-ga.1
                         description: The image tag.
                         type: string
                     type: object
@@ -27576,7 +27580,7 @@ spec:
                           the repository.
                         type: string
                       repository:
-                        default: kineticadevcloud/
+                        default: kinetica/
                         description: The image repository path.
                         type: string
                       semVer:
@@ -27589,7 +27593,7 @@ spec:
                         description: The image sha.
                         type: string
                       tag:
-                        default: v7.1.5.2
+                        default: v7.2.2.8-ga.1
                         description: The image tag.
                         type: string
                     type: object
@@ -28618,7 +28622,7 @@ spec:
             properties:
               registryRepositoryTag:
                 items:
-                  description: RegistryRepositoryTag - DatabaseMetrics configuraion
+                  description: RegistryRepositoryTag - DatabaseMetrics configuration
                     object.
                   properties:
                     imagePullPolicy:
@@ -28656,7 +28660,7 @@ spec:
                         repository.
                       type: string
                     repository:
-                      default: kineticadevcloud/
+                      default: kinetica/
                       description: The image repository path.
                       type: string
                     semVer:
@@ -28669,7 +28673,7 @@ spec:
                       description: The image sha.
                       type: string
                     tag:
-                      default: v7.1.5.2
+                      default: v7.2.2.8-ga.1
                       description: The image tag.
                       type: string
                   type: object
