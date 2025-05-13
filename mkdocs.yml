@@ -194,6 +194,7 @@ nav:
       - Administration/index.md
       - User Management: Administration/user_management.md
       - Role Management: Administration/role_management.md
+      - Schema Management: Administration/schema_management.md
   - Architecture & Design:
       - Architecture/index.md
       - Architecture:

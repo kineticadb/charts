@@ -1,7 +1,6 @@
 ---
 hide:
   - navigation
-  - toc
 tags:
   - Administration
 ---
@@ -39,6 +38,10 @@ The name of the `KineticaCluster` the user is created in.
 ### Role Name
 
 The name of the role as contained with LDAP & the DB.
+
+!!! tip "naming"
+    Must contain only lowercase letters, digits, and underscores, and cannot begin with a digit.
+    Must not match the name of another role or user.
 
 ## Role Creation
 

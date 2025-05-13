@@ -43,11 +43,11 @@ tags:
     This requires [Velero](https://velero.io/docs/v1.13/basic-install/ "Velero Installation Page") to be installed on the Kubernetes Cluster.
 
 
--   :material-lightbulb-on:{ .lg .middle } __Reduce Costs__
+-   :material-power:{ .lg .middle } __Suspending and Resuming the DB__
 
     ---
 
-    Suspend & Resume  Kinetica for Kubernetes.
+    Stopping and Starting Kinetica on Kubernetes.
     <br/><br/><br/>
     [:octicons-arrow-right-24: Suspend & Resume](suspend_resume.md)
 

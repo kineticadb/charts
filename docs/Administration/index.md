@@ -14,7 +14,7 @@ tags:
 
     Core Kinetica Database Cluster Management.
 
-    :octicons-arrow-right-24: KineticaCluster
+    :octicons-arrow-right-24: [KineticaCluster](cluster_management.md)
 [//]: # (    [:octicons-arrow-right-24: KineticaCluster]&#40;kinetica_clusters.md "Cluster Management"&#41;)
 
 -   :fontawesome-solid-user:{ .lg .middle } __DB Users__
@@ -41,11 +41,11 @@ tags:
 
     ---
 
-    Kinetica Database Schema Management.
+    Kinetica Database Schema Management doot.
 
-    :octicons-arrow-right-24: KineticaSchema
+    [:octicons-arrow-right-24: KineticaClusterSchema](schema_management.md "Schema Management")
 
-[//]: # (    [:octicons-arrow-right-24: KineticaSchema]&#40;kinetica_cluster_schemas.md "Role Management"&#41;)
+[//]: # (    [:octicons-arrow-right-24: KineticaClusterSchema]&#40;schema_management.md "Schema Management"&#41;)
 
 -   :material-kubernetes:{ .lg .middle } __DB Grants__
 
@@ -53,9 +53,9 @@ tags:
 
     Kinetica Database Grant Management.
 
-    :octicons-arrow-right-24: KineticaGrant
+    :octicons-arrow-right-24: [KineticaGrant](grant_management.md)
 
-[//]: # (    [:octicons-arrow-right-24: KineticaGrant]&#40;kinetica_cluster_grants.md "Grant Group Management"&#41;)
+[//]: # (    [:octicons-arrow-right-24: KineticaGrant]&#40;grant_management.md "Grant Group Management"&#41;)
 
 -   :material-kubernetes:{ .lg .middle } __DB Resource Groups__
 
@@ -63,16 +63,15 @@ tags:
 
     Kinetica Database Resource Group Management.
 
-    :octicons-arrow-right-24: KineticaResourceGroup
-[//]: # (    [:octicons-arrow-right-24: KineticaResourceGroup]&#40;kinetica_cluster_resource_groups.md "Resource Group Management"&#41;)
+    [:octicons-arrow-right-24: KineticaResourceGroup](resource_group_management.md "Resource Group Management")
 
--   :material-backup-restore:{ .lg .middle } __DB Administration__
+-   :material-power:{ .lg .middle } __DB Start/Stop__
 
     ---
 
-    Kinetica Database Administration.
+    Starting and Stopping the Kinetica Database.
 
-    :octicons-arrow-right-24: KineticaAdmin
+    [:octicons-arrow-right-24: Suspend/Resume](../Operations/suspend_resume.md)
 
 [//]: # (    [:octicons-arrow-right-24: KineticaAdmin]&#40;kinetica_cluster_admins.md "DB Administration"&#41;)
 

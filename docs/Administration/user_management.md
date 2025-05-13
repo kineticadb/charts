@@ -1,7 +1,6 @@
 ---
 hide:
   - navigation
-  - toc
 tags:
   - Administration
 ---
@@ -15,7 +14,7 @@ Management of users is done with the `KineticaUser` CRD.
 ## List Users
 
 To list the users deployed to a Kinetica DB installation we can use the following from the 
-command-line: -
+command-line:
 
 `kubectl -n gpudb get kineticausers` or `kubectl -n gpudb get ku`
 
@@ -24,8 +23,8 @@ where the namespace `-n gpudb` matches the namespace of the Kinetica DB installa
 This outputs 
 
 | Name   | Action | Ring Name           | UID    | Last Name | Given Name | Display Name  | LDAP | DB | Reveal |
-|:-------|:-------|:--------------------|:-------|:----------|:-----------|:--------------|:----:-|:---:| :---: |
-| kadmin | upsert | kinetica-k8s-sample | kadmin | Account          | Admin      | Admin Account | OK   | OK | OK |
+|:-------|:-------|:--------------------|:-------|:----------|:-----------|:--------------|:-----|:---| :----- |
+| kadmin | upsert | kinetica-k8s-sample | kadmin | Account   | Admin      | Admin Account | OK   | OK | OK     |
 
 ### Name
 
@@ -42,7 +41,12 @@ The name of the `KineticaCluster` the user is created in.
 
 ### UID
 
-The unique, user id to use in LDAP & the DB to reference this user.
+The unique user id to use in LDAP & the DB to reference this user.
+
+!!! tip "naming"
+    Must contain only lowercase letters, digits, and underscores, and cannot begin with a digit.
+    Must not match the name of another role or user.
+
 
 ### Last Name
 
@@ -59,6 +63,12 @@ Given Name is the Firstname also called Christian name.
 ### Display Name
 
 The name shown on any UI representation.
+
+### User Principle Name
+
+This is a Unique Identifier for the User account and should be
+formatted like an email address (user@domain.com).  Required for
+LDAP and Reveal.
 
 ### LDAP
 
@@ -194,19 +204,46 @@ spec:
 
 ## Advanced Topics
 
-### Limit User Resources
+### Setting the Resource Group of a User
 
-#### Data Limit
+To limit the compute resources available to a user during execution, you should first
+create a [Resource Group](resource_group_management.md) and when creating the user,
+specify the resource group to associate the user with by setting the option on the
+upsert request.
 
-KIFs user data size limit.
+!!! note
+    The name of the resource group in the CR should be the name of the resource group
+    in the database (not the name of the KineticaClusterResourceGroup CR)
 
-```yaml title="dataLimit"
+``` yaml title="snippet"
+...
 spec:
   upsert:
-    dataLimit: 10Gi
+    options:
+      resource_group: db_resource_group_name
 ```
 
-### User Kifs Usage
+### Setting a Default Schema for the User
+
+When creating the user, you can set the default schema for a user by providing it in the
+upsert request.  The schema should already exist and can be created by creating a
+[KineticaClusterSchema](schema_management.md).
+
+!!! note
+    The name of the schema in the CR should be the name of the schema
+    in the database (not the name of the KineticaClusterSchema CR)
+
+``` yaml title="snippet"
+...
+spec:
+  upsert:
+    options:
+      default_schema: db_schema_name
+```
+
+### KiFS
+
+Users can store blob data in a Kinetica managed FileSystem-like environment called KiFS.
 
 !!! note "Kifs Enablement"
     In order to use the Kifs user features below there is a requirement that Kifs 
@@ -223,7 +260,7 @@ spec:
     createHomeDirectory: true
 ```
 
-##### Limit Directory Storage
+#### Limit Directory Storage
 
 It is possible to limit the amount of Kifs file storage the user has by adding
 `kifsDataLimit` to the user creation yaml and setting the value to a Kubernetes Quantity

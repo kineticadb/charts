@@ -15,11 +15,11 @@ IP addresses to our Kubernetes Services of type `LoadBalancer` using
 
 ??? example "Ingress Service is pending"
     The `ingress-nginx-controller` is currently in the `pending` state as there is no CCM/LoadBalancer
-    ![pending_service.gif](..%2Fimages%2Fkube_vip%2Fpending_service.gif)
+    ![pending_service.png](../images/kube_vip/pending_service.png)
 
 ## `kube-vip`
 
-We will install two components into our Kubernetes CLuster
+We will install two components into our Kubernetes Cluster
 
 * [kube-vip-cloud-controller](https://kube-vip.io/docs/usage/cloud-provider/)
 * [Kubernetes Load-Balancer Service](https://kube-vip.io/docs/usage/kubernetes-services/)

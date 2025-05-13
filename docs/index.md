@@ -35,9 +35,17 @@ Kinetica DB can be quickly installed into Kubernetes using Helm.
 
     ---
 
-    Install the Kinetica DB with helm to get up and running quickly
+    How to install a Kinetica cluster in a production environment.
     <br/><br/>
     [:octicons-arrow-right-24: Installation](GettingStarted/installation.md)
+
+-   :material-connection:{ .lg .middle } __Connecting to the Database__
+
+    ---
+
+    Explore the options on how to connect to your cluster.
+    <br/><br/>
+    [:octicons-arrow-right-24: Connecting](GettingStarted/connecting.md)
 
 -   :material-ninja:{ .lg .middle } __Channel Your Inner Ninja__
 

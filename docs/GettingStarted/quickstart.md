@@ -166,3 +166,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
 !!! note "Default User"
     Username as per the values file mentioned above is `kadmin` and password is `Kinetica1234!`
+
+## Connecting to the Cluster
+
+For information on connecting to your cluster, please see [Connecting](connecting.md)

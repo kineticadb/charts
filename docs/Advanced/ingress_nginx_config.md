@@ -19,6 +19,28 @@ The field `spec.ingressController: nginx` should be set to `spec.ingressControll
 It is then necessary to create the required Ingress CRs by hand. Below is a list
 of the Ingress paths that need to be exposed along with sample ingress-nginx CRs.
 
+## General Considerations
+
+### Kinetica Services
+
+When setting up your own ingress routes, you can utilize the Kubernetes services created by
+the Kinetica Operators.  The services for the database are in the format
+`CLUSTERNAME-service-rankN.NAMESPACE.svc.cluster.local` where `CLUSTERNAME` is the name of the
+KineticaCluster resource for the cluster and `N` is the number of the database rank.
+
+### Ports
+
+The ports on each Pod and Service are the standard port numbers for Kinetica.  Because the
+Operators use LDAP for authentication, you should route your ingress for API calls to the
+:8082 port on each service with the path `/gpudb-N` where `N` is the number of the rank.
+
+### Required Routes
+
+When the API must be accessible from outside of the cluster, clients MUST be able to connect
+to rank0 (head rank), and optionally will need to be able to connect to the worker ranks
+(rank1+) in order to perform multi-head operations.  Ranks should be accessible externally
+at the path `FQDN/CLUSTERNAME/gpudb-N`.
+
 ## Required Ingress Routes
 
 ### Ingress Routes
