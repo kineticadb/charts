@@ -29,7 +29,7 @@ wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.2-18.dev-0-operator"
+    tag: "v7.2.2-18.dev-4-operator"
     digest: ""
 dbOperator:
   install: true
@@ -37,7 +37,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.2-18.dev-0-operator"
+    tag: "v7.2.2-18.dev-4-operator"
     digest: ""
 certManager:
   install: true
@@ -148,7 +148,7 @@ openldap:
     ldapPort: 1389
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-18.dev-0"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-18.dev-4"
       command:
         [
           "sh",
@@ -180,16 +180,18 @@ openldap:
     accessMode: "ReadWriteOnce"
     size: "1Gi"
     storageClass: "gp2"
-kineticacluster:
+db:
   # do you want to provision a database
-  install: true
+  create: true
   name: ""
   namespace: gpudb
   debug: false
   autoSuspend:
     enabled: false
+
   # CHANGE
   payAsYouGo:
+
   awsConfig:
     # CHANGE
     clusterName: ""
@@ -198,9 +200,9 @@ kineticacluster:
       productCode: ""
       publicKeyVersion: 1
   hostManagerMonitor:
-    monitorRegistryRepositoryTag:
+    image:
       repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.2-18.dev-0"
+      tag: "v7.2.2-18.dev-4"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -220,33 +222,36 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      repository: "kinetica.azurecr.io/dev/busybox"
-      tag: "v7.2.2-18.dev-0"
+      image:
+        repository: "kinetica.azurecr.io/dev/busybox"
+        tag: "v7.2.2-18.dev-4"
     socat:
-      repository: "kinetica.azurecr.io/dev/socat"
-      tag: "v7.2.2-18.dev-0"
+      image:
+        repository: "kinetica.azurecr.io/dev/socat"
+        tag: "v7.2.2-18.dev-4"
   # stats:
   #   isEnabled: true
   # alertManager:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-18.dev-0"
+  #     tag: "v7.2.2-18.dev-4"
   # grafana:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-18.dev-0"
+  #     tag: "v7.2.2-18.dev-4"
   # loki:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-18.dev-0"
+  #     tag: "v7.2.2-18.dev-4"
   # prometheus:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-18.dev-0"
+  #     tag: "v7.2.2-18.dev-4"
+
   gadmin:
     isEnabled: true
   reveal:
@@ -275,15 +280,16 @@ kineticacluster:
       cuda:
         image:
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cuda"
-          tag: "v7.2.2-18.dev-0"
+          tag: "v7.2.2-18.dev-4"
       standard:
         image:
-          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.2-18.dev-0 also
+          # you should be able to use kinetica.azurecr.io/dev/kinetica-k8s-cpu:v7.2.2-18.dev-4 also
           repository: "kinetica.azurecr.io/dev/kinetica-k8s-cpu-avx512"
-          tag: "v7.2.2-18.dev-0"
+          tag: "v7.2.2-18.dev-4"
     metricsRegistryRepositoryTag:
-      repository: "kinetica.azurecr.io/dev/fluent-bit"
-      tag: "v7.2.2-18.dev-0"
+      image:
+        repository: "kinetica.azurecr.io/dev/fluent-bit"
+        tag: "v7.2.2-18.dev-4"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -297,6 +303,7 @@ kineticacluster:
       tieredStorage:
         globalTier:
           colocateDisks: true
+
         persistTier:
           default:
             # CHANGE
@@ -305,6 +312,7 @@ kineticacluster:
             volumeClaim:
               spec:
                 storageClassName: gp2
+
         diskCacheTier:
           default:
             # CHANGE
@@ -313,6 +321,7 @@ kineticacluster:
             volumeClaim:
               spec:
                 storageClassName: gp2
+
         coldStorageTier:
           coldStorageType: s3
           coldStorageS3:
@@ -334,4 +343,4 @@ dbWorkbench:
   nodeSelector: {}
   image:
     repository: "kinetica.azurecr.io/dev/workbench"
-    tag: "v7.2.2-18.dev-0"
+    tag: "v7.2.2-18.dev-4"

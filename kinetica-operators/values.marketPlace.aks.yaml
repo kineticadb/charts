@@ -105,34 +105,38 @@ openldap:
     accessMode: "ReadWriteOnce"
     size: "1Gi"
     storageClass: "managed-premium"
-
-kineticacluster:
+db:
   # do you want to provision a database
-  install: true
+  create: true
   name: "${KINETICA_CLUSTER_NAME}"
   namespace: gpudb
   debug: false
   autoSuspend:
     enabled: false
+
   payAsYouGo: "${PAYGO}"
+
   azureConfig:
     managedApp:
       planId: "${PLAN_ID}"
       resourceUri: "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/Microsoft.Solutions/applications/${MANAGED_APP_NAME}"
     appInsights:
       key: "${APP_INSIGHTS_KEY}"
+
   gpudbCluster:
     # this applies if you have labelled node pools for compute
     hasPools: true
     clusterSize:
       tshirtSize: "${TSHIRT_SIZE}"
       tshirtType: "${TSHIRT_TYPE}"
+
     ranksPerNode: ${RANKS_PER_NODE}
     replicas: ${RANKS}
     fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
     letsEncrypt:
       enabled: true
       environment: "production"
+
     license: "${KINETICA_LICENSE}"
     gpuAcceleration: "${GPU_ACCELERATION}"
     config:
@@ -148,6 +152,7 @@ kineticacluster:
       tieredStorage:
         globalTier:
           colocateDisks: true
+
         persistTier:
           default:
             limit: "${PERSIST_TIER_LIMIT}"
@@ -162,6 +167,7 @@ kineticacluster:
             volumeClaim:
               spec:
                 storageClassName: managed-premium
+
         coldStorageTier:
           coldStorageType: azure_blob
           coldStorageAzure:

@@ -59,16 +59,12 @@ supportBundle:
     #       additional tracability.
     cluster: "kinetica-k3s-sample"
 
-kineticacluster:
-  install: true
+db:
+  create: true
   name: kinetica-k3s-sample
-  stats:
-    isEnabled: false
   gpudbCluster:
-    clusterName: kinetica-k3s-sample
     # You need a license key. Please contact support@kinetica.com
     license: ""
-    hasPools: false
     config:
       tieredStorage:
         globalTier:
@@ -86,3 +82,4 @@ dbAdminUser:
   create: true
 dbWorkbench:
   create: true
+  

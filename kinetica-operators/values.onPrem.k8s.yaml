@@ -48,7 +48,7 @@ supportBundle:
     #       additional tracability.
       cluster: "kinetica-k3s-sample"
 
-kineticacluster:
+db:
   create: true
   name: kinetica-k8s-sample
   generateIngressRecords: true

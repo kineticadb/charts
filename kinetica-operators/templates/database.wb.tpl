@@ -5,7 +5,7 @@ apiVersion: workbench.com.kinetica/v1
 kind: Workbench
 metadata:
   name: workbench
-  namespace: {{.Values.kineticacluster.namespace}}
+  namespace: {{.Values.db.namespace}}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
@@ -24,7 +24,7 @@ spec:
   {{- end}}
   useHttps: {{ .Values.dbWorkbench.useHttps | default false}}
   image: "{{ .Values.dbWorkbench.image.repository }}:{{.Values.dbWorkbench.image.tag}}"
-  storageClass: {{ .Values.kineticacluster.name }}-storageclass
+  storageClass: {{ .Values.db.name }}-storageclass
 ---
 {{- if eq .Values.dbWorkbench.fqdn "localhost" }}
 {{- if and (eq (kindOf .Values.dbWorkbench.letsEncrypt) "map") .Values.dbWorkbench.letsEncrypt.enabled }}
@@ -35,7 +35,7 @@ data:
 kind: Secret
 metadata:
   name: workbench-tls
-  namespace: {{.Values.kineticacluster.namespace}}
+  namespace: {{.Values.db.namespace}}
 type: kubernetes.io/tls
 {{- end }}
 {{- end }}

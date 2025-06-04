@@ -75,10 +75,11 @@ openldap:
     successThreshold: 1
     failureThreshold: 30
 
-kineticacluster:
+db:
   # do you want to provision a database
-  install: true
+  create: true
   name: kinetica-kind-sample
+
   gpudbCluster:
     config:
       tieredStorage:

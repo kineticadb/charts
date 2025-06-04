@@ -1,6 +1,0 @@
-apiVersion: v2
-appVersion: 0.1.0
-description: A Helm chart for Kubernetes CRD KineticaCluster i.e. kineticaclusters.app.kinetica.com/v1
-name: kineticacluster
-type: application
-version: 0.1.0
