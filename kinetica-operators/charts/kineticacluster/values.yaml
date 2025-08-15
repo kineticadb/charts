@@ -1,0 +1,647 @@
+
+  # autoSuspend: (required: false)
+  # -- An optional duration after which the database is stopped and DB resources are
+  # freed
+  # Type: object
+
+  # awsConfig: (required: false)
+  # -- The platform infrastructure provider e.g. azure, aws, gcp, on-prem etc.
+  # Type: object
+
+  # azureConfig: (required: false)
+  # -- The platform infrastructure provider e.g. azure, aws, gcp, on-prem etc.
+  # Type: object
+
+  # debug: (required: false)
+  # -- Tells the operator we want to run in Debug mode.
+  # Type: boolean
+  # Default: false
+  debug: false
+
+  # deploymentType: (required: false)
+  # -- Identifies the type of Kubernetes deployment.
+  # Type: object
+
+  # devEditionConfig: (required: false)
+  # -- The platform infrastructure provider e.g. azure, aws, gcp, on-prem etc.
+  # Type: object
+
+  # gadmin: (required: false)
+  # -- The GAdmin Dashboard Configuration for the Kinetica Cluster.
+  # Type: object
+
+  # gaia: (required: true)
+  # -- Gaia - gaia.properties configuration
+  # Type: object
+  gaia: 
+    # admin: (required: true)
+    # Type: object
+    admin: 
+      # admin_login_only_gpudb_down: (required: true)
+      # -- AdminLoginOnlyGpudbDown - When GPUdb is down, only allow admin user to login
+      # Required: true
+      # Type: boolean
+      # Default: true
+      admin_login_only_gpudb_down: true
+
+      # admin_username: (required: true)
+      # -- Username - We do check for admin username in various places
+      # Required: true
+      # Type: string
+      # Default: "admin"
+      admin_username: "admin"
+
+      # login_animation_enabled: (required: true)
+      # -- LoginAnimationEnabled - Display any animation in login page
+      # Required: true
+      # Type: boolean
+      # Default: true
+      login_animation_enabled: true
+
+      # login_bypass_enabled: (required: true)
+      # -- AdminLoginOnlyGpudbDown - Convenience settings for dev mode
+      # Required: true
+      # Type: boolean
+      # Default: false
+      login_bypass_enabled: false
+
+      # require_strong_password: (required: true)
+      # -- RequireStrongPassword - Convenience settings for dev mode
+      # Required: true
+      # Type: boolean
+      # Default: true
+      require_strong_password: true
+
+      # ssl_truststore_password_script: (required: false)
+      # -- SSLTruststorePasswordScript - Display any animation in login page
+      # Type: string
+
+    # demo_schema: (required: true)
+    # -- DemoSchema - Schema-related configuration
+    # Required: true
+    # Type: string
+    # Default: "demo"
+    demo_schema: "demo"
+
+    # gpudb: (required: true)
+    # Type: object
+    gpudb: 
+      # data_file_string_null_value: (required: true)
+      # -- DataFileStringNullValue - Table import/export null value string
+      # Required: true
+      # Type: string
+      # Default: "\N"
+      data_file_string_null_value: "\\N"
+
+      # gpudb_ext_url: (required: true)
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:8082/gpudb-0"
+      gpudb_ext_url: "http://127.0.0.1:8082/gpudb-0"
+
+      # gpudb_url: (required: true)
+      # -- URL - Current instance of gpudb, when running in HA mode change this to load
+      # balancer endpoint
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:9191"
+      gpudb_url: "http://127.0.0.1:9191"
+
+      # logging_log_file_name: (required: true)
+      # -- LoggingLogFileName - Which file to use when displaying logging on Cluster
+      # page.
+      # Required: true
+      # Type: string
+      # Default: "gpudb.log"
+      logging_log_file_name: "gpudb.log"
+
+      # sample_repo_url: (required: true)
+      # -- SampleRepoURL - Table import/export null value string
+      # Required: true
+      # Type: string
+      # Default: "//s3.amazonaws.com/kinetica-ce-data"
+      sample_repo_url: "//s3.amazonaws.com/kinetica-ce-data"
+
+    # hm: (required: true)
+    # Type: object
+    hm: 
+      # gpudb_ext_hm_url: (required: true)
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:8082/gpudb-host-manager"
+      gpudb_ext_hm_url: "http://127.0.0.1:8082/gpudb-host-manager"
+
+      # gpudb_hm_url: (required: true)
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:9300"
+      gpudb_hm_url: "http://127.0.0.1:9300"
+
+    # http: (required: true)
+    # Type: object
+    http: 
+      # http_client_timeout: (required: true)
+      # -- ClientTimeout - Number of seconds for proxy request timeout
+      # Required: true
+      # Type: integer
+      # Default: 3600
+      http_client_timeout: 3600
+
+      # http_client_timeout_v2: (required: true)
+      # -- ClientTimeoutV2 - Force override of previous default with 0 as infinite
+      # timeout
+      # Required: true
+      # Type: integer
+      # Default: 0
+      http_client_timeout_v2: 0
+
+      # tomcat_path_key: (required: true)
+      # -- TomcatPathKey - Name of folder where Tomcat apps are installed
+      # Required: true
+      # Type: string
+      # Default: "tomcat"
+      tomcat_path_key: "tomcat"
+
+      # webapp_context: (required: true)
+      # -- WebappContext - Web App context
+      # Required: true
+      # Type: string
+      # Default: "gadmin"
+      webapp_context: "gadmin"
+
+    # is_remote: (required: true)
+    # -- GAdminIsRemote - True if the gadmin application is running on a remote
+    # machine (not on same node as gpudb).
+    # If running on a remote machine the manage options will be disabled.
+    # Required: true
+    # Type: boolean
+    # Default: false
+    is_remote: false
+
+    # kagent_cli_path: (required: true)
+    # -- KAgentCLIPath - Schema-related configuration
+    # Required: true
+    # Type: string
+    # Default: "/opt/gpudb/kagent/bin/kagent"
+    kagent_cli_path: "/opt/gpudb/kagent/bin/kagent"
+
+    # kio: (required: true)
+    # -- KIO - KIO-related configuration
+    # Type: object
+    kio: 
+      # kio_log_file_path: (required: true)
+      # Required: true
+      # Type: string
+      # Default: "/opt/gpudb/kitools/kio/logs/gadmin.log"
+      kio_log_file_path: "/opt/gpudb/kitools/kio/logs/gadmin.log"
+
+      # kio_log_level: (required: true)
+      # Required: true
+      # Type: string
+      # Default: "DEBUG"
+      kio_log_level: "DEBUG"
+
+      # kio_log_size_limit: (required: true)
+      # Required: true
+      # Type: integer
+      # Format: int64
+      # Default: 10485760
+      kio_log_size_limit: 10485760
+
+    # kisql: (required: true)
+    # Type: object
+    kisql: 
+      # kisql_query_results_limit: (required: true)
+      # -- QueryResultsLimit - KiSQL limit on the number of results in each query
+      # Required: true
+      # Type: integer
+      # Format: int32
+      # Default: 10000
+      kisql_query_results_limit: 10000
+
+      # kisql_query_timezone: (required: true)
+      # -- QueryTimezone - KiSQL TimeZoneId setting for queries (use "system" for local
+      # system time)
+      # Required: true
+      # Type: string
+      # Default: "GMT"
+      kisql_query_timezone: "GMT"
+
+    # license: (required: true)
+    # Type: object
+    license: 
+      # status: (required: true)
+      # -- Status - Stub for license manager
+      # Required: true
+      # Type: string
+      # Default: "ok"
+      status: "ok"
+
+      # type: (required: true)
+      # -- Type - Stub for license manager
+      # Required: true
+      # Type: string
+      # Default: "unlimited"
+      type: "unlimited"
+
+    # max_concurrent_user_sessions: (required: true)
+    # -- MaxConcurrentUserSessions - Session management configuration
+    # Required: true
+    # Type: integer
+    # Default: 0
+    max_concurrent_user_sessions: 0
+
+    # public_schema: (required: true)
+    # -- PublicSchema - Schema-related configuration
+    # Required: true
+    # Type: string
+    # Default: "ki_home"
+    public_schema: "ki_home"
+
+    # reveal_db_info_file: (required: true)
+    # -- RevealDBInfoFile - Path to file containing Reveal DB location
+    # Required: true
+    # Type: string
+    # Default: "/opt/gpudb/connectors/reveal/var/REVEAL_DB_DIR"
+    reveal_db_info_file: "/opt/gpudb/connectors/reveal/var/REVEAL_DB_DIR"
+
+    # root_schema: (required: true)
+    # -- RootSchema - Schema-related configuration
+    # Required: true
+    # Type: string
+    # Default: "root"
+    root_schema: "root"
+
+    # stats: (required: true)
+    # Type: object
+    stats: 
+      # graphana_url: (required: true)
+      # -- GraphanaURL -
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:3000"
+      graphana_url: "http://127.0.0.1:3000"
+
+      # graphite_url: (required: true)
+      # -- GraphiteURL
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:8181"
+      graphite_url: "http://127.0.0.1:8181"
+
+      # stats_grafana_url: (required: true)
+      # -- StatsGrafanaURL - Port used to host the Grafana user interface and embeddable
+      # metric dashboards in GAdmin.
+      # Note: If this value is defaulted then it will be replaced by the name of the
+      # Stats service if it is deployed &
+      # Grafana is enabled e.g. cluster-1234.gpudb.svc.cluster.local
+      # Required: true
+      # Type: string
+      # Default: "http://127.0.0.1:9091"
+      stats_grafana_url: "http://127.0.0.1:9091"
+
+  # generateIngressRecords: (required: false)
+  # -- GenerateIngressRecords - Create ingress/gateway records regardless of
+  # deploying our own controller
+  # Type: boolean
+  # Default: true
+  generateIngressRecords: true
+
+  # gpudbCluster: (required: true)
+  # -- https://github.com/kubernetes-sigs/controller-tools/issues/622
+  # if we want to set usePools as false, need to set defaults
+  # GPUDBCluster is an instance of a Kinetica DB Cluster i.e. it's StatefulSet,
+  # Service, Ingress, ConfigMap etc.
+  # Type: object
+  gpudbCluster: 
+    # affinity: (required: false)
+    # -- Affinity - is a group of affinity scheduling rules.
+    # Type: object
+
+    # annotations: (required: false)
+    # -- Annotations - Annotations labels to be applied to the Statefulset DB pods.
+    # Type: object
+
+    # clusterName: (required: true)
+    # -- The name of the cluster to form.
+    # Required: true
+    # Type: string
+
+    # clusterSize: (required: false)
+    # -- ClusterSize - The tshirt size and type defines number of ranks for
+    # Marketplace
+    # Type: object
+
+    # config: (required: false)
+    # -- Config Kinetica DB Configuration Object
+    # Type: object
+
+    # fqdn: (required: false)
+    # -- The fully qualified URL used on the Ingress records for any exposed services.
+    # Completed buy yth Operator. DO NOT POPULATE MANUALLY.
+    # Type: string
+    # Default: ""
+    fqdn: ""
+
+    # haRingName: (required: false)
+    # -- The name of the parent HA Ring this cluster belongs to.
+    # Type: string
+    # Default: "default"
+    haRingName: "default"
+
+    # hasPools: (required: false)
+    # -- Whether to enable the separate node 'pools' for "infra", "compute" pod
+    # scheduling.
+    #   Default: true
+    # Type: boolean
+    # Default: true
+    hasPools: true
+
+    # hostManagerPort: (required: false)
+    # -- The port the HostManager will be running in each pod in the cluster.
+    #   Default: 9300, TCP
+    # Type: object
+
+    # image: (required: false)
+    # -- Set the name of the container image to use.
+    # Type: string
+    # Default: "kinetica/kinetica-k8s-cpu:v7.2.2-8.ga-1"
+    image: "kinetica/kinetica-k8s-cpu:v7.2.2-8.ga-1"
+
+    # imagePullPolicy: (required: false)
+    # -- Set the policy for pulling container images.
+    # Type: string
+    # Default: "IfNotPresent"
+    imagePullPolicy: "IfNotPresent"
+
+    # imagePullSecrets: (required: false)
+    # -- ImagePullSecrets is an optional list of references to secrets in the same
+    # gpudb-namespace to use for pulling
+    # any of the images used by this PodSpec. If specified, these secrets will be
+    # passed to individual puller
+    # implementations for them to use.
+    # 
+    # For example, in the case of docker, only DockerConfig type secrets are honored.
+    # Type: array of object
+
+    imagePullSecrets: 
+      # name: (required: false)
+      # -- Name of the referent.
+      # This field is effectively required, but due to backwards compatibility is
+      # allowed to be empty. Instances of this type with an empty value here are
+      # almost certainly wrong.
+      # More info:
+      # https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+      # Type: string
+      # Default: ""
+      name: ""
+
+
+    # labels: (required: false)
+    # -- Labels - Pod labels to be applied to the Statefulset DB pods.
+    # Type: object
+
+    # letsEncrypt: (required: false)
+    # -- The Ingress Endpoint that GAdmin will be running on.
+    # Type: object
+
+    # license: (required: true)
+    # -- Set the Kinetica DB License.
+    # Required: true
+    # Type: string
+
+    # livenessProbe: (required: false)
+    # -- Periodic probe of container liveness.
+    # Container will be restarted if the probe fails.
+    # Cannot be updated.
+    # More info:
+    # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+    # Type: object
+
+    # loggerConfig: (required: false)
+    # -- LoggerConfig Kinetica DB Logger Configuration Object
+    # Configure the LOG4CPLUS logger for the DB. Field takes a string containing the
+    # full configuration.
+    # If not specified a template file is used during DB configuration generation.
+    # Type: object
+
+    # metricsRegistryRepositoryTag: (required: false)
+    # -- Metrics - DB Metrics scrape & forward configuration for `fluent-bit`.
+    # Type: object
+
+    # metricsResources: (required: false)
+    # -- Metrics - `fluent-bit` container requests/limits.
+    # Type: object
+
+    # nodeSelector: (required: false)
+    # -- NodeSelector - NodeSelector to be applied to the DB Pods
+    # Type: object
+
+    # originalReplicas: (required: false)
+    # -- Do not use internal Operator field only.
+    # Type: integer
+    # Format: int64
+
+    # podManagementPolicy: (required: false)
+    # -- podManagementPolicy controls how pods are created during initial scale up,
+    # when replacing pods on nodes, or when scaling down. The default policy is
+    # `OrderedReady`, where pods are created in increasing order (pod-0, then
+    # pod-1, etc) and the controller will wait until each pod is ready before
+    # continuing. When scaling down, the pods are removed in the opposite order.
+    # The alternative policy is `Parallel` which will create pods in parallel
+    # to match the desired scale without waiting, and on scale down will delete
+    # all pods at once.
+    # Type: string
+    # Default: "Parallel"
+    podManagementPolicy: "Parallel"
+
+    # ranksPerNode: (required: false)
+    # -- Number of ranks per node as a uint16 i.e. 1-65535 ranks per node.
+    #   Default: 1
+    # Type: integer
+    # Default: 1
+    ranksPerNode: 1
+
+    # readinessProbe: (required: false)
+    # -- Periodic probe of container service readiness.
+    # Container will be removed from service endpoints if the probe fails.
+    # Cannot be updated.
+    # More info:
+    # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+    # Type: object
+
+    # replicas: (required: false)
+    # -- The number of DB ranks i.e. replicas that the cluster will spin up.
+    #   Default: 1
+    # Type: integer
+    # Format: int64
+    # Default: 1
+    replicas: 1
+
+    # resources: (required: false)
+    # -- Limit the resources a DB Pod can consume.
+    # Type: object
+
+    # securityContext: (required: false)
+    # -- SecurityContext holds security configuration that will be applied to a
+    # container.
+    # Some fields are present in both SecurityContext and PodSecurityContext.  When
+    # both
+    # are set, the values in SecurityContext take precedence.
+    # Type: object
+
+    # startupProbe: (required: false)
+    # -- StartupProbe indicates that the Pod has successfully initialized.
+    # If specified, no other probes are executed until this completes successfully.
+    # If this probe fails, the Pod will be restarted, just as if the livenessProbe
+    # failed.
+    # This can be used to provide different probe parameters at the beginning of a
+    # Pod's lifecycle,
+    # when it might take a long time to load data or warm a cache, than during
+    # steady-state operation.
+    # This cannot be updated.
+    # This is an alpha feature enabled by the StartupProbe feature flag.
+    # More info:
+    # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+    # Type: object
+
+    # tolerations: (required: false)
+    # -- Tolerations - Allow for tolerations to be supplied for the Deployment of the
+    # DB.
+    # Type: array of object
+
+    tolerations: 
+      # effect: (required: false)
+      # -- Effect indicates the taint effect to match. Empty means match all taint
+      # effects.
+      # When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+      # Type: string
+
+      # key: (required: false)
+      # -- Key is the taint key that the toleration applies to. Empty means match all
+      # taint keys.
+      # If the key is empty, operator must be Exists; this combination means to match
+      # all values and all keys.
+      # Type: string
+
+      # operator: (required: false)
+      # -- Operator represents a key's relationship to the value.
+      # Valid operators are Exists and Equal. Defaults to Equal.
+      # Exists is equivalent to wildcard for value, so that a pod can
+      # tolerate all taints of a particular category.
+      # Type: string
+
+      # tolerationSeconds: (required: false)
+      # -- TolerationSeconds represents the period of time the toleration (which must be
+      # of effect NoExecute, otherwise this field is ignored) tolerates the taint. By
+      # default,
+      # it is not set, which means tolerate the taint forever (do not evict). Zero and
+      # negative values will be treated as 0 (evict immediately) by the system.
+      # Type: integer
+      # Format: int64
+
+      # value: (required: false)
+      # -- Value is the taint value the toleration matches to.
+      # If the operator is Exists, the value should be empty, otherwise just a regular
+      # string.
+      # Type: string
+
+
+    # useTShirt: (required: false)
+    # -- Whether to use T-Shirt sizing for Marketplace
+    #   Default: false
+    # Type: boolean
+    # Default: false
+    useTShirt: false
+
+  # hostManagerMonitor: (required: true)
+  # -- HostManagerMonitor is used to monitor the Kinetica DB Ranks. If a rank is
+  # unavailable for the specified
+  #   time (MaxRankFailureCount) the cluster will be restarted.
+  # Type: object
+  hostManagerMonitor: 
+    # db_healthz_port: (required: false)
+    # -- The HostMonitor Port for the DB StartupProbe, ReadinessProbe and Liveness
+    # probes.
+    # Default: 8888
+    # Type: object
+
+    # hm_healthz_port: (required: false)
+    # -- The HostMonitor Port for the DB StartupProbe, ReadinessProbe and Liveness
+    # probes.
+    # Default: 8889
+    # Type: object
+
+    # livenessProbe: (required: false)
+    # -- Periodic probe of container liveness.
+    # Container will be restarted if the probe fails.
+    # Cannot be updated.
+    # More info:
+    # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+    # Type: object
+
+    # monitorRegistryRepositoryTag: (required: false)
+    # -- Set the name of the container image to use.
+    # Type: object
+
+    # readinessProbe: (required: false)
+    # -- Periodic probe of container service readiness.
+    # Container will be removed from service endpoints if the probe fails.
+    # Cannot be updated.
+    # More info:
+    # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+    # Type: object
+
+    # resources: (required: false)
+    # -- Allow for overriding resource requests/limits.
+    # Type: object
+
+    # startupProbe: (required: false)
+    # -- StartupProbe indicates that the Pod has successfully initialized.
+    # If specified, no other probes are executed until this completes successfully.
+    # If this probe fails, the Pod will be restarted, just as if the livenessProbe
+    # failed.
+    # This can be used to provide different probe parameters at the beginning of a
+    # Pod's lifecycle,
+    # when it might take a long time to load data or warm a cache, than during
+    # steady-state operation.
+    # This cannot be updated.
+    # This is an alpha feature enabled by the StartupProbe feature flag.
+    # More info:
+    # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+    # Type: object
+
+  # infra: (required: false)
+  # -- The platform infrastructure provider e.g. azure, aws, gcp, on-prem etc.
+  # Type: string
+  # Default: "on-prem"
+  infra: "on-prem"
+
+  # ingressController: (required: false)
+  # -- The Kubernetes Ingress Controller will be running on e.g. ingress-nginx,
+  # Traefik, Ambassador, Gloo, Kong etc.
+  # Type: string
+  # Default: "nginx"
+  ingressController: "nginx"
+
+  # ldap: (required: false)
+  # -- The LDAP server to connect to.
+  # Type: object
+
+  # payAsYouGo: (required: false)
+  # -- Tells the operator to use Cloud Provider Pay As You Go functionality.
+  # Type: boolean
+  # Default: false
+  payAsYouGo: false
+
+  # reveal: (required: false)
+  # -- The Reveal Dashboard Configuration for the Kinetica Cluster.
+  # Type: object
+
+  # stats: (required: false)
+  # -- The Stats server to deploy & connect to if required.
+  # Type: object
+
+  # supportingImages: (required: false)
+  # -- Supporting images like socat,busybox etc.
+  # Type: object

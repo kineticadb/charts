@@ -28,16 +28,16 @@ nodeSelector:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kinetica/workbench-operator"
-    tag: "v7.2.2-19.ga-1-operator"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.2-23.dev-0-operator"
     digest: ""
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kinetica/kinetica-k8s-operator"
-    tag: "v7.2.2-19.ga-1-operator"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.2-23.dev-0-operator"
     digest: ""
 certManager:
   install: true
@@ -148,7 +148,7 @@ openldap:
     ldapPort: 1389
   initContainers:
     - name: openldap-create-directory-structure
-      image: "docker.io/kinetica/busybox:v7.2.2-19.ga-1"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-23.dev-0"
       command:
         [
           "sh",
@@ -180,18 +180,16 @@ openldap:
     accessMode: "ReadWriteOnce"
     size: "1Gi"
     storageClass: "gp2"
-db:
+kineticacluster:
   # do you want to provision a database
-  create: true
+  install: true
   name: ""
   namespace: gpudb
   debug: false
   autoSuspend:
     enabled: false
-
   # CHANGE
   payAsYouGo:
-
   awsConfig:
     # CHANGE
     clusterName: ""
@@ -200,9 +198,9 @@ db:
       productCode: ""
       publicKeyVersion: 1
   hostManagerMonitor:
-    image:
-      repository: "docker.io/kinetica/kinetica-k8s-monitor"
-      tag: "v7.2.2-19.ga-1"
+    monitorRegistryRepositoryTag:
+      repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
+      tag: "v7.2.2-23.dev-0"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -222,36 +220,33 @@ db:
     port: 1389
   supportingImages:
     busybox:
-      image:
-        repository: "docker.io/kinetica/busybox"
-        tag: "v7.2.2-19.ga-1"
+      repository: "kinetica.azurecr.io/dev/busybox"
+      tag: "v7.2.2-23.dev-0"
     socat:
-      image:
-        repository: "docker.io/kinetica/socat"
-        tag: "v7.2.2-19.ga-1"
+      repository: "kinetica.azurecr.io/dev/socat"
+      tag: "v7.2.2-23.dev-0"
   # stats:
   #   isEnabled: true
   # alertManager:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-23.dev-0"
   # grafana:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-23.dev-0"
   # loki:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-23.dev-0"
   # prometheus:
   #   isEnabled: true
   #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
-
+  #     repository: "kinetica.azurecr.io/dev/kagent"
+  #     tag: "v7.2.2-23.dev-0"
   gadmin:
     isEnabled: true
   reveal:
@@ -275,21 +270,11 @@ db:
     # CHANGE
     license: ""
     # CHANGE
-    gpuAcceleration: false
-    image:
-      cuda:
-        image:
-          repository: "docker.io/kinetica/kinetica-k8s-cuda"
-          tag: "v7.2.2-19.ga-1"
-      standard:
-        image:
-          # you should be able to use docker.io/kinetica/kinetica-k8s-cpu:v7.2.2-19.ga-1 also
-          repository: "docker.io/kinetica/kinetica-k8s-cpu-avx512"
-          tag: "v7.2.2-19.ga-1"
+    #Must use a set to select cuda or avx512
+    #gpuAcceleration: false
     metricsRegistryRepositoryTag:
-      image:
-        repository: "docker.io/kinetica/fluent-bit"
-        tag: "v7.2.2-19.ga-1"
+      repository: "kinetica.azurecr.io/dev/fluent-bit"
+      tag: "v7.2.2-23.dev-0"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -303,7 +288,6 @@ db:
       tieredStorage:
         globalTier:
           colocateDisks: true
-
         persistTier:
           default:
             # CHANGE
@@ -312,7 +296,6 @@ db:
             volumeClaim:
               spec:
                 storageClassName: gp2
-
         diskCacheTier:
           default:
             # CHANGE
@@ -321,7 +304,6 @@ db:
             volumeClaim:
               spec:
                 storageClassName: gp2
-
         coldStorageTier:
           coldStorageType: s3
           coldStorageS3:
@@ -331,8 +313,9 @@ db:
 
 dbAdminUser:
   create: true
-dbWorkbench:
-  create: true
+
+workbench:
+  install: true
   # CHANGE
   fqdn: ""
   # CHANGE
@@ -341,6 +324,3 @@ dbWorkbench:
     enabled: false
   useHttps: true
   nodeSelector: {}
-  image:
-    repository: "docker.io/kinetica/workbench"
-    tag: "v7.2.2-19.ga-1"

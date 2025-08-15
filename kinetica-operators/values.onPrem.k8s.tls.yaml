@@ -13,6 +13,20 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
+certManager:
+  install: false
+
+# Uncomment and populate with user supplied certs
+# Also set certManager.install to false
+# tlsTermination:
+#   # certs and keys must be base64 encoded
+#   database:
+#     certificate:
+#     privateKey:
+#   workbench:
+#     certificate:
+#     privateKey:
+
 ingressNginx:
   install: false
 "ingress-nginx":
@@ -49,16 +63,16 @@ supportBundle:
       cluster: "kinetica-k3s-sample"
 
 kineticacluster:
-  create: true
+  install: true
   name: kinetica-k8s-sample
   generateIngressRecords: true
+  deploymentType:
+    type: on_prem_manual_tls
+    region: on_prem_local
   gpudbCluster:
-    replicas: 3
+    replicas: 1
     useTShirt: false
-    # You need a license key. Please contact support@kinetica.com
     license: ""
-    dbRegistryRepositoryTag:
-      repository: kinetica-k8s-cpu-avx512
     config:
       tieredStorage:
         globalTier:

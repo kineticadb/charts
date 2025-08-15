@@ -105,40 +105,37 @@ openldap:
     accessMode: "ReadWriteOnce"
     size: "1Gi"
     storageClass: "managed-premium"
-db:
+
+kineticacluster:
   # do you want to provision a database
-  create: true
+  install: true
   name: "${KINETICA_CLUSTER_NAME}"
   namespace: gpudb
   debug: false
   autoSuspend:
     enabled: false
-
   payAsYouGo: "${PAYGO}"
-
   azureConfig:
     managedApp:
       planId: "${PLAN_ID}"
       resourceUri: "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/Microsoft.Solutions/applications/${MANAGED_APP_NAME}"
     appInsights:
       key: "${APP_INSIGHTS_KEY}"
-
   gpudbCluster:
     # this applies if you have labelled node pools for compute
     hasPools: true
     clusterSize:
       tshirtSize: "${TSHIRT_SIZE}"
       tshirtType: "${TSHIRT_TYPE}"
-
     ranksPerNode: ${RANKS_PER_NODE}
     replicas: ${RANKS}
     fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
     letsEncrypt:
       enabled: true
       environment: "production"
-
     license: "${KINETICA_LICENSE}"
-    gpuAcceleration: "${GPU_ACCELERATION}"
+    #Must use a set to select image type for cuda or avx512
+    #gpuAcceleration: "${GPU_ACCELERATION}"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -152,7 +149,6 @@ db:
       tieredStorage:
         globalTier:
           colocateDisks: true
-
         persistTier:
           default:
             limit: "${PERSIST_TIER_LIMIT}"
@@ -167,7 +163,6 @@ db:
             volumeClaim:
               spec:
                 storageClassName: managed-premium
-
         coldStorageTier:
           coldStorageType: azure_blob
           coldStorageAzure:
@@ -182,8 +177,9 @@ dbAdminUser:
   create: true
   name: "${DB_ADMIN_USER}"
   password: "${DB_ADMIN_PASSWORD}"
-dbWorkbench:
-  create: true
+
+workbench:
+  install: true
   fqdn: "${KINETICA_CLUSTER_NAME}.${LOCATION}.cloudapp.azure.com"
   deploymentInfo: '{"name": "${PLAN_ID}", "product": "${PRODUCT_NAME}", "publisher": "kinetica", "version": "${PLAN_VERSION}", "managed_resource_group_id": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP_NAME}", "customer_email": "${CONTACT_EMAIL}", "application_id": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${MANAGED_APP_RESOURCE_GROUP_NAME}/providers/microsoft.solutions/applications/${MANAGED_APP_NAME}", "contactFirstName": "${CONTACT_FIRST_NAME}", "contactLastName": "${CONTACT_LAST_NAME}", "tshirtSize": "${TSHIRT_SIZE}", "tshirtType": "${TSHIRT_TYPE}"}'
   letsEncrypt:

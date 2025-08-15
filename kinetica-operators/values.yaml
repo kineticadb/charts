@@ -14,13 +14,14 @@ clusterName: ""
 clusterRegion: ""
 letsEncryptEmail: devops@kinetica.com
 openshift: false
+
 global:
   defaultStorageClass: ""
 
 upsertKineticaCrds:
   image:
-    repository: "docker.io/kinetica/upsert-kinetica-crds"
-    tag: "v7.2.2-19.ga-1"
+    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
+    tag: "v7.2.2-23.dev-0"
 
 kubeRbacProxy:
   image:
@@ -32,6 +33,7 @@ kubeStateMetrics:
   image:
     repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
     tag: "v2.10.1"
+
 otelCollector:
   install: true
   image:
@@ -46,16 +48,17 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kinetica/workbench-operator"
-    tag: "v7.2.2-19.ga-1-operator"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.2-23.dev-0-operator"
     digest: ""
+
 dbOperator:
   install: true
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kinetica/kinetica-k8s-operator"
-    tag: "v7.2.2-19.ga-1-operator"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.2-23.dev-0-operator"
     digest: ""
 
 nodeSelector: {}
@@ -75,6 +78,17 @@ certManager:
   startupapicheck:
     nodeSelector: {}
 
+# Uncomment and populate with user supplied certs
+# Also set certManager.install to false
+# tlsTermination:
+#   # certs and keys must be base64 encoded
+#   database:
+#     certificate: ""
+#     privateKey: ""
+#   workbench:
+#     certificate: ""
+#     privateKey: ""
+
 ingressNginx:
   install: true
 "ingress-nginx":
@@ -83,8 +97,8 @@ ingressNginx:
   defaultBackend:
     enabled: true
     image:
-      repository: "docker.io/kinetica/kinetica-default-backend"
-      tag: "v7.2.2-19.ga-1"
+      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
+      tag: "v7.2.2-23.dev-0"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -108,7 +122,7 @@ ingressNginx:
 
 gpuOperator:
   install: false
-  "gpu-operator":
+"gpu-operator":
     mig:
       strategy: single
     driver:
@@ -125,7 +139,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "docker.io/kinetica/busybox:v7.2.2-19.ga-1"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-23.dev-0"
       command:
         [
           "sh",
@@ -150,54 +164,40 @@ openldap:
     size: "1Gi"
     storageClass: ""
 
-
 supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: "docker.io/kinetica"
+    registry: "kinetica.azurecr.io/dev"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.2-19.ga-1"
+    tag: "v7.2.2-23.dev-0"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
     #       additional tracability.
     cluster: ""
 
-
-db:
-  create: false
+kineticacluster:
+  install: true
+  payAsYouGo: false
   name: ""
   namespace: gpudb
   debug: false
-  autoSuspend:
-    enabled: false
-  # provide a boolean to say whether its payasyougo or not
-  payAsYouGo: false
   # for environment onPrem, provide the following
   deploymentType:
     type: on_prem
     region: on_prem_local
-  # awsConfig is applicable only for marketplace on aws
-  awsConfig:
-    clusterName: ""
-    marketplaceApp:
-      productCode: ""
-      publicKeyVersion: 1
-  # azureConfig is applicable only for marketplace on azure
-  azureConfig:
-    managedApp:
-      planId: ""
-      resourceUri: ""
-    appInsights:
-      key: ""
-
+  autoSuspend:
+    enabled: false
   hostManagerMonitor:
-    image:
-      repository: "docker.io/kinetica/kinetica-k8s-monitor"
-      tag: "v7.2.2-19.ga-1"
+    monitorRegistryRepositoryTag:
+      registry: "kinetica.azurecr.io/dev"
+      repository: kinetica-k8s-monitor
+      tag: "v7.2.2-23.dev-0"
+    livenessProbe:
+      failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -217,72 +217,54 @@ db:
     port: 1389
   supportingImages:
     busybox:
-      image:
-        repository: "docker.io/kinetica/busybox"
-        tag: "v7.2.2-19.ga-1"
+      registry: "kinetica.azurecr.io/dev"
+      repository: busybox
+      tag: "v7.2.2-23.dev-0"
     socat:
-      image:
-        repository: "docker.io/kinetica/socat"
-        tag: "v7.2.2-19.ga-1"
+      registry: "kinetica.azurecr.io/dev"
+      repository: socat
+      tag: "v7.2.2-23.dev-0"
   # stats:
   #   isEnabled: false
-  # alertManager:
-  #   isEnabled: false
-  #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
-  # grafana:
-  #   isEnabled: false
-  #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
-  # loki:
-  #   isEnabled: false
-  #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
-  # prometheus:
-  #   isEnabled: false
-  #   image:
-  #     repository: "docker.io/kinetica/kagent"
-  #     tag: "v7.2.2-19.ga-1"
   gadmin:
     isEnabled: true
+    containerPort:
+      name: gadmin
+      protocol: TCP
+      containerPort: 8080
   reveal:
     isEnabled: true
+    containerPort:
+      name: reveal
+      protocol: TCP
+      containerPort: 8088
   generateIngressRecords: true
   gpudbCluster:
     # this applies if you have labelled node pools for compute
     useTShirt: false
-    clusterSize:
-      tshirtSize: XS
-      tshirtType: SmallCPU
     hasPools: false
     ranksPerNode: 1
     replicas: 1
     # provide an fqdn if you want to use a custom fqdn
     fqdn: "local.kinetica"
+    clusterName: "cluster0"
     letsEncrypt:
       enabled: false
       # only allowed values are staging and production
       environment: "staging"
-    # you may either use "payg" or a valid license
+    # valid license required
     license: ""
-    gpuAcceleration: false
-    image:
-      cuda:
-        image:
-          repository: "docker.io/kinetica/kinetica-k8s-cuda"
-          tag: "v7.2.2-19.ga-1"
-      standard:
-        image:
-          # you should be able to use docker.io/kinetica/kinetica-k8s-cpu-avx512:v7.2.2-19.ga-1 also
-          repository: "docker.io/kinetica/kinetica-k8s-cpu"
-          tag: "v7.2.2-19.ga-1"
+    # image.repository is "kinetica-k8s-[cpu, cpu-avx512, cuda]"
+    # use avx512 if your CPUs support this instruction set
+    # use cuda image for NVIDIA GPU acceleration
+    dbRegistryRepositoryTag:
+      registry: "kinetica.azurecr.io/dev"
+      repository: kinetica-k8s-cpu
+      tag: "v7.2.2-23.dev-0"
     metricsRegistryRepositoryTag:
-      image:
-        repository: "docker.io/kinetica/fluent-bit"
-        tag: "v7.2.2-19.ga-1"
+      registry: "kinetica.azurecr.io/dev"
+      repository: fluent-bit
+      tag: "v7.2.2-23.dev-0"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -312,16 +294,18 @@ dbAdminUser:
   name: "kadmin"
   # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
   password: ""
-dbWorkbench:
-  create: false
-  deploymentInfo: "{}"
+
+workbench:
+  install: false
+  name: workbench
+  namespace: gpudb
   fqdn: "local.kinetica"
   letsEncrypt:
     enabled: false
     environment: "staging"
-
   nodeSelector: {}
-
-  image:
-    repository: "docker.io/kinetica/workbench"
-    tag: "v7.2.2-19.ga-1"
+  storageClass: "{{ .Values.kineticacluster.name }}-storageclass"
+  wbRegistryRepositoryTag:
+    registry: "kinetica.azurecr.io/dev"
+    repository: workbench
+    tag: "v7.2.2-23.dev-0"

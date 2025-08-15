@@ -9,7 +9,7 @@ stringData:
 kind: Secret
 metadata: 
   name: admin-pwd
-  namespace: {{ .Values.db.namespace }}
+  namespace: {{ .Values.kineticacluster.namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
@@ -21,14 +21,14 @@ apiVersion: app.kinetica.com/v1
 kind: KineticaUser
 metadata:
   name: {{ .Values.dbAdminUser.name }}
-  namespace: {{ .Values.db.namespace }}
+  namespace: {{ .Values.kineticacluster.namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
     "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 spec:
-  ringName: {{ .Values.db.name }}
+  ringName: {{ .Values.kineticacluster.name }}
   uid: {{ .Values.dbAdminUser.name }}
   action: upsert
   reveal: true
@@ -43,14 +43,14 @@ apiVersion: app.kinetica.com/v1
 kind: KineticaGrant
 metadata:
   name: global-admin-system-admin
-  namespace: {{ .Values.db.namespace }}
+  namespace: {{ .Values.kineticacluster.namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
     "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 spec:
-  ringName: {{ .Values.db.name }}
+  ringName: {{ .Values.kineticacluster.name }}
   addGrantPermissionRequest:
     systemPermission:
       name: "global_admins"
@@ -60,9 +60,9 @@ apiVersion: app.kinetica.com/v1
 kind: KineticaGrant
 metadata:
   name: "{{ .Values.dbAdminUser.name }}-global-admin-create"
-  namespace: {{ .Values.db.namespace }}
+  namespace: {{ .Values.kineticacluster.namespace }}
 spec:
-  ringName: {{ .Values.db.name }}
+  ringName: {{ .Values.kineticacluster.name }}
   addGrantRoleRequest:
     role: global_admins
     member: {{ .Values.dbAdminUser.name }}
@@ -71,18 +71,18 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-delete-script
-  namespace: {{ .Values.db.namespace }}
+  namespace: {{ .Values.kineticacluster.namespace }}
 data:
   delete-script.sh: |  
     #!/bin/bash
-    ku="$(kubectl -n "{{ .Values.db.namespace }}" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
+    ku="$(kubectl -n "{{ .Values.kineticacluster.namespace }}" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
     if [ -n "$ku" ]; then
       op="$(kubectl -n "{{ .Release.Namespace }}" get deployments kineticaoperator-controller-manager -o name 2>/dev/null)"
       if [ -n "$op" ]; then
         kubectl -n "{{ .Release.Namespace }}" scale "$op" --replicas=0
       fi
-      kubectl -n "{{ .Values.db.namespace }}" patch "$ku" -p '{"metadata":{"finalizers":null}}' --type=merge
-      kubectl -n "{{ .Values.db.namespace }}" delete KineticaUser "{{ .Values.dbAdminUser.name }}"
+      kubectl -n "{{ .Values.kineticacluster.namespace }}" patch "$ku" -p '{"metadata":{"finalizers":null}}' --type=merge
+      kubectl -n "{{ .Values.kineticacluster.namespace }}" delete KineticaUser "{{ .Values.dbAdminUser.name }}"
     fi
     exit 0
 ---
@@ -90,7 +90,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-pre-delete-job
-  namespace: {{ .Values.db.namespace }}
+  namespace: {{ .Values.kineticacluster.namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"

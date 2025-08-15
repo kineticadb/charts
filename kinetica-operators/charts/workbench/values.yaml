@@ -1,0 +1,78 @@
+
+  # affinity: (required: false)
+  # -- Affinity is a group of affinity scheduling rules.
+  # Type: object
+
+  # annotations: (required: false)
+  # -- Annotations - Annotations labels to be applied to the Statefulset DB pods.
+  # Type: object
+
+  # dedicatedSaaS: (required: false)
+  # -- Identify if DedicatedSaaS environment or not.
+  # Type: boolean
+  # Default: false
+  dedicatedSaaS: false
+
+  # deploymentInfo: (required: false)
+  # -- DeploymentInfo corresponds to various details related to the deployment
+  # Type: string
+
+  # executeSqlLimit: (required: false)
+  # -- The maximum number of rows that a SQL query is allowed to return
+  # Type: integer
+  # Default: 10000
+  executeSqlLimit: 10000
+
+  # fqdn: (required: true)
+  # -- The fully qualified domain name of the cluster.  Used on the Ingress records
+  # for any exposed services.
+  # Required: true
+  # Type: string
+
+  # freeSaaS: (required: false)
+  # -- Identify if FreeSaaS environment or not.
+  # Type: boolean
+  # Default: false
+  freeSaaS: false
+
+  # image: (required: false)
+  # -- Image corresponds to the workbench image
+  # Type: string
+  # Default: "kinetica/workbench:latest"
+  image: "kinetica/workbench:latest"
+
+  # ingressController: (required: false)
+  # -- Specify the type of ingress controller to use on the Workbench
+  # Type: string
+  # Default: "nginx"
+  ingressController: "nginx"
+
+  # labels: (required: false)
+  # -- Labels - Pod labels to be applied to the Statefulset DB pods.
+  # Type: object
+
+  # letsEncrypt: (required: false)
+  # -- The Ingress Endpoint that GAdmin will be running on.
+  # Type: object
+
+  # nodeSelector: (required: false)
+  # -- NodeSelector - NodeSelector to be applied to the DB Pods
+  # Type: object
+
+  # storageClass: (required: false)
+  # -- Specify the storage class to use on the Workbench stateful set
+  # Type: string
+
+  # useHttps: (required: true)
+  # -- When not using LetsEncrypt, whether the workbench is secured behind SSL or
+  # not.
+  # Required: true
+  # Type: boolean
+  # Default: false
+  useHttps: false
+
+  # userIdleTimeout: (required: false)
+  # -- The number of minutes that a user connection remains alive without activity
+  # Type: integer
+  # Default: 60
+  userIdleTimeout: 60

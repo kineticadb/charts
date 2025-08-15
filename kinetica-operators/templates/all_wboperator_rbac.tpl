@@ -43,7 +43,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp:
   name: workbench-operator-manager-role
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -77,41 +76,6 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - configmaps
-  - events
-  - namespaces
-  - nodes
-  - persistentvolumeclaims
-  - persistentvolumes
-  - pods
-  - secrets
-  - serviceaccounts
-  - services
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ''
-  resources:
-  - configmaps
-  - namespaces
-  - secrets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ''
-  resources:
   - configmaps/status
   - events/status
   - namespaces/status
@@ -126,13 +90,6 @@ rules:
   - get
   - patch
   - update
-- apiGroups:
-  - ''
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
 - apiGroups:
   - apiextensions.k8s.io
   resources:
@@ -150,31 +107,12 @@ rules:
   resources:
   - kineticaclusteradmins
   - kineticaclusterbackups
+  - kineticaclusterelasticities
   - kineticaclusterrestores
   - kineticaclusters
   - kineticaclusterschedules
   - kineticaclusterupgrades
   - kineticacusers
-  - kineticagrants
-  - kineticaoperatorupgrades
-  - kineticaroles
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusteradmins
-  - kineticaclusterbackups
-  - kineticaclusterrestores
-  - kineticaclusters
-  - kineticaclusterschedules
-  - kineticaclusterupgrades
   - kineticagrants
   - kineticaoperatorupgrades
   - kineticaroles
@@ -192,6 +130,7 @@ rules:
   resources:
   - kineticaclusteradmins/status
   - kineticaclusterbackups/status
+  - kineticaclusterelasticities/status
   - kineticaclusterrestores/status
   - kineticaclusters/status
   - kineticaclusterschedules/status
@@ -200,26 +139,6 @@ rules:
   - kineticaoperatorupgrades/status
   - kineticaroles/status
   - kineticausers/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterelasticities
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - app.kinetica.com
-  resources:
-  - kineticaclusterelasticities/status
   verbs:
   - get
   - patch
@@ -244,26 +163,6 @@ rules:
   - daemonsets/status
   - deployments/status
   - statefulsets/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - apps
-  resources:
-  - deployments/status
   verbs:
   - get
   - patch
@@ -333,19 +232,6 @@ rules:
   - update
   - watch
 - apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
-  - clusterrolebindings
-  - rolebindings
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
   - rbac.authorization.k8s.io/v1
   resources:
   - clusterrolebindings
@@ -364,18 +250,7 @@ rules:
   - workbench.com.kinetica
   resources:
   - workbenches
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenches
+  - workbenchoperatorupgrades
   - workbenchupgrades
   verbs:
   - create
@@ -389,51 +264,12 @@ rules:
   - workbench.com.kinetica
   resources:
   - workbenches/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenches/status
+  - workbenchoperatorupgrades/status
   - workbenchupgrades/status
   verbs:
   - get
   - patch
   - update
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenchoperatorupgrades
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenchoperatorupgrades/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenchupgrades
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1

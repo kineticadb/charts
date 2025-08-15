@@ -18,6 +18,14 @@
 {{- $allowedSaasProviders := list "eks"  }}
 {{- $allowedMarketPlaceProviders := list "aks" "eks" }}
 
+{{- if $values.db }}
+  {{- fail (printf "Use '.kineticacluster' instead of '.db' in all sets and value files") }}
+{{- end }}
+
+{{- if $values.dbWorkbench }}
+  {{- fail (printf "Use '.workbench' instead of '.dbWorkbench' in all sets and value files") }}
+{{- end }}
+
 {{- if not (has $values.environment $allowedEnvironments) }}
   {{- fail (printf "%s - %s - %s - " "Not an allowed environment" $values.environment "Allowed are " ($allowedEnvironments  | join "/")) }}
 {{- end }}
@@ -67,6 +75,16 @@
   {{- $webhook := (dict "url" dict) }}
   {{- $values = merge (dict "webhook" $webhook) $values }}
 {{- end }}
+
+{{- if eq (kindOf $values.tlsTermination) "map" }}
+  {{- if eq (kindOf $values.tlsTermination.database) "map" }}
+    {{- include "kinetica-operators.tls-db-secret" $data }}
+  {{- end }}
+  {{- if eq (kindOf $values.tlsTermination.workbench) "map" }}
+    {{- include "kinetica-operators.tls-wb-secret" $data }}
+  {{- end }}
+{{- end }}
+
 
 {{- if $values.openldap.persistence.enabled }}
   {{- if not $values.openldap.persistence.storageClass }}  
@@ -136,6 +154,24 @@
 
 ---
 
+{{- if and $values.kineticacluster.install $values.certManager.install }}
+  {{- if $values.dbAdminUser.create }}
+    {{- include "kinetica-operators.db-admin-user" $data}}
+  {{- end }}
+  {{- if eq (kindOf $values.kineticacluster.gpudbCluster) "map" }}
+    {{- if eq (kindOf $values.kineticacluster.gpudbCluster.letsEncrypt) "map" }}
+      {{- if kindOf $values.kineticacluster.gpudbCluster.letsEncrypt.enabled }}
+        {{- if eq $values.kineticacluster.gpudbCluster.letsEncrypt.environment "production" }}    
+          {{- include "kinetica-operators.all-dboperator-productionIssuer" $data}}
+        {{- else }}
+          {{- include "kinetica-operators.all-dboperator-stagingIssuer" $data}}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end}}
+{{- end }}
+
+---
 {{- if ($values.openshift) }}
   {{- if $dbOperator.install }}
     {{- include "kinetica-operators.oscp-dbopr-scc" $data }}
@@ -149,29 +185,6 @@
     {{- include "kinetica-operators.oscp-ingress-nginx-scc" $data }}
   {{- end}}
 {{- end}}
-
----
-
-{{- if ($values.db.create) }}
-  {{- include "kinetica-operators.db" $data}}
-  {{- if $values.dbAdminUser.create }}
-    {{- include "kinetica-operators.db-admin-user" $data}}
-  {{- end }}
-  {{- if $values.dbWorkbench.create }}
-    {{- include "kinetica-operators.db-workbench" $data}}
-  {{- end }}
-  {{- if eq (kindOf $values.db.gpudbCluster) "map" }}
-    {{- if eq (kindOf $values.db.gpudbCluster.letsEncrypt) "map" }}
-    {{- if kindOf $values.db.gpudbCluster.letsEncrypt.enabled }}
-      {{- if eq $values.db.gpudbCluster.letsEncrypt.environment "production" }}    
-        {{- include "kinetica-operators.all-dboperator-productionIssuer" $data}}
-      {{- else }}
-        {{- include "kinetica-operators.all-dboperator-stagingIssuer" $data}}
-      {{- end }}
-    {{- end }}
-    {{- end }}
-  {{- end}}
-{{- end }}
 ---
 {{- if eq $defaultDbOperatorEnvironment "saas-eks"}}
 {{- include "kinetica-operators.all-dboperator-productionIssuer" $data}}
