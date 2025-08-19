@@ -76,15 +76,6 @@
   {{- $values = merge (dict "webhook" $webhook) $values }}
 {{- end }}
 
-{{- if eq (kindOf $values.tlsTermination) "map" }}
-  {{- if eq (kindOf $values.tlsTermination.database) "map" }}
-    {{- include "kinetica-operators.tls-db-secret" $data }}
-  {{- end }}
-  {{- if eq (kindOf $values.tlsTermination.workbench) "map" }}
-    {{- include "kinetica-operators.tls-wb-secret" $data }}
-  {{- end }}
-{{- end }}
-
 
 {{- if $values.openldap.persistence.enabled }}
   {{- if not $values.openldap.persistence.storageClass }}  
@@ -113,6 +104,16 @@
 
 ---
 
+{{- if eq (kindOf $values.tlsTermination) "map" }}
+  {{- if eq (kindOf $values.tlsTermination.database) "map" }}
+    {{- include "kinetica-operators.tls-db-secret" $data }}
+  {{- end }}
+  {{- if eq (kindOf $values.tlsTermination.workbench) "map" }}
+    {{- include "kinetica-operators.tls-wb-secret" $data }}
+  {{- end }}
+{{- end }}
+
+---
 {{- if and (not $dbOperator.install) $wbOperator.install }}
   {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
 {{- end }}
