@@ -76,7 +76,6 @@
   {{- $values = merge (dict "webhook" $webhook) $values }}
 {{- end }}
 
-
 {{- if $values.openldap.persistence.enabled }}
   {{- if not $values.openldap.persistence.storageClass }}  
     {{- if not $global.defaultStorageClass }}
@@ -104,22 +103,13 @@
 
 ---
 
-{{- if eq (kindOf $values.tlsTermination) "map" }}
-  {{- if eq (kindOf $values.tlsTermination.database) "map" }}
-    {{- include "kinetica-operators.tls-db-secret" $data }}
-  {{- end }}
-  {{- if eq (kindOf $values.tlsTermination.workbench) "map" }}
-    {{- include "kinetica-operators.tls-wb-secret" $data }}
-  {{- end }}
-{{- end }}
-
----
 {{- if and (not $dbOperator.install) $wbOperator.install }}
   {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
 {{- end }}
 
 ---
 {{- if $dbOperator.install }}
+  {{- include "kinetica-operators.all-dboperator-rbac" $data }}
   {{- include "kinetica-operators.all-dboperator-conf" $data }}
   {{- if and (eq $values.environment "marketPlace") (eq $values.provider "eks") }}
       {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
@@ -155,7 +145,7 @@
 
 ---
 
-{{- if and $values.kineticacluster.install $values.certManager.install }}
+{{- if ($values.kineticacluster.install) }}
   {{- if $values.dbAdminUser.create }}
     {{- include "kinetica-operators.db-admin-user" $data}}
   {{- end }}

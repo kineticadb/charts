@@ -30,8 +30,8 @@
 apiVersion: app.kinetica.com/v1
 kind: KineticaCluster
 metadata:
-  name: {{  .Values.kineticacluster.name }}
-  namespace: {{ default "gpudb" .Values.kineticacluster.namespace }}
+  name: {{  .Values.db.name }}
+  namespace: {{ default "gpudb" .Values.db.namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
@@ -173,7 +173,7 @@ spec:
     {{- else }}
     image: "{{ .Values.db.gpudbCluster.image.standard.image.repository }}:{{ .Values.db.gpudbCluster.image.standard.image.tag}}"
     {{- end}}
-    clusterName: {{  .Values.kineticacluster.name }}
+    clusterName: {{  .Values.db.name }}
     {{- if eq (kindOf .Values.db.gpudbCluster.resources) "map" }} 
     resources:
       {{- if eq (kindOf .Values.db.gpudbCluster.resources.limits) "map" }}

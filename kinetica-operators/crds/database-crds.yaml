@@ -1535,14 +1535,13 @@ spec:
                     type: string
                   type:
                     description: "DeploymentTypeEnum - The type of the Deployment.\n
-                      \nSupported Values are: -\n\n\t\tManaged\n\t\tFreeSaaS\n\t\t
-                      DedicatedSaaS\n\t\tOnPrem\n\t OnPremManualTLS"
+                      \nSupported Values are: -\n\n\tManaged\n\tFreeSaaS\n\tDedicatedSaaS\n\
+                      \tOnPrem"
                     enum:
                     - managed_app
                     - free_saas
                     - dedicated_saas
                     - on_prem
-                    - on_prem_manual_tls
                     type: string
                 required:
                 - region
