@@ -54,6 +54,7 @@ spec:
         volumeMounts:
         - mountPath: /etc/config/
           name: workbench-tmpl
+      serviceAccountName: workbench-operator-service-account
       terminationGracePeriodSeconds: 10
       volumes:
       - configMap:

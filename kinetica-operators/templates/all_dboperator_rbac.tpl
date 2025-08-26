@@ -238,6 +238,16 @@ rules:
   - patch
   - update
 - apiGroups:
+  - ''
+  resources:
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
   - app.kinetica.com
   resources:
   - kineticaoperatorupgrades
@@ -363,6 +373,7 @@ rules:
 - apiGroups:
   - ''
   resources:
+  - namespaces
   - nodes
   verbs:
   - get
@@ -462,6 +473,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: proxy-rolebinding
+  namespace: kinetica-system
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -471,10 +483,28 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: proxy-role
-  namespace: kinetica-system
 subjects:
 - kind: ServiceAccount
   name: default
+  namespace: kinetica-system
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: manager-rolebinding
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: manager-role
+subjects:
+- kind: ServiceAccount
+  name: kineticacluster-operator
   namespace: kinetica-system
 
 ---

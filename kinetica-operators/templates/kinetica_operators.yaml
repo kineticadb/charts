@@ -76,6 +76,7 @@
   {{- $values = merge (dict "webhook" $webhook) $values }}
 {{- end }}
 
+
 {{- if $values.openldap.persistence.enabled }}
   {{- if not $values.openldap.persistence.storageClass }}  
     {{- if not $global.defaultStorageClass }}
@@ -103,6 +104,16 @@
 
 ---
 
+{{- if eq (kindOf $values.tlsTermination) "map" }}
+  {{- if eq (kindOf $values.tlsTermination.database) "map" }}
+    {{- include "kinetica-operators.tls-db-secret" $data }}
+  {{- end }}
+  {{- if eq (kindOf $values.tlsTermination.workbench) "map" }}
+    {{- include "kinetica-operators.tls-wb-secret" $data }}
+  {{- end }}
+{{- end }}
+
+---
 {{- if and (not $dbOperator.install) $wbOperator.install }}
   {{- include "kinetica-operators.eks-dboperator-namespaces" $data }}
 {{- end }}
@@ -138,7 +149,6 @@
 
 {{- if $wbOperator.install }}
   {{- include "kinetica-operators.all-wboperator-conf" $data }}
-  {{- include "kinetica-operators.all-wboperator-baseRbac" $data }}
   {{- include "kinetica-operators.all-wboperator-rbac" $data }}
   {{- include "kinetica-operators.all-wboperator-operator" $data }}
 {{- end}}
@@ -146,10 +156,13 @@
 ---
 
 {{- if ($values.kineticacluster.install) }}
+  {{- if ($values.ingressNginx.install) }}
+    {{- include "kinetica-operators.ingress" $data }}
+  {{- end}}
   {{- if $values.dbAdminUser.create }}
     {{- include "kinetica-operators.db-admin-user" $data}}
   {{- end }}
-  {{- if eq (kindOf $values.kineticacluster.gpudbCluster) "map" }}
+  {{- if and $values.certManager.install (eq (kindOf $values.kineticacluster.gpudbCluster) "map") }}
     {{- if eq (kindOf $values.kineticacluster.gpudbCluster.letsEncrypt) "map" }}
       {{- if kindOf $values.kineticacluster.gpudbCluster.letsEncrypt.enabled }}
         {{- if eq $values.kineticacluster.gpudbCluster.letsEncrypt.environment "production" }}    
@@ -160,6 +173,10 @@
       {{- end }}
     {{- end }}
   {{- end}}
+{{- end }}
+
+{{- if ($values.workbench.install) }}
+  {{- include "kinetica-operators.db-workbench" $data}}
 {{- end }}
 
 ---

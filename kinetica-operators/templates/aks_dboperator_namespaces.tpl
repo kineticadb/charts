@@ -4,6 +4,9 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/resource-policy: keep
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -16,6 +19,9 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/resource-policy: keep
   name: kml-active-analytics
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -27,6 +33,9 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/resource-policy: keep
   name: stats
   labels:
     app.kubernetes.io/name: kinetica-operators
