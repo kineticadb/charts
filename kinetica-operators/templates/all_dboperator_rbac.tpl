@@ -361,55 +361,6 @@ rules:
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: manager-role
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-rules:
-- apiGroups:
-  - ''
-  resources:
-  - namespaces
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ''
-  resources:
-  - nodes/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - storageclasses
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - storageclasses/status
-  verbs:
-  - get
-  - patch
-  - update
-
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: manager-rolebinding
@@ -486,25 +437,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: kinetica-system
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: manager-rolebinding
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: manager-role
-subjects:
-- kind: ServiceAccount
-  name: kineticacluster-operator
   namespace: kinetica-system
 
 ---

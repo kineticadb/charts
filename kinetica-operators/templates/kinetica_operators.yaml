@@ -93,6 +93,10 @@
   {{- end }}
 {{- end }}
 
+{{- if and $values.kineticacluster.install (not $values.kineticacluster.gpudbCluster.config.tieredStorage.generateStorageClasses) (and (eq $values.kineticacluster.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.storageClassName "") (eq $values.global.defaultStorageClass "")) }}
+  {{- fail "When kineticacluster.spec.gpudbCluster.config.tieredStorage.generateStorageClasses is set to false, a storage class must be provided fo kineticacluster.spect.gpudbCluster.config.tieredStorage.volumeClaim.spec.storageClassName or global.defaultStorageClass" }}
+{{- end }}
+
 
 {{- /* create the final values */ -}}
 {{- $values = merge (dict "global" $global) $values}}
@@ -100,10 +104,10 @@
 {{- $values = merge (dict "dbOperator" $dbOperator) (dict "wbOperator" $wbOperator) $values}}
 {{- $data := merge (dict "Files" $files) (dict "Values" $values) (dict "Capabilities" $capabilities) (dict "Chart" $chart) (dict "Release" $release) (dict "Template" $template)}}
 
-{{- if $values.upsertKineticaCrds.enable }}
-  {{- include "kinetica-operators.crds" $data }}
-}}
-  
+#if $values.upsertKineticaCrds.enable
+#  - include "kinetica-operators.crds" $data
+#end
+
 ---
 
 {{- if eq (kindOf $values.tlsTermination) "map" }}
@@ -144,6 +148,13 @@
       {{- include "kinetica-operators.local-dboperator-operator" $data -}}
       {{- include "kinetica-operators.local-dboperator-monitoring" $data }}
       {{- include "kinetica-operators.local-dboperator-metering" $data }}       
+  {{- end }}
+
+  {{- if $values.dbOperator.rbac.installClusterRoles.nodes }}
+      {{- include "kinetica-operators.all-dboperator-nodeclusterrole" $data }}
+  {{- end }}
+  {{- if $values.dbOperator.rbac.installClusterRoles.storageClasses }}
+      {{- include "kinetica-operators.all-dboperator-scclusterrole" $data }}
   {{- end }}
 {{- end }}
  
