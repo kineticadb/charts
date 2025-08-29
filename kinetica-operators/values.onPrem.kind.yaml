@@ -60,7 +60,6 @@ openldap:
     LDAP_ORGANISATION: "Kinetica DB Inc."
     LDAP_DOMAIN: "kinetica.com"
     LDAP_LOG_LEVEL: "128"
-
   affinity: {}
   podAntiAffinity: {}
   livenessProbe:
@@ -92,8 +91,15 @@ kineticacluster:
               spec:
                 storageClassName: "standard"
 
+upsertKineticaCrds:
+  enable: false
+
+supportBundle:
+  install: false
+
 dbAdminUser:
   create: true
 
 workbench:
   install: true
+  storageClass: standard

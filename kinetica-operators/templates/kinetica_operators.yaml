@@ -96,12 +96,14 @@
 
 {{- /* create the final values */ -}}
 {{- $values = merge (dict "global" $global) $values}}
-  
+
 {{- $values = merge (dict "dbOperator" $dbOperator) (dict "wbOperator" $wbOperator) $values}}
 {{- $data := merge (dict "Files" $files) (dict "Values" $values) (dict "Capabilities" $capabilities) (dict "Chart" $chart) (dict "Release" $release) (dict "Template" $template)}}
 
-{{- include "kinetica-operators.crds" $data }}
-
+{{- if $values.upsertKineticaCrds.enable }}
+  {{- include "kinetica-operators.crds" $data }}
+}}
+  
 ---
 
 {{- if eq (kindOf $values.tlsTermination) "map" }}
