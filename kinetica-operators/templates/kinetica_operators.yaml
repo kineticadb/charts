@@ -104,10 +104,6 @@
 {{- $values = merge (dict "dbOperator" $dbOperator) (dict "wbOperator" $wbOperator) $values}}
 {{- $data := merge (dict "Files" $files) (dict "Values" $values) (dict "Capabilities" $capabilities) (dict "Chart" $chart) (dict "Release" $release) (dict "Template" $template)}}
 
-#if $values.upsertKineticaCrds.enable
-#  - include "kinetica-operators.crds" $data
-#end
-
 ---
 
 {{- if eq (kindOf $values.tlsTermination) "map" }}

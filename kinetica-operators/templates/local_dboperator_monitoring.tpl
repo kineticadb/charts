@@ -442,6 +442,15 @@ spec:
           requests:
             cpu: 1000m
             memory: 2Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /conf
           name: otel-collector-config-vol

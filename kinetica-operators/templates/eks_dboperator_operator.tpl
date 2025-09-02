@@ -60,8 +60,13 @@ spec:
         - containerPort: 8443
           name: https
         securityContext:
-          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
       - args:
         - --metrics-addr=127.0.0.1:8080
         - --enable-leader-election
@@ -104,7 +109,13 @@ spec:
             memory: 256Mi
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /etc/config/
           name: gpudb-tmpl

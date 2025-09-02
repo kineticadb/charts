@@ -79,6 +79,16 @@ kineticacluster:
   install: true
   name: kinetica-kind-sample
   gpudbCluster:
+    resources:
+      limits:
+        cpu: 4
+        ephemeral-storage: 10Gi
+        memory: 8Gi
+      requests:
+        cpu: 4
+        ephemeral-storage: 10Gi
+        memory: 8Gi
+    clusterName: kinetica-kind-sample
     config:
       tieredStorage:
         globalTier:
@@ -90,9 +100,6 @@ kineticacluster:
             volumeClaim:
               spec:
                 storageClassName: "standard"
-
-upsertKineticaCrds:
-  enable: false
 
 supportBundle:
   install: false
