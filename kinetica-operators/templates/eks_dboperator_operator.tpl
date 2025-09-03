@@ -60,6 +60,7 @@ spec:
         - containerPort: 8443
           name: https
         securityContext:
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL
