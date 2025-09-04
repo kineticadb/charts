@@ -1,5 +1,7 @@
 {{- define "kinetica-operators.eks-dboperator-namespaces" }}
 
+{{ $gpudb_namespace := lookup 'v1' 'Namespace' '' 'gpudb' }}
+{{- if not $gpudb_namespace -}}
 ---
 apiVersion: v1
 kind: Namespace
@@ -13,6 +15,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+{{- end -}}
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
