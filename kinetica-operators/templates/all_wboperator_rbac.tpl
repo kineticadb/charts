@@ -136,6 +136,14 @@ rules:
   verbs:
   - get
 - apiGroups:
+  - ''
+  resources:
+  - events
+  verbs:
+  - create
+  - get
+  - watch
+- apiGroups:
   - coordination.k8s.io
   resources:
   - leases
