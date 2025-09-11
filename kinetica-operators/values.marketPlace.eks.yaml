@@ -29,7 +29,7 @@ wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.2-23.dev-22-operator"
+    tag: "v7.2.2-23.dev-23-operator"
     digest: ""
 dbOperator:
   install: true
@@ -37,7 +37,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.2-23.dev-22-operator"
+    tag: "v7.2.2-23.dev-23-operator"
     digest: ""
 certManager:
   install: true
@@ -148,7 +148,7 @@ openldap:
     ldapPort: 1389
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-23.dev-22"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.2-23.dev-23"
       command:
         [
           "sh",
@@ -200,7 +200,7 @@ kineticacluster:
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
       repository: "kinetica.azurecr.io/dev/kinetica-k8s-monitor"
-      tag: "v7.2.2-23.dev-22"
+      tag: "v7.2.2-23.dev-23"
   # you may use nginx if you want the operator to create the nginx records
   # if you want to manage your own ingress controller/gateway api, provide "none"
   # TODO: As of now, if you want the operator to create nginx records, do the following
@@ -221,32 +221,32 @@ kineticacluster:
   supportingImages:
     busybox:
       repository: "kinetica.azurecr.io/dev/busybox"
-      tag: "v7.2.2-23.dev-22"
+      tag: "v7.2.2-23.dev-23"
     socat:
       repository: "kinetica.azurecr.io/dev/socat"
-      tag: "v7.2.2-23.dev-22"
+      tag: "v7.2.2-23.dev-23"
   # stats:
   #   isEnabled: true
   # alertManager:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-23.dev-22"
+  #     tag: "v7.2.2-23.dev-23"
   # grafana:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-23.dev-22"
+  #     tag: "v7.2.2-23.dev-23"
   # loki:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-23.dev-22"
+  #     tag: "v7.2.2-23.dev-23"
   # prometheus:
   #   isEnabled: true
   #   image:
   #     repository: "kinetica.azurecr.io/dev/kagent"
-  #     tag: "v7.2.2-23.dev-22"
+  #     tag: "v7.2.2-23.dev-23"
   gadmin:
     isEnabled: true
   reveal:
@@ -274,7 +274,7 @@ kineticacluster:
     #gpuAcceleration: false
     metricsRegistryRepositoryTag:
       repository: "kinetica.azurecr.io/dev/fluent-bit"
-      tag: "v7.2.2-23.dev-22"
+      tag: "v7.2.2-23.dev-23"
     config:
       postgresProxy:
         enablePostgresProxy: true

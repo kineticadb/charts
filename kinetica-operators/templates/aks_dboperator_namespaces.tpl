@@ -1,5 +1,6 @@
 {{- define "kinetica-operators.aks-dboperator-namespaces" }}
 
+{{ if .Values.createNamespaces }}
 {{ if not (lookup "v1" "Namespace" "" "gpudb") }}
 ---
 apiVersion: v1
@@ -16,7 +17,9 @@ metadata:
     app.kubernetes.io/part-of: kinetica
   name: gpudb
 {{ end }}
+{{ end }}
 
+{{ if .Values.createNamespaces }}
 {{ if not (lookup "v1" "Namespace" "" "kml-active-analytics") }}
 ---
 apiVersion: v1
@@ -32,7 +35,9 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 {{ end }}
+{{ end }}
 
+{{ if .Values.createNamespaces }}
 {{ if not (lookup "v1" "Namespace" "" "stats") }}
 ---
 apiVersion: v1
@@ -47,6 +52,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+{{ end }}
 {{ end }}
 
 ---
