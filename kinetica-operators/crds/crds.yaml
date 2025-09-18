@@ -24342,6 +24342,47 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              monitoring:
+                default:
+                  syslog:
+                    enabled: true
+                    host: otel-collector.kinetica-system.svc.cluster.local
+                    port: 9601
+                description: Where to send monitoring information e.g. OTEL collector
+                  etc.
+                properties:
+                  syslog:
+                    default:
+                      enabled: true
+                      host: otel-collector.kinetica-system.svc.cluster.local
+                      port: 9601
+                    properties:
+                      conversionPattern:
+                        default: '%D{%Y-%m-%d %H:%M:%S.%q} %-5p (%i,%T,%-18t) %h %F:%L
+                          - %X{JobId}%m%n'
+                        description: |-
+                          A PatternLayout to specify the layout of log messages. For more information,
+                          see: https://logging.apache.org/log4cxx
+                        type: string
+                      enabled:
+                        default: true
+                        type: boolean
+                      host:
+                        default: otel-collector.kinetica-system.svc.cluster.local
+                        type: string
+                      port:
+                        default: 9601
+                        type: integer
+                      threshold:
+                        default: INFO
+                        type: string
+                    required:
+                    - enabled
+                    - port
+                    type: object
+                required:
+                - syslog
+                type: object
               payAsYouGo:
                 default: false
                 description: Tells the operator to use Cloud Provider Pay As You Go

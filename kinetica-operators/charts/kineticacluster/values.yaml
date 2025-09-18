@@ -628,6 +628,10 @@
   # -- The LDAP server to connect to.
   # Type: object
 
+  # monitoring: (required: false)
+  # -- Where to send monitoring information e.g. OTEL collector etc.
+  # Type: object
+
   # payAsYouGo: (required: false)
   # -- Tells the operator to use Cloud Provider Pay As You Go functionality.
   # Type: boolean

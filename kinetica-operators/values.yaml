@@ -22,7 +22,7 @@ global:
 upsertKineticaCrds:
   image:
     repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
-    tag: "v7.2.2-23.dev-23"
+    tag: "v7.2.2-23.dev-26"
 
 kubeRbacProxy:
   image:
@@ -37,6 +37,7 @@ kubeStateMetrics:
 
 otelCollector:
   install: true
+  installRbac: false
   image:
     repository: "otel/opentelemetry-collector-contrib"
     tag: "0.95.0"
@@ -50,7 +51,7 @@ wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.2-23.dev-23-operator"
+    tag: "v7.2.2-23.dev-26-operator"
     digest: ""
 
 dbOperator:
@@ -59,8 +60,12 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.2-23.dev-23-operator"
+    tag: "v7.2.2-23.dev-26-operator"
     digest: ""
+  monitoring:
+    type: "otel"
+    otel:
+      url: "otel-collector.kinetica-system.svc.cluster.local:4317"
   rbac:
     installClusterRoles:
       # Permission to inspect nodes to auto-discover node sizing for databases
@@ -106,7 +111,7 @@ ingressNginx:
     enabled: true
     image:
       repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
-      tag: "v7.2.2-23.dev-23"
+      tag: "v7.2.2-23.dev-26"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -211,7 +216,7 @@ supportBundle:
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.2-23.dev-23"
+    tag: "v7.2.2-23.dev-26"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -234,7 +239,7 @@ kineticacluster:
     monitorRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.2-23.dev-23"
+      tag: "v7.2.2-23.dev-26"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -258,11 +263,11 @@ kineticacluster:
     busybox:
       registry: "kinetica.azurecr.io/dev"
       repository: busybox
-      tag: "v7.2.2-23.dev-23"
+      tag: "v7.2.2-23.dev-26"
     socat:
       registry: "kinetica.azurecr.io/dev"
       repository: socat
-      tag: "v7.2.2-23.dev-23"
+      tag: "v7.2.2-23.dev-26"
   # stats:
   #   isEnabled: false
   gadmin:
@@ -299,11 +304,11 @@ kineticacluster:
     dbRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.2-23.dev-23"
+      tag: "v7.2.2-23.dev-26"
     metricsRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: fluent-bit
-      tag: "v7.2.2-23.dev-23"
+      tag: "v7.2.2-23.dev-26"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -349,4 +354,4 @@ workbench:
   wbRegistryRepositoryTag:
     registry: "kinetica.azurecr.io/dev"
     repository: workbench
-    tag: "v7.2.2-23.dev-23"
+    tag: "v7.2.2-23.dev-26"

@@ -145,14 +145,14 @@ rules:
   - watch
 {{- end }}
 ---
+{{ if .Values.otelCollector.installRbac }}
 ---
-{{- if .Values.otelCollector.install }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: otel-collector-role
   labels:
-    app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
@@ -163,8 +163,8 @@ rules:
   - '*'
   verbs:
   - '*'
-{{- end }}
----
+{{ end }}
+
 ---
 {{- if .Values.kubeStateMetrics.install }}
 apiVersion: rbac.authorization.k8s.io/v1
@@ -188,14 +188,14 @@ subjects:
   namespace: kinetica-system
 {{- end }}
 ---
+{{ if .Values.otelCollector.installRbac }}
 ---
-{{- if .Values.otelCollector.install }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: otel-collector-role-binding
   labels:
-    app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
@@ -207,8 +207,8 @@ subjects:
 - kind: ServiceAccount
   name: opentelemetry-collector
   namespace: kinetica-system
-{{- end }}
----
+{{ end }}
+
 ---
 {{- if .Values.otelCollector.install }}
 apiVersion: v1

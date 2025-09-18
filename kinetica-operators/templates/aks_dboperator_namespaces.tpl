@@ -57,7 +57,7 @@ metadata:
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -66,21 +66,37 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
   name: gpudb
+  namespace: gpudb
 rules:
 - apiGroups:
-  - '*'
+  - ''
   resources:
-  - '*'
+  - configmaps
+  - events
+  - pods
+  - pods/status
+  - secrets
   verbs:
-  - '*'
-- nonResourceURLs:
-  - '*'
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - statefulsets/status
   verbs:
-  - '*'
+  - get
+  - list
+  - watch
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -89,9 +105,10 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
   name: gpudb
+  namespace: gpudb
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: gpudb
 subjects:
 - kind: ServiceAccount
