@@ -81,11 +81,6 @@ kineticacluster:
               spec:
                 storageClassName: "local-path"
         
-upsertKineticaCrds:
-  enable: false
-
-supportBundle:
-  install: false
 
 dbAdminUser:
   create: true
