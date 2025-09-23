@@ -20,8 +20,8 @@ global:
 
 upsertKineticaCrds:
   image:
-    repository: "docker.io/kinetica/upsert-kinetica-crds"
-    tag: "v7.2.3-1.ga-0"
+    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
+    tag: "v7.2.3-1.dev-1"
 
 kubeRbacProxy:
   image:
@@ -48,8 +48,8 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kinetica/workbench-operator"
-    tag: "v7.2.3-1.ga-0-operator"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.3-1.dev-1-operator"
     digest: ""
 
 dbOperator:
@@ -57,8 +57,8 @@ dbOperator:
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kinetica/kinetica-k8s-operator"
-    tag: "v7.2.3-1.ga-0-operator"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.3-1.dev-1-operator"
     digest: ""
 
 nodeSelector: {}
@@ -97,8 +97,8 @@ ingressNginx:
   defaultBackend:
     enabled: true
     image:
-      repository: "docker.io/kinetica/kinetica-default-backend"
-      tag: "v7.2.3-1.ga-0"
+      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
+      tag: "v7.2.3-1.dev-1"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -139,7 +139,7 @@ openldap:
     tag: "2.6.7"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "docker.io/kinetica/busybox:v7.2.3-1.ga-0"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.3-1.dev-1"
       command:
         [
           "sh",
@@ -168,11 +168,11 @@ supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: "docker.io/kinetica"
+    registry: "kinetica.azurecr.io/dev"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.3-1.ga-0"
+    tag: "v7.2.3-1.dev-1"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -193,9 +193,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: "docker.io/kinetica"
+      registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.3-1.ga-0"
+      tag: "v7.2.3-1.dev-1"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -217,13 +217,13 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      registry: "docker.io/kinetica"
+      registry: "kinetica.azurecr.io/dev"
       repository: busybox
-      tag: "v7.2.3-1.ga-0"
+      tag: "v7.2.3-1.dev-1"
     socat:
-      registry: "docker.io/kinetica"
+      registry: "kinetica.azurecr.io/dev"
       repository: socat
-      tag: "v7.2.3-1.ga-0"
+      tag: "v7.2.3-1.dev-1"
   # stats:
   #   isEnabled: false
   gadmin:
@@ -258,13 +258,13 @@ kineticacluster:
     # use avx512 if your CPUs support this instruction set
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: "docker.io/kinetica"
+      registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.3-1.ga-0"
+      tag: "v7.2.3-1.dev-1"
     metricsRegistryRepositoryTag:
-      registry: "docker.io/kinetica"
+      registry: "kinetica.azurecr.io/dev"
       repository: fluent-bit
-      tag: "v7.2.3-1.ga-0"
+      tag: "v7.2.3-1.dev-1"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -306,6 +306,6 @@ workbench:
   nodeSelector: {}
   storageClass: "{{ .Values.kineticacluster.name }}-storageclass"
   wbRegistryRepositoryTag:
-    registry: "docker.io/kinetica"
+    registry: "kinetica.azurecr.io/dev"
     repository: workbench
-    tag: "v7.2.3-1.ga-0"
+    tag: "v7.2.3-1.dev-1"
