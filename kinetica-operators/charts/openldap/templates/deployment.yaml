@@ -54,6 +54,9 @@ spec:
               sed -i "/^export LDAP_PASSWORDS/d" /opt/bitnami/scripts/libopenldap.sh
               cp -Lr /opt/bitnami/scripts/* /scripts/
 
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: scripts
               mountPath: /scripts
@@ -128,6 +131,9 @@ spec:
               mountPath: /ldifs/
 {{- end }}
             
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
 
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
@@ -175,6 +181,11 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
       volumes:
         - name: data
         {{- if .Values.persistence.enabled }}

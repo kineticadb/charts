@@ -1,0 +1,62 @@
+environment: "onPrem"
+provider: kind
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+createNamespaces: false
+
+kubeStateMetrics:
+  install: false
+
+otelCollector:
+  install: false
+
+ingressNginx:
+  install: true
+"ingress-nginx":
+  controller:
+    ingressClassResource:
+      enabled: false
+    admissionWebhooks:
+      enabled: false
+    
+supportBundle:
+  install: false
+
+certManager:
+  install: false
+
+kineticacluster:
+  install: true
+  name: rubix-kinetica
+  stats:
+    isEnabled: false
+  gpudbCluster:
+    clusterName: rubix-kinetica
+    license: ""
+    hasPools: false
+    config:
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: ""
+            provisioner: "rancher.io/local-path"
+            volumeClaim:
+              spec:
+                storageClassName: "standard"
+        
+supportBundle:
+  install: false
+
+dbAdminUser:
+  create: false
+
+wbOperator:
+  install: false
+
+workbench:
+  install: false
+  storageClass: "standard"
