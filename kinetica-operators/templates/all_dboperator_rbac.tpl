@@ -355,6 +355,10 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
+{{ if .Values.controller.metricsService.annotations }}
+  annotations:
+{{ toYaml .Values.controller.metricsService.annotations | indent 4 }}
+{{ end }}
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
