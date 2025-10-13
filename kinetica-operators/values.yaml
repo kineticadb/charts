@@ -14,15 +14,16 @@ clusterName: ""
 clusterRegion: ""
 letsEncryptEmail: devops@kinetica.com
 openshift: false
-createNamespaces: true
 
 global:
   defaultStorageClass: ""
 
+kubectlImage: "rancher/kubectl:v1.32.8"
+
 upsertKineticaCrds:
   image:
-    repository: "docker.io/kineticastagingcloud/upsert-kinetica-crds"
-    tag: "v7.2.3-2.rc-3"
+    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
+    tag: "v7.2.3-3.dev-3"
 
 kubeRbacProxy:
   image:
@@ -37,7 +38,6 @@ kubeStateMetrics:
 
 otelCollector:
   install: true
-  installRbac: false
   image:
     repository: "otel/opentelemetry-collector-contrib"
     tag: "0.95.0"
@@ -50,8 +50,8 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kineticastagingcloud/workbench-operator"
-    tag: "v7.2.3-2.rc-3-operator"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.3-3.dev-3-operator"
     digest: ""
 
 dbOperator:
@@ -59,21 +59,9 @@ dbOperator:
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
-    tag: "v7.2.3-2.rc-3-operator"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.3-3.dev-3-operator"
     digest: ""
-  monitoring:
-    type: "otel"
-    otel:
-      url: "otel-collector.kinetica-system.svc.cluster.local:4317"
-  rbac:
-    installRoles:
-      velero: false
-    installClusterRoles:
-      # Permission to inspect nodes to auto-discover node sizing for databases
-      nodes: false
-      # Permission to get and create storage classes (auto-generate storage classes with best practice annotations)
-      storageClasses: false
 
 nodeSelector: {}
 tolerations: []
@@ -106,14 +94,13 @@ certManager:
 ingressNginx:
   install: true
 "ingress-nginx":
-  namespaceOverride: "gpudb"
   fullnameOverride: "ingress-nginx"
   tcp: {}
   defaultBackend:
     enabled: true
     image:
-      repository: "docker.io/kineticastagingcloud/kinetica-default-backend"
-      tag: "v7.2.3-2.rc-3"
+      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
+      tag: "v7.2.3-3.dev-3"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -124,10 +111,6 @@ ingressNginx:
     allowSnippetAnnotations: true
     config:
       annotations-risk-level: Critical
-      use-forwarded-headers: "true"
-    scope:
-      enabled: true
-      namespace: "gpudb"
     service:
       annotations: {}
     admissionWebhooks:
@@ -138,10 +121,6 @@ ingressNginx:
           repository: k8s.gcr.io/ingress-nginx/kube-webhook-certgen
           tag: v1.1.1
           digest: ""
-    watchIngressWithoutClass: true
-  rbac:
-    create: false
-    scope: true
 
 gpuOperator:
   install: false
@@ -154,44 +133,22 @@ gpuOperator:
       enabled: true
 
 openldap:
-  containerSecurityContext:
-    enabled: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop:
-      - ALL
-    readOnlyRootFilesystem: false
-    runAsUser: 1001
-    runAsNonRoot: true
-    seccompProfile:
-      type: RuntimeDefault
-
   openldapNamespace: "gpudb"
   fullnameOverride: "openldap"
   global:
     ldapPort: 1389
   image:
-    repository: "kinetica.azurecr.io/public/openldap"
-    tag: "2.6.8"
+    repository: "kineticastagingcloud/openldap"
+    tag: "2.7.0"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/public/openldap:2.6.8"
+      image: "kinetica.azurecr.io/dev/busybox:v7.2.3-3.dev-3"
       command:
         [
           "sh",
           "-c",
-          "mkdir -p /bitnami/openldap/data",
+          "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
         ]
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
-        readOnlyRootFilesystem: true
-        runAsUser: 1001
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
       volumeMounts:
         - name: data
           mountPath: /bitnami
@@ -214,11 +171,11 @@ supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: "docker.io/kineticastagingcloud"
+    registry: "kinetica.azurecr.io/dev"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.3-2.rc-3"
+    tag: "v7.2.3-3.dev-3"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -239,9 +196,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.3-2.rc-3"
+      tag: "v7.2.3-3.dev-3"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -263,13 +220,13 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: busybox
-      tag: "v7.2.3-2.rc-3"
+      tag: "v7.2.3-3.dev-3"
     socat:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: socat
-      tag: "v7.2.3-2.rc-3"
+      tag: "v7.2.3-3.dev-3"
   # stats:
   #   isEnabled: false
   gadmin:
@@ -304,13 +261,13 @@ kineticacluster:
     # use avx512 if your CPUs support this instruction set
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.3-2.rc-3"
+      tag: "v7.2.3-3.dev-3"
     metricsRegistryRepositoryTag:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: fluent-bit
-      tag: "v7.2.3-2.rc-3"
+      tag: "v7.2.3-3.dev-3"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -322,8 +279,6 @@ kineticacluster:
       textSearch:
         enableTextSearch: true
       tieredStorage:
-        generateStorageClasses: false
-        allowAutoSizing: false
         globalTier:
           colocateDisks: true
         persistTier:
@@ -337,14 +292,14 @@ kineticacluster:
                   - "ReadWriteOnce"
 
 dbAdminUser:
-  create: true
+  create: false
   # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
   name: "kadmin"
   # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
   password: ""
 
 workbench:
-  install: true
+  install: false
   name: workbench
   namespace: gpudb
   fqdn: "local.kinetica"
@@ -352,8 +307,8 @@ workbench:
     enabled: false
     environment: "staging"
   nodeSelector: {}
-  storageClass: ""
+  storageClass: "{{ .Values.kineticacluster.name }}-storageclass"
   wbRegistryRepositoryTag:
-    registry: "docker.io/kineticastagingcloud"
+    registry: "kinetica.azurecr.io/dev"
     repository: workbench
-    tag: "v7.2.3-2.rc-3"
+    tag: "v7.2.3-3.dev-3"

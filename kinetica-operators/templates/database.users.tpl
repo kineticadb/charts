@@ -109,7 +109,7 @@ spec:
           name: {{ .Release.Name }}-delete-script
       containers:
       - name: kubectl
-        image: {{ default "bitnami/kubectl:1.29.3"  .Values.kubectlImage }}  
+        image: {{ default "bitnami/kubectl:latest"  .Values.kubectlImage }}  
         command: ["/bin/bash"]
         args: ["/mnt/scripts/delete-script.sh"]
         volumeMounts:

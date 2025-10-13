@@ -34,15 +34,6 @@ spec:
         ports:
         - containerPort: 8443
           name: https
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          seccompProfile:
-            type: RuntimeDefault
       - args:
         - --metrics-addr=127.0.0.1:8080
         - --enable-leader-election
@@ -60,23 +51,9 @@ spec:
           requests:
             cpu: 100m
             memory: 256Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          runAsNonRoot: true
-          seccompProfile:
-            type: RuntimeDefault
         volumeMounts:
         - mountPath: /etc/config/
           name: workbench-tmpl
-      securityContext:
-        fsGroup: 2000
-        runAsGroup: 3000
-        runAsNonRoot: true
-        runAsUser: 65432
-      serviceAccountName: workbench-operator-service-account
       terminationGracePeriodSeconds: 10
       volumes:
       - configMap:
