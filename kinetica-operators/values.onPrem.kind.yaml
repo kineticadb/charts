@@ -60,7 +60,6 @@ openldap:
     LDAP_ORGANISATION: "Kinetica DB Inc."
     LDAP_DOMAIN: "kinetica.com"
     LDAP_LOG_LEVEL: "128"
-
   affinity: {}
   podAntiAffinity: {}
   livenessProbe:
@@ -80,6 +79,16 @@ kineticacluster:
   install: true
   name: kinetica-kind-sample
   gpudbCluster:
+    resources:
+      limits:
+        cpu: 4
+        ephemeral-storage: 10Gi
+        memory: 8Gi
+      requests:
+        cpu: 4
+        ephemeral-storage: 10Gi
+        memory: 8Gi
+    clusterName: kinetica-kind-sample
     config:
       tieredStorage:
         globalTier:
@@ -92,8 +101,12 @@ kineticacluster:
               spec:
                 storageClassName: "standard"
 
+supportBundle:
+  install: false
+
 dbAdminUser:
   create: true
 
 workbench:
   install: true
+  storageClass: standard

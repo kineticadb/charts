@@ -1,10 +1,10 @@
-{{- define "kinetica-operators.all-wboperator-rbac" }}
+{{- define "kinetica-operators.all-dboperator-rbac" }}
 
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: workbench-operator-service-account
+  name: kineticacluster-operator
   namespace: kinetica-system
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -16,7 +16,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: workbench-operator-manager-role
+  name: manager-role
   namespace: gpudb
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -28,8 +28,6 @@ rules:
   - ''
   resources:
   - configmaps
-  - events
-  - persistentvolumeclaims
   - pods
   - secrets
   - services
@@ -44,11 +42,83 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - configmaps/status
-  - events/status
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ''
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ''
+  resources:
   - pods/status
-  - secrets/status
   - services/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticacluster
+  - kineticaclusteradmins
+  - kineticaclusterbackups
+  - kineticaclusterelasticities
+  - kineticaclusterresourcegroups
+  - kineticaclusterrestores
+  - kineticaclusters
+  - kineticaclusterschedules
+  - kineticaclusterschemas
+  - kineticaclusterupgrades
+  - kineticagrants
+  - kineticareleaseversions
+  - kineticaroles
+  - kineticausers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticacluster/finalizers
+  - kineticaclusteradmins/finalizers
+  - kineticaclusterbackups/finalizers
+  - kineticaclusters/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticacluster/status
+  - kineticaclusteradmins/status
+  - kineticaclusterbackups/status
+  - kineticaclusterelasticities/status
+  - kineticaclusterresourcegroups/status
+  - kineticaclusterrestores/status
+  - kineticaclusters/status
+  - kineticaclusterschedules/status
+  - kineticaclusterschemas/status
+  - kineticaclusterupgrades/status
+  - kineticagrants/status
+  - kineticareleaseversions/status
+  - kineticaroles/status
+  - kineticausers/status
   verbs:
   - get
   - patch
@@ -56,6 +126,7 @@ rules:
 - apiGroups:
   - apps
   resources:
+  - deployments
   - statefulsets
   verbs:
   - create
@@ -68,11 +139,24 @@ rules:
 - apiGroups:
   - apps
   resources:
+  - deployments/status
   - statefulsets/status
   verbs:
   - get
   - patch
   - update
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - networking.k8s.io
   resources:
@@ -93,34 +177,12 @@ rules:
   - get
   - patch
   - update
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenches
-  - workbenchupgrades
-  - workbenchupgrades/status
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - workbench.com.kinetica
-  resources:
-  - workbenches/status
-  verbs:
-  - get
-  - patch
-  - update
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: workbench-operator-manager-role
+  name: manager-role
   namespace: kinetica-system
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -132,9 +194,14 @@ rules:
   - ''
   resources:
   - configmaps
-  - secrets
   verbs:
+  - create
+  - delete
   - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - ''
   resources:
@@ -142,7 +209,48 @@ rules:
   verbs:
   - create
   - get
+  - list
+  - patch
   - watch
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticaoperatorupgrades
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticaoperatorupgrades/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - deployments/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - coordination.k8s.io
   resources:
@@ -157,32 +265,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: workbench-operator-proxy-role
-  namespace: kinetica-system
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-rules:
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: workbench-operator-leader-election-role
+  name: leader-election-role
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -204,14 +287,6 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - configmaps/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - ''
-  resources:
   - events
   verbs:
   - create
@@ -220,7 +295,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: workbench-operator-manager-rolebinding
+  name: manager-rolebinding
   namespace: gpudb
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -230,17 +305,17 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: workbench-operator-manager-role
+  name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: workbench-operator-service-account
+  name: kineticacluster-operator
   namespace: kinetica-system
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: workbench-operator-manager-rolebinding
+  name: leader-election-rolebinding
   namespace: kinetica-system
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -250,27 +325,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: workbench-operator-manager-role
-subjects:
-- kind: ServiceAccount
-  name: workbench-operator-service-account
-  namespace: kinetica-system
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: workbench-operator-proxy-rolebinding
-  namespace: kinetica-system
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: workbench-operator-proxy-role
+  name: leader-election-role
 subjects:
 - kind: ServiceAccount
   name: default
@@ -280,7 +335,8 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: workbench-operator-leader-election-rolebinding
+  name: manager-rolebinding
+  namespace: kinetica-system
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -289,23 +345,27 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: workbench-operator-leader-election-role
+  name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: kineticacluster-operator
   namespace: kinetica-system
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
+{{ if (and .Values.controller .Values.controller.metricsService .Values.controller.metricsService.annotations) }}
+  annotations:
+{{ toYaml .Values.controller.metricsService.annotations | indent 4 }}
+{{ end }}
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
-  name: workbench-operator-controller-manager-metrics-service
+  name: controller-manager-metrics-service
   namespace: kinetica-system
 spec:
   ports:

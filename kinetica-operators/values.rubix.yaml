@@ -1,0 +1,88 @@
+environment: "onPrem"
+provider: "kind"
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+createNamespaces: false
+
+controller:
+  metricsService:
+    annotations:
+      com.palantir.rubix.service/pod-cert: "{}"
+
+kubeStateMetrics:
+  install: false
+
+otelCollector:
+  install: false
+
+openldap:
+  service:
+    annotations:
+      com.palantir.rubix.service/pod-cert: "{}"
+
+ingressNginx:
+  install: true
+"ingress-nginx":
+  defaultBackend:
+    enabled: false
+  controller:
+    image:
+      image: "kineticastagingcloud/ingress-nginx-controller"
+      tag: "v1.13.3-rubix"
+      digest: ""
+    service:
+      type: ClusterIP
+      annotations:
+        com.palantir.rubix.service/pod-cert: "{}"
+    ingressClassResource:
+      enabled: false
+    admissionWebhooks:
+      enabled: false
+    watchIngressWithoutClass: true
+    rbac:
+      create: false
+      scope: true
+    
+supportBundle:
+  install: false
+
+certManager:
+  install: false
+
+kineticacluster:
+  install: true
+  name: rubix-kinetica
+  stats:
+    isEnabled: false
+  reveal:
+    inEnabled: false
+  gpudbCluster:
+    clusterName: rubix-kinetica
+    license: ""
+    hasPools: false
+    config:
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: ""
+            provisioner: "rancher.io/local-path"
+            volumeClaim:
+              spec:
+                storageClassName: "standard"
+        
+supportBundle:
+  install: false
+
+dbAdminUser:
+  create: false
+
+wbOperator:
+  install: false
+
+workbench:
+  install: false
+  storageClass: "standard"

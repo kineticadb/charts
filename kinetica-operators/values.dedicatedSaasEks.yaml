@@ -12,9 +12,6 @@ provider: eks
 clusterName: "cluster-001"
 clusterRegion: ""
 
-kineticacluster:
-  install: false
-
 kubeRbacProxy:
   image:
     repository: "quay.io/brancz/kube-rbac-proxy"
