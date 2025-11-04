@@ -81,8 +81,8 @@ dbAdminUser:
   create: false
 
 wbOperator:
-  install: false
+  install: true
 
 workbench:
-  install: false
+  install: true
   storageClass: "standard"

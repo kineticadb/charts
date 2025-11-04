@@ -157,31 +157,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: workbench-operator-proxy-role
-  namespace: kinetica-system
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-rules:
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
   name: workbench-operator-leader-election-role
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -254,26 +229,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: workbench-operator-service-account
-  namespace: kinetica-system
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: workbench-operator-proxy-rolebinding
-  namespace: kinetica-system
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: workbench-operator-proxy-role
-subjects:
-- kind: ServiceAccount
-  name: default
   namespace: kinetica-system
 
 ---
