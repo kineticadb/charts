@@ -62,7 +62,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     ``` sh title="Get & install the Kinetica-Operators Chart"
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.kind.yaml
 
-    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
     
     or if you have been asked by the Kinetica Support team to try a development version
@@ -71,7 +71,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     helm search repo kinetica-operators --devel --versions
 
-    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version {{helm_chart_version}}
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version {{helm_chart_version}}
     ```
  
     !!! success "Accessing the Workbench"
@@ -131,7 +131,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     ``` shell title="Download Template values.yaml" 
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k3s.yaml
     
-    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
 
     or if you have been asked by the Kinetica Support team to try a development version
@@ -139,7 +139,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     ``` sh title="Using a development version"
     helm search repo kinetica-operators --devel --versions
     
-    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
+    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
     ```
 
     #### K3S - Install the  Kinetica-Operators Chart (GPU)
@@ -150,7 +150,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     ``` sh title="k3s GPU Installation"
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k3s.gpu.yaml
     
-    helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set db.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+    helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
     ```
     
     !!! success "Accessing the Workbench"

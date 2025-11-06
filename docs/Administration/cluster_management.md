@@ -54,7 +54,7 @@ dedicated to each Rank can be increased or decreased.
 
 #### Changing the Number of Ranks
 
-The number of worker Ranks can be adjusted by modifying the `db.gpudbCluster.replicas`
+The number of worker Ranks can be adjusted by modifying the `kineticacluster.gpudbCluster.replicas`
 parameter on the helm values.  This number must be greater than zero.  When updated,
 the Kinetica Operators will automatically update the number of replicas of the
 database that are running and will rebalance the data across the remaining Ranks,
@@ -79,14 +79,14 @@ linux Out Of Memory Killer Kernel Process (OOMKill).  Ranks will be identical in
 size and consequently the size of the Ranks will be determined by the smallest node
 that is availble for the cluster to run upon.
 
-You can set rank limits via the `db.gpudbCluster.resources` field in the Helm values
+You can set rank limits via the `kineticacluster.gpudbCluster.resources` field in the Helm values
 file.  As a reminder, this value is a "per Rank" value, not an overall value.  For
 example, the following will create (or resize) a cluster with three worker ranks
 each on a different node, and each having 16 vcpus and 64Gi of memory.  Meaning that
 in total, you would be using 48 vcpus (16 vcpu x 3) and 192Gi of RAM (64Gi x 3).
 
 ``` yaml
-db:
+kineticacluster:
   gpudbCluster:
     ranksPerNode: 1
     replicas: 3
@@ -102,7 +102,7 @@ db:
 !!! warning "auto sizing"
     If you do *not* put any limits on the pods, Kinetica will inspect the nodes
     that are available (and which match the app.kinetica.com/pool=compute label
-    if `db.gpudbCluster.hasPools` is true).  It will assume that Kinetica is being
+    if `kineticacluster.gpudbCluster.hasPools` is true).  It will assume that Kinetica is being
     given exclusive access to these nodes and will default to using 85% of the
     largest N matching nodes (by memory capacity) where N is the number of ranks.
 
@@ -112,7 +112,7 @@ In some instances, it may be best to run more than one Rank per node.  By defaul
 the Kinetica Operator assumes that there will only be one Rank per node and puts
 a Kubernetes "anti-affinity" on the pods of the stateful set, forcing Kubernetes
 to pick unique node hostnames to run Kinetica on.  If you wish to run multiple
-Ranks per node, you should update the `db.gpudbCluster.ranksPerNode` setting on the
+Ranks per node, you should update the `kineticacluster.gpudbCluster.ranksPerNode` setting on the
 helm values file to specify how many ranks you wish to run per node.  Setting more
 than one will remove the anti-affinity from the pods and will affect the automatic
 resource calculations if you have not specified per-pod resources.

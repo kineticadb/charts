@@ -29,7 +29,7 @@ kinetica-operators kinetica-operators/kinetica-operators \
 --devel \
 --version 72.0 \
 --values values.onPrem.k8s.yaml \
---set db.gpudbCluster.license="LICENSE-KEY" \
+--set kineticacluster.gpudbCluster.license="LICENSE-KEY" \
 --set dbAdminUser.password="PASSWORD" \
 --set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
 ```

@@ -18,7 +18,7 @@ GAdmin: `FQDN/gadmin`
 
 Reveal: `FQDN/reveal`
 
-... where the FQDN is provided by the Helm chart values at `db.gpudbCluster.fqdn` or by the
+... where the FQDN is provided by the Helm chart values at `kineticacluster.gpudbCluster.fqdn` or by the
 KineticaCluster CR at `spec.gpudbCluster.fqdn`.
 
 ## :material-api: Connecting to Rest APIs
@@ -49,7 +49,7 @@ KineticaCluster CR at `spec.gpudbCluster.fqdn`.
     of [ingress-nginx](https://github.com/kubernetes/ingress-nginx) and create the proper ingress
     records (`db.ingressController` = `nginx`).  This will create standard ingress records which should
     route traffic from the Fully Qualified Domain Name (FQDN) that was provided in the Helm chart values
-    (`db.gpudbCluster.fqdn` to the various Kinetica services).  API clients should connect over http/https
+    (`kineticacluster.gpudbCluster.fqdn` to the various Kinetica services).  API clients should connect over http/https
     ports (depending on cluster configuration) via:
 
     `http(s)://FQDN/CLUSTERNAME/gpudb-0`

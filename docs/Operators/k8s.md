@@ -76,7 +76,7 @@ helm -n kinetica-system install \
 kinetica-operators kinetica-operators/kinetica-operators \
 --create-namespace \
 --values values.onPrem.k8s.yaml \
---set db.gpudbCluster.license="LICENSE-KEY" \
+--set kineticacluster.gpudbCluster.license="LICENSE-KEY" \
 --set dbAdminUser.password="PASSWORD" \
 --set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
 ```
