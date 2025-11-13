@@ -44,10 +44,7 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - configmaps/status
-  - events/status
   - pods/status
-  - secrets/status
   - services/status
   verbs:
   - get
@@ -176,14 +173,6 @@ rules:
   - update
   - patch
   - delete
-- apiGroups:
-  - ''
-  resources:
-  - configmaps/status
-  verbs:
-  - get
-  - update
-  - patch
 - apiGroups:
   - ''
   resources:

@@ -54,14 +54,14 @@ rules:
   - update
   - patch
   - delete
-- apiGroups:
-  - velero.io
-  resources:
-  - restores
-  verbs:
-  - get
-  - watch
-  - list
+#- apiGroups:
+#  - velero.io
+#  resources:
+#  - restores
+#  verbs:
+#  - get
+#  - watch
+#  - list
 - apiGroups:
   - app.kinetica.com
   resources:
