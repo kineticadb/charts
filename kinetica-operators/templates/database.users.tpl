@@ -71,7 +71,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-delete-script
-  namespace: {{ .Values.kineticacluster.namespace }}
+  namespace: {{ .Release.Namespace }}
 data:
   delete-script.sh: |  
     #!/bin/bash
@@ -90,7 +90,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-pre-delete-job
-  namespace: {{ .Values.kineticacluster.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
@@ -98,18 +98,24 @@ metadata:
     "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
   annotations:
     "helm.sh/hook": pre-delete
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
     "helm.sh/hook-weight": "-5"
 spec:
   template:
     spec:
+      serviceAccount: kineticacluster-operator
+      serviceAccountName: kineticacluster-operator
       volumes:
       - name: script-volume
         configMap:
           name: {{ .Release.Name }}-delete-script
       containers:
       - name: kubectl
-        image: {{ default "bitnami/kubectl:1.29.3"  .Values.kubectlImage }}  
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+        image: "{{ .Values.kubectl.image.repository }}:{{ .Values.kubectl.image.tag }}"
         command: ["/bin/bash"]
         args: ["/mnt/scripts/delete-script.sh"]
         volumeMounts:
