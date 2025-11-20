@@ -28,8 +28,8 @@ controller:
 
 upsertKineticaCrds:
   image:
-    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
-    tag: "v7.2.3-6.dev-1"
+    repository: "docker.io/kineticastagingcloud/upsert-kinetica-crds"
+    tag: "v7.2.3-6.rc-1"
 
 kubeRbacProxy:
   image:
@@ -57,8 +57,8 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.3-6.dev-1"
+    repository: "docker.io/kineticastagingcloud/workbench-operator"
+    tag: "v7.2.3-6.rc-1"
     digest: ""
 
 dbOperator:
@@ -66,8 +66,8 @@ dbOperator:
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.3-6.dev-1"
+    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
+    tag: "v7.2.3-6.rc-1"
     digest: ""
   monitoring:
     type: "otel"
@@ -116,15 +116,15 @@ ingressNginx:
 "ingress-nginx":
   global:
     image:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
   namespaceOverride: "gpudb"
   fullnameOverride: "ingress-nginx"
   tcp: {}
   defaultBackend:
     enabled: false
     image:
-      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
-      tag: "v7.2.3-6.dev-1"
+      repository: "docker.io/kineticastagingcloud/kinetica-default-backend"
+      tag: "v7.2.3-6.rc-1"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -213,11 +213,11 @@ openLDAP:
   global:
     ldapPort: 1389
   image:
-    repository: "kinetica.azurecr.io/dev/openldap"
-    tag: "v7.2.3-6.dev-1"
+    repository: "docker.io/kineticastagingcloud/openldap"
+    tag: "v7.2.3-6.rc-1"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/openldap:v7.2.3-6.dev-1"
+      image: "docker.io/kineticastagingcloud/openldap:v7.2.3-6.rc-1"
       command:
         [
           "sh",
@@ -256,11 +256,11 @@ supportBundle:
   install: false
 "support-bundle":
   image:
-    registry: "kinetica.azurecr.io/dev"
+    registry: "docker.io/kineticastagingcloud"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.3-6.dev-1"
+    tag: "v7.2.3-6.rc-1"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -281,9 +281,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.3-6.dev-1"
+      tag: "v7.2.3-6.rc-1"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -305,9 +305,9 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: busybox
-      tag: "v7.2.3-6.dev-1"
+      tag: "v7.2.3-6.rc-1"
   stats:
     isEnabled: false
   gadmin:
@@ -352,13 +352,13 @@ kineticacluster:
     # use avx512 if your CPUs support this instruction set
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.3-6.dev-1"
+      tag: "v7.2.3-6.rc-1"
     metricsRegistryRepositoryTag:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: fluent-bit
-      tag: "v7.2.3-6.dev-1"
+      tag: "v7.2.3-6.rc-1"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -404,6 +404,6 @@ workbench:
   storageClass: null
   useHttps: true
   wbRegistryRepositoryTag:
-    registry: "kinetica.azurecr.io/dev"
+    registry: "docker.io/kineticastagingcloud"
     repository: workbench
-    tag: "v7.2.3-6.dev-1"
+    tag: "v7.2.3-6.rc-1"
