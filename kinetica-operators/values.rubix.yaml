@@ -28,8 +28,8 @@ controller:
 
 upsertKineticaCrds:
   image:
-    repository: "docker.io/kineticastagingcloud/upsert-kinetica-crds"
-    tag: "v7.2.3-6.rc-1"
+    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
+    tag: "v7.2.3-6.dev-2"
 
 kubeRbacProxy:
   image:
@@ -57,8 +57,8 @@ fluentBit:
 wbOperator:
   install: true
   image:
-    repository: "docker.io/kineticastagingcloud/workbench-operator"
-    tag: "v7.2.3-6.rc-1"
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.3-6.dev-2"
     digest: ""
 
 dbOperator:
@@ -66,8 +66,8 @@ dbOperator:
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
-    tag: "v7.2.3-6.rc-1"
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.3-6.dev-2"
     digest: ""
   monitoring:
     type: "otel"
@@ -116,15 +116,15 @@ ingressNginx:
 "ingress-nginx":
   global:
     image:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
   namespaceOverride: "gpudb"
   fullnameOverride: "ingress-nginx"
   tcp: {}
   defaultBackend:
     enabled: false
     image:
-      repository: "docker.io/kineticastagingcloud/kinetica-default-backend"
-      tag: "v7.2.3-6.rc-1"
+      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
+      tag: "v7.2.3-6.dev-2"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -213,11 +213,11 @@ openLDAP:
   global:
     ldapPort: 1389
   image:
-    repository: "docker.io/kineticastagingcloud/openldap"
-    tag: "v7.2.3-6.rc-1"
+    repository: "kinetica.azurecr.io/dev/openldap"
+    tag: "v7.2.3-6.dev-2"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "docker.io/kineticastagingcloud/openldap:v7.2.3-6.rc-1"
+      image: "kinetica.azurecr.io/dev/openldap:v7.2.3-6.dev-2"
       command:
         [
           "sh",
@@ -256,11 +256,11 @@ supportBundle:
   install: false
 "support-bundle":
   image:
-    registry: "docker.io/kineticastagingcloud"
+    registry: "kinetica.azurecr.io/dev"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.3-6.rc-1"
+    tag: "v7.2.3-6.dev-2"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -281,9 +281,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.3-6.rc-1"
+      tag: "v7.2.3-6.dev-2"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -305,9 +305,9 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: busybox
-      tag: "v7.2.3-6.rc-1"
+      tag: "v7.2.3-6.dev-2"
   stats:
     isEnabled: false
   gadmin:
@@ -331,34 +331,34 @@ kineticacluster:
     useTShirt: false
     hasPools: false
     ranksPerNode: 1
-    replicas: 4
-    resources:
-      limits:
-        cpu: "8"
-        memory: 16Gi
-      requests:
-        cpu: "8"
-        memory: 16Gi
+    replicas: 1
+    #resources:
+    #  limits:
+    #    cpu: "8"
+    #    memory: 16Gi
+    #  requests:
+    #    cpu: "8"
+    #    memory: 16Gi
     # provide an fqdn if you want to use a custom fqdn
-    fqdn: "marjoram.palantirgov.com"
+    fqdn: ""
     clusterName: "kinetica-apollo-entity"
     letsEncrypt:
       enabled: false
       # only allowed values are staging and production
       environment: "staging"
     # valid license required
-    license: "GWr3+ocqlzCN-YkF4Vncf6RZ5-1rgj179OcF7F-7LdtRpKTbyZ3-NFWhqRwVgBHU5EM6Kd2SVTQvkekp4gbA"
+    license: ""
     # image.repository is "kinetica-k8s-[cpu, cpu-avx512, cuda]"
     # use avx512 if your CPUs support this instruction set
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.3-6.rc-1"
+      tag: "v7.2.3-6.dev-2"
     metricsRegistryRepositoryTag:
-      registry: "docker.io/kineticastagingcloud"
+      registry: "kinetica.azurecr.io/dev"
       repository: fluent-bit
-      tag: "v7.2.3-6.rc-1"
+      tag: "v7.2.3-6.dev-2"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -396,7 +396,7 @@ workbench:
   name: workbench
   namespace: gpudb
   dedicatedSaaS: true
-  fqdn: "marjoram.palantirgov.com"
+  fqdn: ""
   letsEncrypt:
     enabled: false
     environment: "staging"
@@ -404,6 +404,6 @@ workbench:
   storageClass: null
   useHttps: true
   wbRegistryRepositoryTag:
-    registry: "docker.io/kineticastagingcloud"
+    registry: "kinetica.azurecr.io/dev"
     repository: workbench
-    tag: "v7.2.3-6.rc-1"
+    tag: "v7.2.3-6.dev-2"

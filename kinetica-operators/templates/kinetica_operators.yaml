@@ -77,22 +77,6 @@
 {{- end }}
 
 
-{{- if $values.openldap.persistence.enabled }}
-  {{- if not $values.openldap.persistence.storageClass }}  
-    {{- if not $global.defaultStorageClass }}
-      {{- fail "No default storage class found- --set global.defaultStorageClass=yourstorageclass" }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-{{- if $global.defaultStorageClass }}
-  {{- /* this part can run only when you install, just doing template you wont see it */ -}}
-  {{- $defaultStorageClassObject := (lookup "storage.k8s.io/v1" "StorageClass" "" $global.defaultStorageClass) }}
-  {{- if $defaultStorageClassObject -}}
-    {{- $storageProvisioner := $defaultStorageClassObject.provisioner }}
-    {{- $values = merge (dict "storageProvisioner" $storageProvisioner) $values}}  
-  {{- end }}
-{{- end }}
-
 {{- if and $values.kineticacluster.install (not $values.kineticacluster.gpudbCluster.config.tieredStorage.generateStorageClasses) (and (eq $values.kineticacluster.gpudbCluster.config.tieredStorage.persistTier.default.volumeClaim.spec.storageClassName "") (eq $values.global.defaultStorageClass "")) }}
   {{- fail "When kineticacluster.spec.gpudbCluster.config.tieredStorage.generateStorageClasses is set to false, a storage class must be provided fo kineticacluster.spec.gpudbCluster.config.tieredStorage.volumeClaim.spec.storageClassName or global.defaultStorageClass" }}
 {{- end }}
@@ -210,20 +194,5 @@
 ---
 {{- $requiredSc := printf "%s-storageclass" $values.clusterName }}
 
-{{- if not (lookup "storage.k8s.io/v1" "StorageClass" "" $requiredSc) }}
-
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: {{ $requiredSc}}
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-allowVolumeExpansion: true
-provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer
-reclaimPolicy: Delete
-parameters:
-  type: gp3
-{{- end }}
 {{- end }}
 ---
