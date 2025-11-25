@@ -22,7 +22,7 @@ global:
 upsertKineticaCrds:
   image:
     repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
 
 kubeRbacProxy:
   image:
@@ -45,13 +45,13 @@ otelCollector:
 fluentBit:
   image:
     repository: "kinetica.azurecr.io/dev/fluent-bit"
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
 
 wbOperator:
   install: true
   image:
     repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
     digest: ""
 
 dbOperator:
@@ -60,7 +60,7 @@ dbOperator:
   aadpodidbinding: ""
   image:
     repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
     digest: ""
   monitoring:
     type: "otel"
@@ -114,7 +114,7 @@ ingressNginx:
     enabled: true
     image:
       repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
-      tag: "v7.2.3-6.dev-2"
+      tag: "v7.2.3-6.dev-3"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -123,7 +123,7 @@ ingressNginx:
   controller:
     image:
       repository: "kinetica.azurecr.io/dev/ingress-nginx-controller"
-      tag: "v7.2.3-6.dev-2"
+      tag: "v7.2.3-6.dev-3"
       digest: ""
       digestChroot: ""
     nodeSelector: {}
@@ -177,10 +177,10 @@ openldap:
     ldapPort: 1389
   image:
     repository: "kinetica.azurecr.io/dev/openldap"
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/openldap:v7.2.3-6.dev-2"
+      image: "kinetica.azurecr.io/dev/openldap:v7.2.3-6.dev-3"
       command:
         [
           "sh",
@@ -234,7 +234,7 @@ supportBundle:
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -257,7 +257,7 @@ kineticacluster:
     monitorRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.3-6.dev-2"
+      tag: "v7.2.3-6.dev-3"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -281,7 +281,7 @@ kineticacluster:
     busybox:
       registry: "kinetica.azurecr.io/dev"
       repository: busybox
-      tag: "v7.2.3-6.dev-2"
+      tag: "v7.2.3-6.dev-3"
   # stats:
   #   isEnabled: false
   gadmin:
@@ -317,11 +317,11 @@ kineticacluster:
     dbRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.3-6.dev-2"
+      tag: "v7.2.3-6.dev-3"
     metricsRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: fluent-bit
-      tag: "v7.2.3-6.dev-2"
+      tag: "v7.2.3-6.dev-3"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -367,4 +367,4 @@ workbench:
   wbRegistryRepositoryTag:
     registry: "kinetica.azurecr.io/dev"
     repository: workbench
-    tag: "v7.2.3-6.dev-2"
+    tag: "v7.2.3-6.dev-3"
