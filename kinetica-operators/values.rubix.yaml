@@ -3,11 +3,6 @@ provider: "kind"
 
 createNamespaces: false
 
-kubectl:
-  image:
-    repository: "kineticastagingcloud/kubectl-shell"
-    tag: v1.33.4
-
 controller:
   metricsService:
     annotations:
