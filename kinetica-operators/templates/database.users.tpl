@@ -74,7 +74,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   delete-script.sh: |  
-    #!/bin/bash
+    #!/bin/sh
     ku="$(kubectl -n "{{ .Values.kineticacluster.namespace }}" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
     if [ -n "$ku" ]; then
       op="$(kubectl -n "{{ .Release.Namespace }}" get deployments kineticaoperator-controller-manager -o name 2>/dev/null)"
@@ -115,8 +115,8 @@ spec:
           runAsNonRoot: true
           runAsUser: 1000
           allowPrivilegeEscalation: false
-        image: "{{ .Values.kubectl.image.repository }}:{{ .Values.kubectl.image.tag }}"
-        command: ["/bin/bash"]
+        image: "{{ .Values.kineticacluster.supportingImages.busybox.registry }}/{{ .Values.kineticacluster.supportingImages.busybox.repository }}:{{ .Values.kineticacluster.supportingImages.busybox.tag }}"
+        command: ["/bin/sh"]
         args: ["/mnt/scripts/delete-script.sh"]
         volumeMounts:
         - name: script-volume
