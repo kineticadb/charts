@@ -1,3 +1,5 @@
+{{ if .Values.networkPolicies.install }}
+
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -25,3 +27,5 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: gpudb
+
+{{ end }}

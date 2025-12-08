@@ -23542,6 +23542,13 @@ spec:
                       to match the desired scale without waiting, and on scale down will delete
                       all pods at once.
                     type: string
+                  publicTls:
+                    default: false
+                    description: |-
+                      Whether or not the operator should generate "https" public endpoint URLs even if
+                      LetsEncrypt.Enabled is false.  This should be used when TLS is being handled by
+                      some other user-provided component.
+                    type: boolean
                   ranksPerNode:
                     default: 1
                     description: |-
