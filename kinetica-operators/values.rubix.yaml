@@ -3,6 +3,9 @@ provider: "kind"
 
 createNamespaces: false
 
+networkPolicies:
+  install: true
+
 controller:
   metricsService:
     annotations:
