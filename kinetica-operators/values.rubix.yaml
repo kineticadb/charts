@@ -1,70 +1,33 @@
-environment: "onPrem"
-provider: "kind"
-
-createNamespaces: false
-
-networkPolicies:
-  install: true
-
-controller:
-  metricsService:
-    annotations:
-      com.palantir.rubix.service/pod-cert: "{}"
-
-kubeRbacProxy:
-  image:
-    repository: "kineticastagingcloud/kube-rbac-proxy"
-    tag: "v0.20.0"
-
-kubeStateMetrics:
-  install: false
-
-otelCollector:
-  install: false
-  installRbac: false
-  image:
-    repository: "kineticastagingcloud/opentelemetry-collector-contrib"
-    tag: "0.95.0"
-
-# fluentBit:
-#   image:
-#     repository: "docker.io/fluent/fluent-bit"
-#     tag: "2.2"
-
-wbOperator:
-  install: true
-  image:
-    digest: ""
-
-dbOperator:
-  install: true
-  image:
-    digest: ""
 
 certManager:
   install: false
 
-ingressNginx:
-  install: true
-"ingress-nginx":
-  # global:
-  #   image:
-  #     registry: "kineticastagingcloud"
-  defaultBackend:
-    enabled: false
+controller:
+  metricsService:
+    annotations:
+      com.palantir.rubix.service/pod-cert: '{}'
+
+createNamespaces: false
+
+environment: onPrem
+
+gpuOperator:
+  install: false
+
+ingress-nginx:
   controller:
+    admissionWebhooks:
+      enabled: false
     ingressClassResource:
       enabled: false
-    # image:
-    #   repository: "kineticastagingcloud/ingress-nginx-controller"
-    #   tag: "v1.13.3-rubix"
-    #   digest: ""
+    rbac:
+      create: false
+      scope: true
     service:
-      type: ClusterIP
       annotations:
-        com.palantir.rubix.service/pod-cert: "{}"
-        com.palantir.rubix.service.spp/v3: >
+        com.palantir.rubix.service.spp/v3: |
           {
+
             "endpoints": [
               {
                 "name": "https",
@@ -73,15 +36,47 @@ ingressNginx:
               }
             ]
           }
-    admissionWebhooks:
-      enabled: false
+        com.palantir.rubix.service/pod-cert: '{}'
+      type: ClusterIP
     watchIngressWithoutClass: true
-    rbac:
-      create: false
-      scope: true
+  defaultBackend:
+    enabled: false
 
-gpuOperator:
+kineticacluster:
+  gpudbCluster:
+    clusterName: kinetica-apollo-entity
+    config:
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: 50Gi
+            volumeClaim:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                storageClassName: null
+    letsEncrypt:
+      enabled: false
+  install: true
+  monitoring:
+    syslog:
+      enabled: false
+  name: kinetica-apollo-entity
+  stats:
+    isEnabled: false
+
+kubeRbacProxy:
+  image:
+    repository: kineticastagingcloud/kube-rbac-proxy
+    tag: v0.20.0
+
+kubeStateMetrics:
   install: false
+
+networkPolicies:
+  install: true
 
 openldap:
   initTLSSecret:
@@ -89,69 +84,27 @@ openldap:
       registry: docker.io
       repository: alpine/openssl
       tag: 3.5.3
+  persistence:
+    storageClass: null
   service:
     annotations:
-      com.palantir.rubix.service/pod-cert: "{}"
-  persistence:
-    enabled: true
-    storageClass: null
+      com.palantir.rubix.service/pod-cert: '{}'
+
+otelCollector:
+  install: false
+  installRbac: false
+
+support-bundle:
+  configMap:
+    cluster: kinetica-apollo-entity
 
 supportBundle:
   install: false
 
-kineticacluster:
-  install: true
-  name: "kinetica-apollo-entity"
-  ingressController: nginx
-  stats:
-    isEnabled: false
-  gadmin:
-    isEnabled: true
-  reveal:
-    isEnabled: true
-  generateIngressRecords: true
-  monitoring:
-    syslog:
-      enabled: false
-  gpudbCluster:
-    ranksPerNode: 1
-    replicas: 1
-    fqdn: ""
-    clusterName: "kinetica-apollo-entity"
-    letsEncrypt:
-      enabled: false
-    license: ""
-    dbRegistryRepositoryTag:
-      repository: kinetica-k8s-cpu
-    config:
-      postgresProxy:
-        enablePostgresProxy: true
-      kifs:
-        enable: true
-        mountPoint: /gpudb/kifs
-      procs:
-        enable: true
-      textSearch:
-        enableTextSearch: true
-      tieredStorage:
-        persistTier:
-          default:
-            volumeClaim:
-              spec:
-                storageClassName: null
-                accessModes:
-                  - "ReadWriteOnce"
-
-dbAdminUser:
-  create: true
-  # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
-  name: ""
-  # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
-  password: ""
+upsertKineticaCrds:
+  enable: false
 
 workbench:
-  install: true
-  fqdn: ""
   letsEncrypt:
     enabled: false
   storageClass: null

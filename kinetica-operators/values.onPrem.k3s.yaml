@@ -1,95 +1,58 @@
 
-# environment refers to either of "onPrem" "saas" "marketPlace"
-# "saas" "marketPlace" are used by Kinetica only
-# for a customer trying to install the chart on his own wherever, it should be onPrem
-environment: "onPrem"
-# onPrem Providers: "k3s" "kind" "eks" "aks" "other"
-# saas Providers: eks
-# marketPlace Providers: aks eks
-provider: k3s
+environment: onPrem
 
+global:
+  defaultStorageClass: local-path
 
-nodeSelector: {}
-tolerations: []
-affinity: {}
-
-ingressNginx:
-  install: true
-"ingress-nginx":
+ingress-nginx:
   controller:
-    kind: DaemonSet
     allowSnippetAnnotations: true
+    config:
+      use-forwarded-headers: "true"
     hostNetwork: true
     hostPort:
       enabled: true
-    service:
-      enabled: false
-    publishService:
-      enabled: false
+    kind: DaemonSet
     metrics:
       enabled: true
       serviceMonitor:
         enabled: false
-    config:
-      use-forwarded-headers: "true"
-    
-openldap:
-  namespace: "gpudb"
-  fullnameOverride: "openldap"
-  env:
-    LDAP_BACKEND: "mdb"
-    LDAP_ORGANISATION: "Kinetica DB Inc."
-    LDAP_DOMAIN: "kinetica.com"
-    LDAP_LOG_LEVEL: "128"
-  affinity: {}
-  podAntiAffinity: {}
-  persistence:
-    enabled: true
-    existingClaim: ""
-    accessMode: "ReadWriteOnce"
-    size: 1Mi
-    storageClass: "local-path"
-
-supportBundle:
-  install: true
-"support-bundle":
-  configMap:
-    # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
-    #       affects the filename of the support-bundles that are created to create
-    #       additional tracability.
-    cluster: "kinetica-k3s-sample"
+    publishService:
+      enabled: false
+    service:
+      enabled: false
 
 kineticacluster:
-  install: true
-  name: kinetica-k3s-sample
-  stats:
-    isEnabled: false
   gpudbCluster:
-    clusterName: kinetica-k3s-sample
-    # You need a license key. Please contact support@kinetica.com
-    license: ""
-    hasPools: false
+    clusterName: cluster0
     config:
       tieredStorage:
         globalTier:
           colocateDisks: true
         persistTier:
           default:
-            limit: ""
-            provisioner: "rancher.io/local-path"
+            limit: 50Gi
+            provisioner: rancher.io/local-path
             volumeClaim:
               spec:
-                storageClassName: "local-path"
-        
+                storageClassName: local-path
+  install: true
+  name: cluster0
+
+networkPolicies:
+  install: false
+
+provider: k3s
+
+support-bundle:
+  configMap:
+    cluster: cluster0
+
+supportBundle:
+  install: true
+
 upsertKineticaCrds:
   enable: false
 
-supportBundle:
-  install: false
-
-dbAdminUser:
-  create: true
-
 workbench:
-  install: true
-  storageClass: kinetica-k3s-sample-storageclass
+  storageClass: local-path

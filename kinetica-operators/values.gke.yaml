@@ -15,7 +15,7 @@ cert-manager:
 environment: onPrem
 
 global:
-  defaultStorageClass: standard
+  defaultStorageClass: premium-rwo
 
 gpu-operator:
   driver:
@@ -32,45 +32,11 @@ ingress-nginx:
       nodeSelector:
         app.kinetica.com/pool: infra
   controller:
-    admissionWebhooks:
-      enabled: true
-      patch:
-        enabled: true
-        image:
-          digest: ""
-          repository: k8s.gcr.io/ingress-nginx/kube-webhook-certgen
-          tag: v1.1.1
-    allowSnippetAnnotations: true
-    extraArgs:
-      publish-status-address: localhost
-    hostNetwork: true
-    hostPort:
-      enabled: true
     nodeSelector:
       app.kinetica.com/pool: infra
-      ingress-ready: "true"
-    publishService:
-      enabled: false
-    service:
-      type: NodePort
-    terminationGracePeriodSeconds: 0
-    tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-        operator: Equal
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
-        operator: Equal
   defaultBackend:
     nodeSelector:
       app.kinetica.com/pool: infra
-  tcp:
-    1389: gpudb/openldap:1389
-    4317: kinetica-system/otel-collector:4317
-    5432: gpudb/kinetica-sample-rank0-service:5432
-    9002: gpudb/kinetica-sample-rank0-service:9002
-    9191: gpudb/kinetica-sample-rank0-service:9191
-    9300: gpudb/kinetica-sample-rank0-service:9300
 
 kineticacluster:
   gpudbCluster:
@@ -82,13 +48,15 @@ kineticacluster:
         persistTier:
           default:
             limit: 50Gi
-            provisioner: rancher.io/local-path
+            parameters:
+              type: pd-ssd
+            provisioner: pd.csi.storage.gke.io
             volumeClaim:
               spec:
-                storageClassName: standard
+                storageClassName: premium-rwo
     hasPools: true
   install: true
-  name: kinetica-kind-sample
+  name: cluster0
   stats:
     pool: compute
 
@@ -102,7 +70,7 @@ openldap:
   nodeSelector:
     app.kinetica.com/pool: infra
 
-provider: kind
+provider: gke
 
 support-bundle:
   configMap:
@@ -119,4 +87,4 @@ upsertKineticaCrds:
 workbench:
   nodeSelector:
     app.kinetica.com/pool: infra
-  storageClass: standard
+  storageClass: premium-rwo
