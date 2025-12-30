@@ -90,6 +90,12 @@
 
 ---
 
+{{- if ($values.upsertKineticaCrds.enabled) }}
+  {{- include "kinetica-operators.crds" $data}}
+{{- end }}
+
+---
+
 {{- if eq (kindOf $values.tlsTermination) "map" }}
   {{- if eq (kindOf $values.tlsTermination.database) "map" }}
     {{- include "kinetica-operators.tls-db-secret" $data }}
