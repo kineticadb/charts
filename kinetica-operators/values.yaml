@@ -1,0 +1,374 @@
+# environment refers to either of "onPrem" "saas" "marketPlace"
+# "saas" "marketPlace" are used by Kinetica only
+# for a customer trying to install the chart on his own wherever, it should be onPrem
+environment: ""
+# onPrem Providers: "k3s" "kind" "eks" "aks"
+# saas Providers: eks
+# marketPlace Providers: aks eks
+provider: ""
+
+# clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
+# clusterName alone is used if you are using dedicated-saas eks, this value is used to create a named StorageClass
+# its used in the monitoring related configmaps
+clusterName: ""
+clusterRegion: ""
+letsEncryptEmail: devops@kinetica.com
+openshift: false
+createNamespaces: true
+
+global:
+  defaultStorageClass: ""
+
+upsertKineticaCrds:
+  enabled: false
+  image:
+    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
+    tag: "v7.2.3-6.dev-13"
+
+kubeRbacProxy:
+  image:
+    repository: "quay.io/brancz/kube-rbac-proxy"
+    tag: "v0.20.0"
+
+kubeStateMetrics:
+  install: false
+  image:
+    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
+    tag: "v2.10.1"
+
+otelCollector:
+  install: true
+  installRbac: false
+  image:
+    repository: "otel/opentelemetry-collector-contrib"
+    tag: "0.95.0"
+
+fluentBit:
+  image:
+    repository: "kinetica.azurecr.io/dev/fluent-bit"
+    tag: "v7.2.3-6.dev-13"
+
+wbOperator:
+  install: true
+  image:
+    repository: "kinetica.azurecr.io/dev/workbench-operator"
+    tag: "v7.2.3-6.dev-13"
+    digest: ""
+
+dbOperator:
+  install: true
+  # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
+  aadpodidbinding: ""
+  image:
+    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
+    tag: "v7.2.3-6.dev-13"
+    digest: ""
+  monitoring:
+    type: "otel"
+    otel:
+      url: "otel-collector.kinetica-system.svc.cluster.local:4317"
+  rbac:
+    installRoles:
+      velero: false
+    installClusterRoles:
+      # Permission to inspect nodes to auto-discover node sizing for databases
+      nodes: false
+      # Permission to get and create storage classes (auto-generate storage classes with best practice annotations)
+      storageClasses: false
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+certManager:
+  install: true
+"cert-manager":
+  crds:
+    enabled: true
+  namespace: kinetica-system
+  nodeSelector: {}
+  webhook:
+    nodeSelector: {}
+  cainjector:
+    nodeSelector: {}
+  startupapicheck:
+    nodeSelector: {}
+
+# Uncomment and populate with user supplied certs
+# Also set certManager.install to false
+# tlsTermination:
+#   # certs and keys must be base64 encoded
+#   database:
+#     certificate: ""
+#     privateKey: ""
+#   workbench:
+#     certificate: ""
+#     privateKey: ""
+
+ingressNginx:
+  install: true
+"ingress-nginx":
+  namespaceOverride: "gpudb"
+  fullnameOverride: "ingress-nginx"
+  tcp: {}
+  defaultBackend:
+    enabled: true
+    image:
+      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
+      tag: "v7.2.3-6.dev-13"
+      digest: ""
+    nodeSelector: {}
+    extraEnvs:
+      - name: DEBUG
+        value: "false"
+  controller:
+    image:
+      repository: "kinetica.azurecr.io/dev/ingress-nginx-controller"
+      tag: "v7.2.3-6.dev-13"
+      digest: ""
+      digestChroot: ""
+    nodeSelector: {}
+    allowSnippetAnnotations: true
+    config:
+      annotations-risk-level: Critical
+      use-forwarded-headers: "true"
+    scope:
+      enabled: true
+      namespace: "gpudb"
+    service:
+      annotations: {}
+    admissionWebhooks:
+      enabled: true
+      patch:
+        enabled: true
+        image:
+          repository: k8s.gcr.io/ingress-nginx/kube-webhook-certgen
+          tag: v1.1.1
+          digest: ""
+    watchIngressWithoutClass: true
+  rbac:
+    create: false
+    scope: true
+
+gpuOperator:
+  install: false
+"gpu-operator":
+    mig:
+      strategy: single
+    driver:
+      enabled: true
+    toolkit:
+      enabled: true
+
+openldap:
+  containerSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    readOnlyRootFilesystem: false
+    runAsUser: 1001
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  openldapNamespace: "gpudb"
+  fullnameOverride: "openldap"
+  global:
+    ldapPort: 1389
+  image:
+    repository: "kinetica.azurecr.io/dev/openldap"
+    tag: "v7.2.3-6.dev-13"
+  initContainers:
+    - name: openldap-create-directory-structure
+      image: "kinetica.azurecr.io/dev/openldap:v7.2.3-6.dev-13"
+      command:
+        [
+          "sh",
+          "-c",
+          "mkdir -p /bitnami/openldap/data",
+        ]
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsUser: 1001
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      volumeMounts:
+        - name: data
+          mountPath: /bitnami
+  env:
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+  affinity: {}
+  podAntiAffinity: {}
+  nodeSelector: {}
+  persistence:
+    enabled: true
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    storageClass: ""
+  livenessProbe:
+    enabled: true
+  readinessProbe:
+    enabled: true
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 30
+
+supportBundle:
+  install: true
+"support-bundle":
+  image:
+    registry: "kinetica.azurecr.io/dev"
+    repository: "support-bundle"
+    digest: ""
+    pullPolicy: IfNotPresent
+    tag: "v7.2.3-6.dev-13"
+  configMap:
+    # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
+    #       affects the filename of the support-bundles that are created to create
+    #       additional tracability.
+    cluster: ""
+
+kineticacluster:
+  install: true
+  payAsYouGo: false
+  name: ""
+  namespace: gpudb
+  debug: false
+  # for environment onPrem, provide the following
+  deploymentType:
+    type: on_prem
+    region: on_prem_local
+  autoSuspend:
+    enabled: false
+  hostManagerMonitor:
+    monitorRegistryRepositoryTag:
+      registry: "kinetica.azurecr.io/dev"
+      repository: kinetica-k8s-monitor
+      tag: "v7.2.3-6.dev-13"
+    livenessProbe:
+      failureThreshold: 30
+  # you may use nginx if you want the operator to create the nginx records
+  # if you want to manage your own ingress controller/gateway api, provide "none"
+  # TODO: As of now, if you want the operator to create nginx records, do the following
+  # 1. first install nginx sub chart by providing the release namespace as nginx
+  # helm -n nginx install nginx charts/kinetica-operators/charts/ingress-nginx --values values
+  # you can refer to the correct ingress-ngix values in the corresponding values file in the operators values files
+  # This is needed now as the operator as of now, looks for its nginx in the nginx namespace
+  # if you enable ingress-nginx and install the operators, it will install all in the kinetica-system namespace
+  ingressController: nginx
+  ldap:
+    baseDN: dc=kinetica,dc=com
+    bindDN: cn=admin,dc=kinetica,dc=com
+    host: openldap
+    isInLocalK8S: true
+    isLDAPS: false
+    namespace: gpudb
+    port: 1389
+  supportingImages:
+    busybox:
+      registry: "kinetica.azurecr.io/dev"
+      repository: busybox
+      tag: "v7.2.3-6.dev-13"
+  # stats:
+  #   isEnabled: false
+  gadmin:
+    isEnabled: true
+    containerPort:
+      name: gadmin
+      protocol: TCP
+      containerPort: 8080
+  reveal:
+    isEnabled: true
+    containerPort:
+      name: reveal
+      protocol: TCP
+      containerPort: 8088
+  generateIngressRecords: true
+  gpudbCluster:
+    # this applies if you have labelled node pools for compute
+    useTShirt: false
+    hasPools: false
+    ranksPerNode: 1
+    replicas: 1
+    # provide an fqdn if you want to use a custom fqdn
+    fqdn: "local.kinetica"
+    clusterName: "cluster0"
+    letsEncrypt:
+      enabled: false
+      # only allowed values are staging and production
+      environment: "staging"
+    # valid license required
+    license: ""
+    # image.repository is "kinetica-k8s-[cpu, cuda]"
+    # use cuda image for NVIDIA GPU acceleration
+    dbRegistryRepositoryTag:
+      registry: "kinetica.azurecr.io/dev"
+      repository: kinetica-k8s-cpu
+      tag: "v7.2.3-6.dev-13"
+    metricsRegistryRepositoryTag:
+      registry: "kinetica.azurecr.io/dev"
+      repository: fluent-bit
+      tag: "v7.2.3-6.dev-13"
+    config:
+      postgresProxy:
+        enablePostgresProxy: true
+      kifs:
+        enable: true
+        mountPoint: /gpudb/kifs
+      procs:
+        enable: true
+      textSearch:
+        enableTextSearch: true
+      tieredStorage:
+        generateStorageClasses: false
+        allowAutoSizing: false
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: ""
+            provisioner: ""
+            volumeClaim:
+              spec:
+                storageClassName: ""
+                accessModes:
+                  - "ReadWriteOnce"
+
+dbAdminUser:
+  create: true
+  # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
+  name: "kadmin"
+  # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
+  password: ""
+
+workbench:
+  install: true
+  name: workbench
+  namespace: gpudb
+  fqdn: "local.kinetica"
+  letsEncrypt:
+    enabled: false
+    environment: "staging"
+  nodeSelector: {}
+  storageClass: ""
+  wbRegistryRepositoryTag:
+    registry: "kinetica.azurecr.io/dev"
+    repository: workbench
+    tag: "v7.2.3-6.dev-13"
+
+networkPolicies:
+  install: false
