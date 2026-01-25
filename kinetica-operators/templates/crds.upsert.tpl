@@ -1,49 +1,6 @@
 {{- define "kinetica-operators.crds" }}
 
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: '{{ .Release.Name }}-crd-manager'
-  namespace: '{{ .Release.Namespace }}'
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-    helm.sh/hook-weight: '-10'
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: '{{ .Release.Name }}-crd-manager'
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-    helm.sh/hook-weight: '-10'
-rules:
-- apiGroups: ["apiextensions.k8s.io"]
-  resources: ["customresourcedefinitions"]
-  verbs: ["get", "update"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: '{{ .Release.Name }}-crd-manager'
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
-    helm.sh/hook-weight: '-10'
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: '{{ .Release.Name }}-crd-manager'
-subjects:
-- kind: ServiceAccount
-  name: '{{ .Release.Name }}-crd-manager'
-  namespace: '{{ .Release.Namespace }}'
-
----
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -59,12 +16,48 @@ metadata:
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
     helm.sh/hook-weight: '-5'
 spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kinetica-operators
+        app.kubernetes.io/instance: '{{ .Release.Name }}'
     spec:
-      serviceAccountName: '{{ .Release.Name }}-crd-manager'
+      serviceAccountName: kineticacluster-operator
       containers:
       - name: upsert-kinetica-crds-job
         image: "{{ .Values.upsertKineticaCrds.image.repository }}:{{ .Values.upsertKineticaCrds.image.tag }}"
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            set -e
+            echo "=== Checking CRD permissions ==="
+            echo -n "can-i get customresourcedefinitions: "
+            kubectl auth can-i get customresourcedefinitions || true
+            echo -n "can-i update customresourcedefinitions: "
+            kubectl auth can-i update customresourcedefinitions || true
+            echo ""
+            echo "=== Starting CRD replacements ==="
+            FAILED=0
+            for F in /crds/db-crds/* /crds/wb-crds/*; do
+              if [ -f "$F" ]; then
+                echo "Processing: $F"
+                if kubectl replace -f "$F"; then
+                  echo "  SUCCESS: $F"
+                else
+                  echo "  FAILED: $F"
+                  FAILED=$((FAILED + 1))
+                fi
+              fi
+            done
+            echo ""
+            echo "=== CRD replacement complete ==="
+            if [ $FAILED -gt 0 ]; then
+              echo "WARNING: $FAILED CRD(s) failed to update"
+              exit 1
+            fi
+            echo "All CRDs updated successfully"
       restartPolicy: Never
 
 {{- end }}

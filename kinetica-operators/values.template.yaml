@@ -21,6 +21,7 @@ global:
 
 upsertKineticaCrds:
   enabled: false
+  installRbac: false
   image:
     repository: "REPLACEMEREGISTRY/upsert-kinetica-crds"
     tag: "REPLACEMETAG"

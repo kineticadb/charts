@@ -1,13 +1,14 @@
 {{- define "kinetica-operators.aks-dboperator-namespaces" }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "gpudb") }}
+{{ if not (lookup "v1" "Namespace" "" "{{ .Values.kineticacluster.namespace }}") }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
     helm.sh/hook: pre-install
+    helm.sh/hook-weight: '-15'
     helm.sh/resource-policy: keep
   labels:
     app.kubernetes.io/name: kinetica-operators
@@ -15,43 +16,47 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app.kubernetes.io/part-of: kinetica
-  name: gpudb
+  name: '{{ .Values.kineticacluster.namespace }}'
 {{ end }}
 {{ end }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "kml-active-analytics") }}
+{{ if not (lookup "v1" "Namespace" "" "{{ .Release.Namespace }}") }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
     helm.sh/hook: pre-install
+    helm.sh/hook-weight: '-15'
     helm.sh/resource-policy: keep
-  name: kml-active-analytics
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/part-of: kinetica
+  name: '{{ .Release.Namespace }}'
 {{ end }}
 {{ end }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "stats") }}
+{{ if not (lookup "v1" "Namespace" "" "nginx") }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
     helm.sh/hook: pre-install
+    helm.sh/hook-weight: '-15'
     helm.sh/resource-policy: keep
-  name: stats
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/part-of: kinetica
+  name: nginx
 {{ end }}
 {{ end }}
 
@@ -66,7 +71,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
   name: gpudb
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
 rules:
 - apiGroups:
   - ''
@@ -105,7 +110,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
   name: gpudb
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -113,6 +118,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
 
 {{- end }}

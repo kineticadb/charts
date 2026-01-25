@@ -91,7 +91,10 @@
 ---
 
 {{- if ($values.upsertKineticaCrds.enabled) }}
-  {{- include "kinetica-operators.crds" $data}}
+  {{- include "kinetica-operators.crds" $data }}
+  {{- if ($values.upsertKineticaCrds.installRbac) }}
+    {{- include "kinetica-operators.crds-rbac" $data }}
+  {{- end }}
 {{- end }}
 
 ---

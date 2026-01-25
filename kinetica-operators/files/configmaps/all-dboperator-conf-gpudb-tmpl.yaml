@@ -1173,6 +1173,10 @@ gpudb_conf.tmpl: |
   # Note that thread allocation may also be limted by resource group limits and/or system load.
   subtask_concurrency_limit = {{ .Cluster.Spec.GPUDBCluster.Config.Processes.SubtaskConcurrencyLimit }}
 
+  # Async threads for API.
+  async_io_threads = {{ .Cluster.Spec.GPUDBCluster.Config.Processes.AsyncIoThreads }}
+
+
   # ==============================================================================
   # Hardware
 

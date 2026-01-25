@@ -105,6 +105,11 @@ spec:
     spec:
       serviceAccount: kineticacluster-operator
       serviceAccountName: kineticacluster-operator
+      securityContext:
+        fsGroup: 2000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        runAsUser: 65432
       volumes:
       - name: script-volume
         configMap:
@@ -112,9 +117,14 @@ spec:
       containers:
       - name: kubectl
         securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         image: "{{ .Values.kineticacluster.supportingImages.busybox.registry }}/{{ .Values.kineticacluster.supportingImages.busybox.repository }}:{{ .Values.kineticacluster.supportingImages.busybox.tag }}"
         command: ["/bin/sh"]
         args: ["/mnt/scripts/delete-script.sh"]

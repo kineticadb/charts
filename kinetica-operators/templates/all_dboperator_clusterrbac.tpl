@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: workbench
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -17,7 +17,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticacluster-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -48,7 +48,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticacluster-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -75,7 +75,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusteradmin-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -106,7 +106,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusteradmin-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -133,7 +133,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterbackup-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -164,7 +164,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterbackup-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -191,7 +191,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterelasticity-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -222,7 +222,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterelasticity-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -249,7 +249,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterresourcegroup-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -280,7 +280,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterresourcegroup-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -307,7 +307,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterrestore-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -338,7 +338,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterrestore-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -365,7 +365,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterschedule-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -396,7 +396,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterschedule-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -423,7 +423,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterschema-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -454,7 +454,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterschema-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -481,7 +481,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterupgrade-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -512,7 +512,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaclusterupgrade-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -539,7 +539,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticagrant-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -570,7 +570,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticagrant-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -597,7 +597,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaoperatorupgrade-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -628,7 +628,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticaoperatorupgrade-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -655,7 +655,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticareleaseversion-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -686,7 +686,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticareleaseversion-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -713,7 +713,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticarole-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -744,7 +744,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticarole-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -771,7 +771,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticauser-editor-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -802,7 +802,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: kineticauser-viewer-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm

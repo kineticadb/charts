@@ -1,15 +1,55 @@
 {{- define "kinetica-operators.local-dboperator-namespaces" }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "gpudb") }}
+{{ if not (lookup "v1" "Namespace" "" "cert-manager") }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
     helm.sh/hook: pre-install
+    helm.sh/hook-weight: '-15'
     helm.sh/resource-policy: keep
-  name: gpudb
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+    app.kubernetes.io/part-of: kinetica
+  name: cert-manager
+{{ end }}
+{{ end }}
+
+{{ if .Values.createNamespaces }}
+{{ if not (lookup "v1" "Namespace" "" "{{ .Values.kineticacluster.namespace }}") }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '-15'
+    helm.sh/resource-policy: keep
+  name: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+{{ end }}
+{{ end }}
+
+{{ if .Values.createNamespaces }}
+{{ if not (lookup "v1" "Namespace" "" "{{ .Release.Namespace }}") }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-weight: '-15'
+    helm.sh/resource-policy: keep
+  name: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -29,7 +69,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
   name: gpudb
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
 rules:
 - apiGroups:
   - ''
@@ -68,7 +108,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app: gpudb
   name: gpudb
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -76,6 +116,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
 
 {{- end }}

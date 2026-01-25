@@ -49,6 +49,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kineticacluster-operator
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 {{- end }}

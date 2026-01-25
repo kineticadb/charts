@@ -5,24 +5,32 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kineticacluster-operator
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: manager-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
 rules:
 - apiGroups:
   - ''
@@ -183,12 +191,16 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: manager-role
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
 rules:
 - apiGroups:
   - ''
@@ -296,12 +308,16 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: manager-rolebinding
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -309,14 +325,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kineticacluster-operator
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: leader-election-rolebinding
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -329,19 +345,23 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: manager-rolebinding
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -349,7 +369,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kineticacluster-operator
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 ---
 apiVersion: v1
@@ -366,7 +386,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
   name: controller-manager-metrics-service
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   ports:
   - name: https

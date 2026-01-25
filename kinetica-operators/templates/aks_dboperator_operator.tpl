@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kineticaoperator-config-map
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -30,7 +30,7 @@ metadata:
     component: kineticaoperator-controller-manager
     control-plane: controller-manager
   name: kineticaoperator-controller-manager
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   replicas: 1
   selector:

@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 {{- end }}
 ---
 ---
@@ -22,7 +22,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: opentelemetry-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -185,7 +185,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 {{- end }}
 ---
 {{ if .Values.otelCollector.installRbac }}
@@ -206,7 +206,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: opentelemetry-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 {{ end }}
 
 ---
@@ -222,7 +222,7 @@ metadata:
     app: opentelemetry
     component: otel-collector-conf
   name: otel-collector-conf
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 data:
   {{ (.Files.Glob "files/configmaps/aks-dboperator-monitoring-otel-collector-conf.yaml").AsConfig }}
 {{- end }}
@@ -254,7 +254,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   clusterIP: None
   ports:
@@ -281,7 +281,7 @@ metadata:
     app: opentelemetry
     component: otel-collector
   name: otel-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   ports:
   - name: syslog
@@ -330,7 +330,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   replicas: 1
   selector:
@@ -405,7 +405,7 @@ metadata:
     app: opentelemetry
     component: otel-collector
   name: otel-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   minReadySeconds: 5
   progressDeadlineSeconds: 120

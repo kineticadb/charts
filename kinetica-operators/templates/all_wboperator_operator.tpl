@@ -11,7 +11,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
   name: workbench-operator-controller-manager
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   replicas: 1
   selector:

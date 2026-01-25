@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: workbench-operator-service-account
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -17,7 +17,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: workbench-operator-manager-role
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -118,7 +118,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: workbench-operator-manager-role
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -185,7 +185,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: workbench-operator-manager-rolebinding
-  namespace: gpudb
+  namespace: '{{ .Values.kineticacluster.namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -198,14 +198,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: workbench-operator-service-account
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: workbench-operator-manager-rolebinding
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -218,7 +218,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: workbench-operator-service-account
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -237,7 +237,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 
 ---
 apiVersion: v1
@@ -250,7 +250,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     control-plane: controller-manager
   name: workbench-operator-controller-manager-metrics-service
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   ports:
   - name: https

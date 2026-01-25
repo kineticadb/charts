@@ -4,7 +4,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-from-kinetica-system
-  namespace: gpudb
+  namespace: {{ .Values.kineticacluster.namespace }}
 spec:
   policyTypes:
     - Ingress
@@ -18,7 +18,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-egress-to-gpudb
-  namespace: kinetica-system
+  namespace: {{ .Release.Namespace }}
 spec:
   policyTypes:
     - Egress
