@@ -24320,7 +24320,6 @@ spec:
                   host: openldap
                   isInLocalK8S: true
                   isLDAPS: false
-                  namespace: gpudb
                   port: 389
                 description: The LDAP server to connect to.
                 properties:
@@ -24353,10 +24352,10 @@ spec:
                         Default: false
                     type: boolean
                   namespace:
-                    default: gpudb
+                    default: ''
                     description: |-
-                      Namespace - The namespace the
-                        Default: openldap
+                      Namespace - The Kubernetes namespace where the LDAP server is deployed.
+                        If empty, uses the operator's configured LDAP namespace from ManagerConfig.
                     type: string
                   port:
                     default: 389
