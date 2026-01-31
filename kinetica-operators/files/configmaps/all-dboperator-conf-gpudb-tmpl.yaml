@@ -1173,10 +1173,6 @@ gpudb_conf.tmpl: |
   # Note that thread allocation may also be limted by resource group limits and/or system load.
   subtask_concurrency_limit = {{ .Cluster.Spec.GPUDBCluster.Config.Processes.SubtaskConcurrencyLimit }}
 
-  # Async threads for API.
-  async_io_threads = {{ .Cluster.Spec.GPUDBCluster.Config.Processes.AsyncIoThreads }}
-
-
   # ==============================================================================
   # Hardware
 
@@ -2702,7 +2698,7 @@ gpudb_logger_conf.tmpl: |+
   # Specify the default log level and a comma separated list of appenders to
   # send the log data to.
 
-  log4cplus.rootLogger=INFO, ToConsole{{ if .Monitoring.Syslog.Enabled }}, ToSysLog{{ end }}
+  log4cplus.rootLogger=INFO, ToConsole, ToSysLog
 
   # ---------------------------------------------------------------------------
   # Appenders: ToConsole, ToSysLog, ToFile, ToRollingFile, ToRollingDatedFile, ToBacktraceFile
@@ -2737,17 +2733,15 @@ gpudb_logger_conf.tmpl: |+
   #log4cplus.appender.ToSysLog.Facility=user
   #log4cplus.appender.ToSysLog.Threshold=WARN
 
-  {{ if .Monitoring.Syslog.Enabled }}
   log4cplus.appender.ToSysLog=log4cplus::SysLogAppender
   log4cplus.appender.ToSysLog.layout=log4cplus::PatternLayout
-  log4cplus.appender.ToSysLog.layout.ConversionPattern={{ .Monitoring.Syslog.ConversionPattern }}
-  log4cplus.appender.ToSysLog.host={{ .Monitoring.Syslog.Host }}
+  log4cplus.appender.ToSysLog.layout.ConversionPattern=%D{%Y-%m-%d %H:%M:%S.%q} %-5p (%i,%T,%-18t) %h %F:%L - %X{JobId}%m%n
+  log4cplus.appender.ToSysLog.host=otel-collector.kinetica-system.svc.cluster.local
   log4cplus.appender.ToSysLog.udp=false
-  log4cplus.appender.ToSysLog.port={{ .Monitoring.Syslog.Port }}
+  log4cplus.appender.ToSysLog.port=9601
   log4cplus.appender.ToSysLog.Facility=user
-  log4cplus.appender.ToSysLog.Threshold={{ .Monitoring.Syslog.Threshold }}
+  log4cplus.appender.ToSysLog.Threshold=INFO
   log4cplus.appender.ToSysLog.ident=gpudb
-  {{ end }}
 
   # ---------------------------------------------------------------------------
   # File appender
