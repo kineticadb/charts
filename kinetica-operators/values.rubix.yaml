@@ -1,0 +1,111 @@
+
+certManager:
+  install: false
+
+controller:
+  metricsService:
+    annotations:
+      com.palantir.rubix.service/pod-cert: '{}'
+
+createNamespaces: false
+
+environment: onPrem
+
+gpuOperator:
+  install: false
+
+ingress-nginx:
+  controller:
+    admissionWebhooks:
+      enabled: false
+    ingressClassResource:
+      enabled: false
+    rbac:
+      create: false
+      scope: true
+    service:
+      annotations:
+        com.palantir.rubix.service.spp/v3: |
+          {
+
+            "endpoints": [
+              {
+                "name": "https",
+                "prefix": "/",
+                "domain-aliases": ["DEFAULT"]
+              }
+            ]
+          }
+        com.palantir.rubix.service/pod-cert: '{}'
+      type: ClusterIP
+    watchIngressWithoutClass: true
+  defaultBackend:
+    enabled: false
+
+kineticacluster:
+  gpudbCluster:
+    clusterName: kinetica-apollo-entity
+    config:
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: 50Gi
+            volumeClaim:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                storageClassName: null
+    letsEncrypt:
+      enabled: false
+  install: true
+  monitoring:
+    syslog:
+      enabled: false
+  name: kinetica-apollo-entity
+  stats:
+    isEnabled: false
+
+kubeRbacProxy:
+  image:
+    repository: kineticastagingcloud/kube-rbac-proxy
+    tag: v0.20.0
+
+kubeStateMetrics:
+  install: false
+
+networkPolicies:
+  install: true
+
+openldap:
+  initTLSSecret:
+    image:
+      registry: docker.io
+      repository: alpine/openssl
+      tag: 3.5.3
+  persistence:
+    storageClass: null
+  service:
+    annotations:
+      com.palantir.rubix.service/pod-cert: '{}'
+
+otelCollector:
+  install: false
+  installRbac: false
+
+support-bundle:
+  configMap:
+    cluster: kinetica-apollo-entity
+
+supportBundle:
+  install: false
+
+upsertKineticaCrds:
+  enable: false
+
+workbench:
+  letsEncrypt:
+    enabled: false
+  storageClass: null
+  useHttps: true

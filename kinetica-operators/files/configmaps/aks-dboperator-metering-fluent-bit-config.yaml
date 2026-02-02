@@ -25,7 +25,7 @@ output-otel-fluent-bit.conf: |-
   [OUTPUT]
       Name                 opentelemetry
       Match                *
-      Host                 otel-collector.kinetica-system.svc.cluster.local
+      Host                 otel-collector.{{ .Release.Namespace }}.svc.cluster.local
       Port                 4318
       Metrics_uri          /v1/metrics
       Logs_uri             /v1/logs

@@ -1,0 +1,31 @@
+{{ if .Values.networkPolicies.install }}
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-kinetica-opr-ns
+  namespace: {{ .Values.kineticacluster.namespace }}
+spec:
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-kinetica-db-ns
+  namespace: {{ .Release.Namespace }}
+spec:
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.kineticacluster.namespace }}
+
+{{ end }}
