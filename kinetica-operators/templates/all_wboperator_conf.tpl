@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: workbench-tmpl
-  namespace: '{{ .Release.Namespace }}'
+  namespace: kinetica-system
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
