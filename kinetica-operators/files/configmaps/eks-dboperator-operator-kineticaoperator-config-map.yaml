@@ -2,15 +2,15 @@ kinetica_cluster_reconciler.yaml: |2-
     Version: v7.1.9.5
     TargetProvider: "aws"
     ComponentConfig:
-        SystemNamespace: "{{ .Release.Namespace }}"
-        DBNamespace: "{{ .Values.kineticacluster.namespace }}"
+        SystemNamespace: "kinetica-system"
+        DBNamespace: "gpudb"
         LDAP:
           IsExternal: false
           Internal:
               Name: "openldap"
-              Namespace: "{{ .Values.kineticacluster.namespace }}"
+              Namespace: "gpudb"
         Nginx:
-          Namespace: "{{ .Release.Namespace }}"
+          Namespace: "kinetica-system"
     KineticaClusterAdminReconcilerConfig:
       Debug: false
     KineticaClusterBackupReconcilerConfig:

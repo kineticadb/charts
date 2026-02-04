@@ -242,8 +242,6 @@ supportBundle:
     #       affects the filename of the support-bundles that are created to create
     #       additional tracability.
     cluster: ""
-    # NOTE: Should match the 'kineticacluster.namespace' value
-    dbNamespace: "gpudb"
 
 kineticacluster:
   install: true
