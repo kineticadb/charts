@@ -11,7 +11,7 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
     app.kubernetes.io/part-of: kinetica
   name: fluent-bit-config
-  namespace: '{{ .Values.kineticacluster.namespace }}'
+  namespace: gpudb
 data:
   {{- (tpl (.Files.Get "files/configmaps/eks-dboperator-metering-fluent-bit-config.yaml") . | nindent 2)  }}
 

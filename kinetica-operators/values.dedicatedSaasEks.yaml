@@ -1,109 +1,124 @@
+# environment refers to either of "onPrem" "saas" "marketPlace"
+# "saas" "marketPlace" are used by Kinetica only
+# for a customer trying to install the chart on his own wherever, it should be onPrem
+environment: "saas"
+# onPrem Providers: "k3s" "kind" "eks" "aks"
+# saas Providers: eks
+# marketPlace Providers: aks eks
+provider: eks
 
-cert-manager:
-  cainjector:
-    nodeSelector:
-      app.kinetica.com/pool: infra
-  nodeSelector:
-    app.kinetica.com/pool: infra
-  startupapicheck:
-    nodeSelector:
-      app.kinetica.com/pool: infra
-  webhook:
-    nodeSelector:
-      app.kinetica.com/pool: infra
-
-environment: saas
-
-global:
-  defaultStorageClass: gp3
-
-gpu-operator:
-  driver:
-    enabled: true
-    nvidiaDriverCRD:
-      nodeSelector:
-        app.kinetica.com/pool: compute
-  mig:
-    strategy: single
-  operator:
-    nodeSelector:
-      app.kinetica.com/pool: infra
-  toolkit:
-    enabled: true
-
-ingress-nginx:
-  admissionWebhooks:
-    patch:
-      nodeSelector:
-        app.kinetica.com/pool: infra
-  controller:
-    nodeSelector:
-      app.kinetica.com/pool: infra
-    service:
-      annotations:
-        service.beta.kubernetes.io/aws-load-balancer-alpn-policy: HTTP2Preferred
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-        service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: 3600
-        service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: true
-        service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
-        service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ""
-        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
-        service.beta.kubernetes.io/aws-load-balancer-type: nlb
-  defaultBackend:
-    nodeSelector:
-      app.kinetica.com/pool: infra
+# clusterName and clusterRegion are used only when environment is marketPlace and provider is eks
+# its used in the monitoring related configmaps
+clusterName: "cluster-001"
+clusterRegion: ""
 
 kineticacluster:
-  gpudbCluster:
-    clusterName: cluster-001
-    config:
-      tieredStorage:
-        globalTier:
-          colocateDisks: true
-        persistTier:
-          default:
-            limit: 50Gi
-            parameters:
-              type: gp3
-            provisioner: ebs.csi.eks.amazonaws.com
-            volumeClaim:
-              spec:
-                storageClassName: gp3
-    hasPools: true
   install: false
-  name: cluster-001
-  stats:
-    pool: compute
 
-networkPolicies:
-  install: false
+kubeRbacProxy:
+  image:
+    repository: "quay.io/brancz/kube-rbac-proxy"
+    tag: "v0.14.2"
+
+kubeStateMetrics:
+  install: true
+  image:
+    repository: "registry.k8s.io/kube-state-metrics/kube-state-metrics"
+    tag: "v2.10.1"
+
+otelCollector:
+  install: true
+  image:
+    repository: "otel/opentelemetry-collector-contrib"
+    tag: "0.95.0"
+
+fluentBit:
+  image:
+    repository: "docker.io/fluent/fluent-bit"
+    tag: "2.2"
 
 nodeSelector:
   app.kinetica.com/pool: infra
+tolerations: []
+affinity: {}
 
-openldap:
-  nodeSelector:
-    app.kinetica.com/pool: infra
-  persistence:
-    storageClass: cluster-001-storageclass
-
-provider: eks
-
-support-bundle:
-  configMap:
-    cluster: cluster0
-  nodeSelector:
-    app.kinetica.com/pool: infra
-
-supportBundle:
+certManager:
   install: true
-
-upsertKineticaCrds:
-  enable: false
-
-workbench:
-  install: false
+"cert-manager":
+  installCRDs: "true"
+  namespace: kinetica-system
   nodeSelector:
-    app.kinetica.com/pool: infra
-  storageClass: gp3
+    "app.kinetica.com/pool": "infra"
+  webhook:
+    nodeSelector:
+      "app.kinetica.com/pool": "infra"
+  cainjector:
+    nodeSelector:
+      "app.kinetica.com/pool": "infra"
+  startupapicheck:
+    nodeSelector:
+      "app.kinetica.com/pool": "infra"
+
+ingressNginx:
+  install: true
+"ingress-nginx":
+  defaultBackend:
+    enabled: true
+    image:
+      repository: docker.io/kineticadevcloud/kinetica-default-backend
+      tag: v0.0.1
+      digest: ""
+    extraEnvs:
+      - name: DEBUG
+        value: "false"
+  controller:
+    allowSnippetAnnotations: true
+    service:
+      annotations:
+        "service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout": 3600
+        "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": tcp
+        "service.beta.kubernetes.io/aws-load-balancer-type": nlb
+gpuOperator:
+  install: false
+  "gpu-operator":
+    mig:
+      strategy: single
+    driver:
+      enabled: true
+      version: "535.54.03"
+
+    toolkit:
+      enabled: true
+openldap:
+  namespace: "gpudb"
+  fullnameOverride: "openldap"
+  global:
+    ldapPort: 1389
+  initContainers:
+    - name: openldap-create-directory-structure
+      image: busybox
+      command:
+        [
+          "sh",
+          "-c",
+          "mkdir -p /bitnami/openldap/data && chown -R 1001:1001 /bitnami",
+        ]
+      volumeMounts:
+        - name: data
+          mountPath: /bitnami
+  env:
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+
+  affinity: {}
+  podAntiAffinity: {}
+  nodeSelector:
+    "app.kinetica.com/pool": "infra"
+  persistence:
+    enabled: true
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: "1Gi"
+    storageClass: "cluster-001-storageclass"

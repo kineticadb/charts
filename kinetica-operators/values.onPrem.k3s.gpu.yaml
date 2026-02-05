@@ -1,68 +1,126 @@
 
-environment: onPrem
+# environment refers to either of "onPrem" "saas" "marketPlace"
+# "saas" "marketPlace" are used by Kinetica only
+# for a customer trying to install the chart on his own wherever, it should be onPrem
+environment: "onPrem"
+# onPrem Providers: "k3s" "kind" "eks" "aks" "other"
+# saas Providers: eks
+# marketPlace Providers: aks eks
+provider: k3s
 
-global:
-  defaultStorageClass: local-path
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
 
 gpuOperator:
   install: true
+  "gpu-operator":
+    mig:
+      strategy: single
+    driver:
+      enabled: true
+      # version: "535.54.03"
 
-ingress-nginx:
+    toolkit:
+      enabled: true
+
+      env:
+        - name: CONTAINERD_CONFIG
+          value: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
+        - name: CONTAINERD_SOCKET
+          value: /run/k3s/containerd/containerd.sock
+        - name: CONTAINERD_RUNTIME_CLASS
+          value: nvidia
+        - name: CONTAINERD_SET_AS_DEFAULT
+          # true for all pod in this runtime, otherwise only pod with the "runtimeClassName: nvidia"
+          value: "false"
+        - name: CONTAINERD_RESTART_MODE
+          value: systemd
+certManager:
+  install: true
+"cert-manager":
+  installCRDs: 'true' 
+  namespace: kinetica-system
+
+ingressNginx:
+  install: true
+"ingress-nginx":
+  
   controller:
+    kind: DaemonSet
     allowSnippetAnnotations: true
-    config:
-      use-forwarded-headers: "true"
     hostNetwork: true
     hostPort:
       enabled: true
-    kind: DaemonSet
+    service:
+      enabled: false
+    publishService:
+      enabled: false
     metrics:
       enabled: true
       serviceMonitor:
         enabled: false
-    publishService:
-      enabled: false
-    service:
-      enabled: false
+    config:
+      use-forwarded-headers: "true"
+    
+openldap:
+  namespace: "gpudb"
+  fullnameOverride: "openldap"
+  env:
+    LDAP_BACKEND: "mdb"
+    LDAP_ORGANISATION: "Kinetica DB Inc."
+    LDAP_DOMAIN: "kinetica.com"
+    LDAP_LOG_LEVEL: "128"
+  affinity: {}
+  podAntiAffinity: {}
+  persistence:
+    enabled: true
+    existingClaim: ""
+    accessMode: "ReadWriteOnce"
+    size: 1Mi
+    storageClass: "local-path"
 
 kineticacluster:
+  install: true
+  name: kinetica-k3s-sample
   gpudbCluster:
-    clusterName: cluster0
+    clusterSize:
+      tshirtSize: XS
+      tshirtType: SmallGPU
+    dbRegistryRepositoryTag:
+      repository: kinetica-k8s-cuda
     config:
       tieredStorage:
         globalTier:
           colocateDisks: true
         persistTier:
           default:
-            limit: 50Gi
-            provisioner: rancher.io/local-path
+            limit: ""
+            provisioner: "rancher.io/local-path"
             volumeClaim:
               spec:
-                storageClassName: local-path
-    dbRegistryRepositoryTag:
-      repository: kinetica-k8s-cuda
-    resources:
-      limits:
-        nvidia.com/gpu: "1"
-      requests:
-        nvidia.com/gpu: "1"
-  install: true
-  name: cluster0
+                storageClassName: "local-path"
+        diskCacheTier:
+          default:
+            limit: 1Gi
+            provisioner: "rancher.io/local-path"
+            volumeClaim:
+              spec:
+                storageClassName: "local-path"
+        coldStorageTier:
+          coldStorageType: "disk"
+          coldStorageDisk:
+            provisioner: "rancher.io/local-path"
+            volumeClaim:
+              spec:
+                storageClassName: "local-path"
 
-networkPolicies:
-  install: false
-
-provider: k3s
-
-support-bundle:
-  configMap:
-    cluster: cluster0
-
-supportBundle:
-  install: true
-
-upsertKineticaCrds:
-  enable: false
-
+dbAdminUser:
+    create: true
+    
 workbench:
-  storageClass: local-path
+  install: true
+ 
+
+  
