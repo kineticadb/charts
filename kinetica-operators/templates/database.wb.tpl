@@ -1,33 +1,159 @@
 {{- define "kinetica-operators.db-workbench" }}
 ---
 
-apiVersion: workbench.com.kinetica/v1
-kind: Workbench
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: workbench
-  namespace: {{.Values.kineticacluster.namespace}}
   labels:
+    app: workbench
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/instance: workbench
+    app.kubernetes.io/part-of: kinetica
     "app.kubernetes.io/name": "kinetica-operators"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "{{ .Release.Name }}"
     "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
-spec:
-  {{- if eq (kindOf .Values.dbWorkbench.nodeSelector) "map" }}
-  nodeSelector: {{ toYaml .Values.dbWorkbench.nodeSelector | nindent 8 }}
-  {{- end }}
-  fqdn: {{ .Values.dbWorkbench.fqdn | default "localhost" }}
-  deploymentInfo: {{ .Values.dbWorkbench.deploymentInfo | toJson| squote  }}
-  {{- if eq (kindOf .Values.dbWorkbench.letsEncrypt) "map" }}
-  letsEncrypt:
-    enabled: {{ .Values.dbWorkbench.letsEncrypt.enabled }}
-    environment: {{  .Values.dbWorkbench.letsEncrypt.environment | default "staging"}}
-  {{- end}}
-  useHttps: {{ .Values.dbWorkbench.useHttps | default false}}
-  image: "{{ .Values.dbWorkbench.image.repository }}:{{.Values.dbWorkbench.image.tag}}"
-  storageClass: {{ .Values.kineticacluster.name }}-storageclass
+  name: workbench-service-account
+  namespace: "{{ .Values.kineticacluster.namespace }}"
+
 ---
-{{- if eq .Values.dbWorkbench.fqdn "localhost" }}
-{{- if and (eq (kindOf .Values.dbWorkbench.letsEncrypt) "map") .Values.dbWorkbench.letsEncrypt.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: workbench
+  namespace: "{{ .Values.kineticacluster.namespace }}"
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+rules:
+- apiGroups:
+  - workbench.com.kinetica
+  resources:
+  - workbenches
+  - workbenchupgrades
+  - workbenchoperatorupgrades
+  verbs:
+  - get
+  - watch
+  - list
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ''
+  resources:
+  - secrets
+  verbs:
+  - get
+  - watch
+  - list
+  - create
+  - update
+  - patch
+  - delete
+#- apiGroups:
+#  - velero.io
+#  resources:
+#  - restores
+#  verbs:
+#  - get
+#  - watch
+#  - list
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticacluster
+  - kineticaclusteradmins
+  - kineticaclusterbackups
+  - kineticaclusterelasticities
+  - kineticaclusterresourcegroups
+  - kineticaclusterrestores
+  - kineticaclusters
+  - kineticaclusterschedules
+  - kineticaclusterschemas
+  - kineticaclusterupgrades
+  - kineticagrants
+  - kineticareleaseversions
+  - kineticaroles
+  - kineticausers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticacluster/status
+  - kineticaclusteradmins/status
+  - kineticaclusterbackups/status
+  - kineticaclusterelasticities/status
+  - kineticaclusterresourcegroups/status
+  - kineticaclusterrestores/status
+  - kineticaclusters/status
+  - kineticaclusterschedules/status
+  - kineticaclusterschemas/status
+  - kineticaclusterupgrades/status
+  - kineticagrants/status
+  - kineticareleaseversions/status
+  - kineticaroles/status
+  - kineticausers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments/status
+  - statefulsets/status
+  verbs:
+  - get
+  - patch
+  - update
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workbench
+  namespace: "{{ .Values.kineticacluster.namespace }}"
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: workbench
+subjects:
+- kind: ServiceAccount
+  name: workbench-service-account
+  namespace: "{{ .Values.kineticacluster.namespace }}"
+
+---
+{{- if eq .Values.workbench.fqdn "localhost" }}
+{{- if and (eq (kindOf .Values.workbench.letsEncrypt) "map") .Values.workbench.letsEncrypt.enabled }}
 apiVersion: v1
 data:
   tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUREekNDQWZlZ0F3SUJBZ0lVSEFoSjR4ZE1zNDA1SmFyek4zZ1pJWldGeEhRd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0ZERVNNQkFHQTFVRUF3d0piRzlqWVd4b2IzTjBNQjRYRFRJek1USXhNakEyTURBek1sb1hEVEkwTURFeApNVEEyTURBek1sb3dGREVTTUJBR0ExVUVBd3dKYkc5allXeG9iM04wTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGCkFBT0NBUThBTUlJQkNnS0NBUUVBdUQ5MmJSWEhvUjdMOGRBenQ1TFVCY0hwQ040MTFST1h2ZUtUSjdIRkp0bnQKOFhIR0dTUkgzcUVmRURuZmdzcjJpdmZrcGJyQ1FzWmZENTdnSG1OUTl0SWFHdFZEeDI2bzZiY3pjanVXSW9iWQp6VjJ3RWxjbFpOT1FjT0c3bmFVZFJ6Sm9VQ2ttcW5JYmdIdkZERUFOSHVHT2QxK0w5TWcySS9rRDM4UGkrVHRSClJoazV6STE1Q1g5eC9xaVQwdkVLQ3l0SVpadVFERk1XTTE5UXdWdGJ6TGw2a1M4TU00MGkrZzM5aVI0QkdacU0KSy9DWVZXVnhvSElsRFlKUldiZVNQKzFhaUpPVUQwQmMxVndXNXZ1WU00QVNGTXdYbUxFNEswNzdjNGd0T1I4cApXTDNwQXpCMC9Mdll5bGtQcDBIbm9pOFowNmh2RGg5cTR4b3NKdEpKSFFJREFRQUJvMWt3VnpBVUJnTlZIUkVFCkRUQUxnZ2xzYjJOaGJHaHZjM1F3Q3dZRFZSMFBCQVFEQWdlQU1CTUdBMVVkSlFRTU1Bb0dDQ3NHQVFVRkJ3TUIKTUIwR0ExVWREZ1FXQkJTcWNCRDFiKzl1RGNZZVJDeUdQcjUyYXVsYmV6QU5CZ2txaGtpRzl3MEJBUXNGQUFPQwpBUUVBYzVkdGw3MGtTd1JVdFo2NFpRZ3luZG9MdmZDbnFTR0xuSVVlY2xwcmh3d1RnYVlDWjdobUVmcE9HUEFnClRPQUpoUjB0eWhzNGxhbWYzcjdkYkJEQTJ6K3dTY2VCbjUycUNISmJUaTFQbDdWejRrcUxrd0YydHgxdE1nVDkKUkhhRURpTUlaSlhZTDl2NVZWaWFIOTh4QkUrdzhNY0dNbnZDcWcvdUpxS3NLOW8xYzMzV3kzYjJTVXlST0xLMwoveDl0aEk4UTJkVWdDbkh1bjJLMjFZZitvUFZTTERtTkxvRSt0b1hjUHo4TWdXRkRmVmRRUkJlZ0dsRk5EOWNwCnpKNVZKdU5DeFZsaXVJRnd1K3Y3WTFZN28yOVVnNmdJTmgyZEZpOVIyQUd2RC9wZm5qTG10WVlSNFNmQmY4dW8KSGZ0dlFUaVJobm1yNDY1TTZCZlR4b3BiNXc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==

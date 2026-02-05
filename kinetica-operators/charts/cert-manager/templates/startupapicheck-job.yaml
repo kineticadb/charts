@@ -41,15 +41,16 @@ spec:
       {{- with .Values.global.priorityClassName }}
       priorityClassName: {{ . | quote }}
       {{- end }}
+      {{- if (hasKey .Values.global "hostUsers") }}
+      hostUsers: {{ .Values.global.hostUsers }}       
+      {{- end }}
       {{- with .Values.startupapicheck.securityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}-startupapicheck
-          {{- with .Values.startupapicheck.image }}
-          image: "{{- if .registry -}}{{ .registry }}/{{- end -}}{{ .repository }}{{- if (.digest) -}} @{{ .digest }}{{- else -}}:{{ default $.Chart.AppVersion .tag }} {{- end -}}"
-          {{- end }}
+          image: "{{ template "image" (tuple .Values.startupapicheck.image $.Chart.AppVersion) }}"
           imagePullPolicy: {{ .Values.startupapicheck.image.pullPolicy }}
           args:
           - check
@@ -62,6 +63,14 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          {{- with .Values.startupapicheck.extraEnv }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
           {{- with .Values.startupapicheck.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -70,9 +79,11 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.startupapicheck.nodeSelector }}
+      {{- with (coalesce .Values.startupapicheck.nodeSelector .Values.global.nodeSelector) }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
       {{- end }}
       {{- with .Values.startupapicheck.affinity }}
       affinity:

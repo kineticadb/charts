@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 {{- end }}
 ---
 ---
@@ -22,7 +22,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: opentelemetry-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
   labels:
     app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
@@ -145,14 +145,14 @@ rules:
   - watch
 {{- end }}
 ---
+{{ if .Values.otelCollector.installRbac }}
 ---
-{{- if .Values.otelCollector.install }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: otel-collector-role
   labels:
-    app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
@@ -163,8 +163,8 @@ rules:
   - '*'
   verbs:
   - '*'
-{{- end }}
----
+{{ end }}
+
 ---
 {{- if .Values.kubeStateMetrics.install }}
 apiVersion: rbac.authorization.k8s.io/v1
@@ -185,17 +185,17 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 {{- end }}
 ---
+{{ if .Values.otelCollector.installRbac }}
 ---
-{{- if .Values.otelCollector.install }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: otel-collector-role-binding
   labels:
-    app.kubernetes.io/name: otel-collector
+    app.kubernetes.io/name: kinetica-operators
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
@@ -206,9 +206,9 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: opentelemetry-collector
-  namespace: kinetica-system
-{{- end }}
----
+  namespace: '{{ .Release.Namespace }}'
+{{ end }}
+
 ---
 {{- if .Values.otelCollector.install }}
 apiVersion: v1
@@ -222,7 +222,7 @@ metadata:
     app: opentelemetry
     component: otel-collector-conf
   name: otel-collector-conf
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 data:
   {{ (.Files.Glob "files/configmaps/eks-dboperator-monitoring-otel-collector-conf.yaml").AsConfig }}
 {{- end }}
@@ -240,7 +240,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   clusterIP: None
   ports:
@@ -267,7 +267,7 @@ metadata:
     app: opentelemetry
     component: otel-collector
   name: otel-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   ports:
   - name: syslog
@@ -316,7 +316,7 @@ metadata:
     app.kubernetes.io/component: exporter
     app.kubernetes.io/version: 2.4.2
   name: kube-state-metrics
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   replicas: 1
   selector:
@@ -391,7 +391,7 @@ metadata:
     app: opentelemetry
     component: otel-collector
   name: otel-collector
-  namespace: kinetica-system
+  namespace: '{{ .Release.Namespace }}'
 spec:
   minReadySeconds: 5
   progressDeadlineSeconds: 120
@@ -442,6 +442,15 @@ spec:
           requests:
             cpu: 1000m
             memory: 2Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /conf
           name: otel-collector-config-vol
