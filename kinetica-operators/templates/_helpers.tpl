@@ -82,4 +82,78 @@ tag: "{{ $tag }}"
     {{ end -}}
 {{ end -}}
 
+{{/*
+Resolve license value from secret (preferred) or direct value (fallback).
+Priority: 1) licenseSecretName if secret exists and has 'license' key, 2) direct license value
+Returns the license string or fails if neither is provided.
+Usage: {{ include "kinetica-operators.resolveLicense" (dict "Values" .Values "Release" .Release) }}
+*/}}
+{{- define "kinetica-operators.resolveLicense" -}}
+{{- $license := "" -}}
+{{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
+{{- $usedSecret := false -}}
+{{/* Try secret first if specified */}}
+{{- if and .Values.kineticacluster.gpudbCluster.licenseSecretName (ne .Values.kineticacluster.gpudbCluster.licenseSecretName "") -}}
+  {{- $secretName := .Values.kineticacluster.gpudbCluster.licenseSecretName -}}
+  {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
+  {{- if $secret -}}
+    {{- if hasKey $secret.data "license" -}}
+      {{- $license = index $secret.data "license" | b64dec -}}
+      {{- $usedSecret = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{/* Fall back to direct value if secret not used */}}
+{{- if not $usedSecret -}}
+  {{- if and .Values.kineticacluster.gpudbCluster.license (ne .Values.kineticacluster.gpudbCluster.license "") -}}
+    {{- $license = .Values.kineticacluster.gpudbCluster.license -}}
+  {{- else -}}
+    {{- fail "A valid license is required. Provide kineticacluster.gpudbCluster.license or a valid kineticacluster.gpudbCluster.licenseSecretName (secret must have 'license' key)" -}}
+  {{- end -}}
+{{- end -}}
+{{- $license -}}
+{{- end -}}
+
+{{/*
+Resolve admin username from secret (preferred) or direct value (fallback).
+Priority: 1) adminUserSecretName if secret exists and has 'username' key, 2) direct name value
+Usage: {{ include "kinetica-operators.resolveAdminUsername" (dict "Values" .Values "Release" .Release) }}
+*/}}
+{{- define "kinetica-operators.resolveAdminUsername" -}}
+{{- $username := .Values.dbAdminUser.name -}}
+{{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
+{{- if and .Values.dbAdminUser.adminUserSecretName (ne .Values.dbAdminUser.adminUserSecretName "") -}}
+  {{- $secretName := .Values.dbAdminUser.adminUserSecretName -}}
+  {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
+  {{- if $secret -}}
+    {{- if hasKey $secret.data "username" -}}
+      {{- $username = index $secret.data "username" | b64dec -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $username -}}
+{{- end -}}
+
+{{/*
+Resolve admin password from secret (preferred) or direct value (fallback).
+Priority: 1) adminUserSecretName if secret exists and has 'password' key, 2) direct password value
+Usage: {{ include "kinetica-operators.resolveAdminPassword" (dict "Values" .Values "Release" .Release) }}
+*/}}
+{{- define "kinetica-operators.resolveAdminPassword" -}}
+{{- $password := .Values.dbAdminUser.password -}}
+{{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
+{{- if and .Values.dbAdminUser.adminUserSecretName (ne .Values.dbAdminUser.adminUserSecretName "") -}}
+  {{- $secretName := .Values.dbAdminUser.adminUserSecretName -}}
+  {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
+  {{- if $secret -}}
+    {{- if hasKey $secret.data "password" -}}
+      {{- $password = index $secret.data "password" | b64dec -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if eq $password "" -}}
+  {{- fail "Password for Admin User is required. Provide dbAdminUser.password or a valid dbAdminUser.adminUserSecretName (secret must have 'password' key)" -}}
+{{- end -}}
+{{- $password -}}
+{{- end -}}
 

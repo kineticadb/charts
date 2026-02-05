@@ -312,8 +312,11 @@ kineticacluster:
       enabled: false
       # only allowed values are staging and production
       environment: "staging"
-    # valid license required
+    # license - provide directly or via licenseSecretName (secret takes priority if it exists)
     license: ""
+    # reference an existing secret containing the license (preferred if exists)
+    # the secret must contain a 'license' key; falls back to 'license' value above if secret not found
+    licenseSecretName: ""  # name of existing secret (e.g., "kinetica-license")
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
@@ -355,6 +358,10 @@ dbAdminUser:
   name: "kadmin"
   # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
   password: ""
+  # reference an existing secret containing the admin credentials (preferred if exists)
+  # the secret must contain 'username' and 'password' keys
+  # falls back to 'name' and 'password' values above if secret not found
+  adminUserSecretName: ""  # name of existing secret (e.g., "kinetica-admin-credentials")
 
 workbench:
   install: true

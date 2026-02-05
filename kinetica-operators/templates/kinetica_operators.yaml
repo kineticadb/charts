@@ -81,6 +81,11 @@
   {{- fail "When kineticacluster.spec.gpudbCluster.config.tieredStorage.generateStorageClasses is set to false, a storage class must be provided fo kineticacluster.spec.gpudbCluster.config.tieredStorage.volumeClaim.spec.storageClassName or global.defaultStorageClass" }}
 {{- end }}
 
+{{- /* Resolve license from secret or direct value and inject into kineticacluster values */ -}}
+{{- if $values.kineticacluster.install }}
+  {{- $resolvedLicense := include "kinetica-operators.resolveLicense" (dict "Values" $values "Release" $release) }}
+  {{- $_ := set $values.kineticacluster.gpudbCluster "license" $resolvedLicense }}
+{{- end }}
 
 {{- /* create the final values */ -}}
 {{- $values = merge (dict "global" $global) $values}}

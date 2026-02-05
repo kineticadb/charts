@@ -1,13 +1,21 @@
 
 {{- define "kinetica-operators.db-admin-user" }}
 
+{{/*
+Resolve admin username and password from secret (if provided) or direct values.
+Uses helper functions from _helpers.tpl:
+  - kinetica-operators.resolveAdminUsername: resolves username from secret or direct value
+  - kinetica-operators.resolveAdminPassword: resolves password from secret or direct value
+*/}}
+{{- $adminUsername := include "kinetica-operators.resolveAdminUsername" . }}
+{{- $adminPassword := include "kinetica-operators.resolveAdminPassword" . }}
 
 ---
 apiVersion: v1
 stringData:
-  password: {{ required "Password for Admin User is required, use --set dbAdminUser.password=your_password" .Values.dbAdminUser.password }}
+  password: {{ $adminPassword }}
 kind: Secret
-metadata: 
+metadata:
   name: admin-pwd
   namespace: {{ .Values.kineticacluster.namespace }}
   labels:
@@ -20,7 +28,7 @@ type: Opaque
 apiVersion: app.kinetica.com/v1
 kind: KineticaUser
 metadata:
-  name: {{ .Values.dbAdminUser.name }}
+  name: {{ $adminUsername }}
   namespace: {{ .Values.kineticacluster.namespace }}
   labels:
     "app.kubernetes.io/name": "kinetica-operators"
@@ -29,7 +37,7 @@ metadata:
     "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
 spec:
   ringName: {{ .Values.kineticacluster.name }}
-  uid: {{ .Values.dbAdminUser.name }}
+  uid: {{ $adminUsername }}
   action: upsert
   reveal: true
   upsert:
@@ -59,13 +67,13 @@ spec:
 apiVersion: app.kinetica.com/v1
 kind: KineticaGrant
 metadata:
-  name: "{{ .Values.dbAdminUser.name }}-global-admin-create"
+  name: "{{ $adminUsername }}-global-admin-create"
   namespace: {{ .Values.kineticacluster.namespace }}
 spec:
   ringName: {{ .Values.kineticacluster.name }}
   addGrantRoleRequest:
     role: global_admins
-    member: {{ .Values.dbAdminUser.name }}
+    member: {{ $adminUsername }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -73,7 +81,7 @@ metadata:
   name: {{ .Release.Name }}-delete-script
   namespace: {{ .Release.Namespace }}
 data:
-  delete-script.sh: |  
+  delete-script.sh: |
     #!/bin/sh
     ku="$(kubectl -n "{{ .Values.kineticacluster.namespace }}" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
     if [ -n "$ku" ]; then
@@ -82,7 +90,7 @@ data:
         kubectl -n "{{ .Release.Namespace }}" scale "$op" --replicas=0
       fi
       kubectl -n "{{ .Values.kineticacluster.namespace }}" patch "$ku" -p '{"metadata":{"finalizers":null}}' --type=merge
-      kubectl -n "{{ .Values.kineticacluster.namespace }}" delete KineticaUser "{{ .Values.dbAdminUser.name }}"
+      kubectl -n "{{ .Values.kineticacluster.namespace }}" delete KineticaUser "{{ $adminUsername }}"
     fi
     exit 0
 ---
