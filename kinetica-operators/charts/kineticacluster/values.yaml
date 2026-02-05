@@ -455,6 +455,15 @@
     # Default: "Parallel"
     podManagementPolicy: "Parallel"
 
+    # publicTls: (required: false)
+    # -- Whether or not the operator should generate "https" public endpoint URLs even
+    # if
+    # LetsEncrypt.Enabled is false.  This should be used when TLS is being handled by
+    # some other user-provided component.
+    # Type: boolean
+    # Default: false
+    publicTls: false
+
     # ranksPerNode: (required: false)
     # -- Number of ranks per node as a uint16 i.e. 1-65535 ranks per node.
     #   Default: 1
@@ -508,7 +517,44 @@
     # tolerations: (required: false)
     # -- Tolerations - Allow for tolerations to be supplied for the Deployment of the
     # DB.
-    # Type: object
+    # Type: array of object
+
+    tolerations: 
+      # effect: (required: false)
+      # -- Effect indicates the taint effect to match. Empty means match all taint
+      # effects.
+      # When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+      # Type: string
+
+      # key: (required: false)
+      # -- Key is the taint key that the toleration applies to. Empty means match all
+      # taint keys.
+      # If the key is empty, operator must be Exists; this combination means to match
+      # all values and all keys.
+      # Type: string
+
+      # operator: (required: false)
+      # -- Operator represents a key's relationship to the value.
+      # Valid operators are Exists and Equal. Defaults to Equal.
+      # Exists is equivalent to wildcard for value, so that a pod can
+      # tolerate all taints of a particular category.
+      # Type: string
+
+      # tolerationSeconds: (required: false)
+      # -- TolerationSeconds represents the period of time the toleration (which must be
+      # of effect NoExecute, otherwise this field is ignored) tolerates the taint. By
+      # default,
+      # it is not set, which means tolerate the taint forever (do not evict). Zero and
+      # negative values will be treated as 0 (evict immediately) by the system.
+      # Type: integer
+      # Format: int64
+
+      # value: (required: false)
+      # -- Value is the taint value the toleration matches to.
+      # If the operator is Exists, the value should be empty, otherwise just a regular
+      # string.
+      # Type: string
+
 
     # useTShirt: (required: false)
     # -- Whether to use T-Shirt sizing for Marketplace
@@ -591,6 +637,10 @@
   # -- The LDAP server to connect to.
   # Type: object
 
+  # monitoring: (required: false)
+  # -- Where to send monitoring information e.g. OTEL collector etc.
+  # Type: object
+
   # payAsYouGo: (required: false)
   # -- Tells the operator to use Cloud Provider Pay As You Go functionality.
   # Type: boolean
@@ -606,5 +656,5 @@
   # Type: object
 
   # supportingImages: (required: false)
-  # -- Supporting images like socat,busybox etc.
+  # -- Supporting images like busybox
   # Type: object

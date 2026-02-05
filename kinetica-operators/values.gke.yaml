@@ -1,0 +1,90 @@
+
+cert-manager:
+  cainjector:
+    nodeSelector:
+      app.kinetica.com/pool: infra
+  nodeSelector:
+    app.kinetica.com/pool: infra
+  startupapicheck:
+    nodeSelector:
+      app.kinetica.com/pool: infra
+  webhook:
+    nodeSelector:
+      app.kinetica.com/pool: infra
+
+environment: onPrem
+
+global:
+  defaultStorageClass: premium-rwo
+
+gpu-operator:
+  driver:
+    nvidiaDriverCRD:
+      nodeSelector:
+        app.kinetica.com/pool: compute
+  operator:
+    nodeSelector:
+      app.kinetica.com/pool: infra
+
+ingress-nginx:
+  admissionWebhooks:
+    patch:
+      nodeSelector:
+        app.kinetica.com/pool: infra
+  controller:
+    nodeSelector:
+      app.kinetica.com/pool: infra
+  defaultBackend:
+    nodeSelector:
+      app.kinetica.com/pool: infra
+
+kineticacluster:
+  gpudbCluster:
+    clusterName: cluster0
+    config:
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: 50Gi
+            parameters:
+              type: pd-ssd
+            provisioner: pd.csi.storage.gke.io
+            volumeClaim:
+              spec:
+                storageClassName: premium-rwo
+    hasPools: true
+  install: true
+  name: cluster0
+  stats:
+    pool: compute
+
+networkPolicies:
+  install: false
+
+nodeSelector:
+  app.kinetica.com/pool: infra
+
+openldap:
+  nodeSelector:
+    app.kinetica.com/pool: infra
+
+provider: gke
+
+support-bundle:
+  configMap:
+    cluster: cluster0
+  nodeSelector:
+    app.kinetica.com/pool: infra
+
+supportBundle:
+  install: true
+
+upsertKineticaCrds:
+  enable: false
+
+workbench:
+  nodeSelector:
+    app.kinetica.com/pool: infra
+  storageClass: premium-rwo
