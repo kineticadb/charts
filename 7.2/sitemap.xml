@@ -2,357 +2,357 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://www.kinetica.com/7.2/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/tags/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/cluster_management/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/grant_management/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/resource_group_management/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/role_management/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/schema_management/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Administration/user_management/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/advanced_topics/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/airgapped/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/alternative_charts/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/ingress_configuration/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/ingress_nginx_config/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/ingress_urls/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/kinetica_images_list_for_airgapped_environments/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/kinetica_mac_arm_k8s/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/kube_vip_loadbalancer/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/kubernetes_bare_metal_vm_install/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/minio_s3_dev_test/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Advanced/nginx_ingress_config/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Architecture/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Architecture/db_architecture/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Architecture/kinetica_for_kubernetes_architecture/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/aks/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/connecting/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/eks/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/helm_repo_add/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/installation/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/installation_cpu/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/installation_gpu/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/local_kinetica_etc_hosts/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/note_additional_gpu_sqlassistant/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/preparation_and_prerequisites/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/GettingStarted/quickstart/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Help/changing_the_fqdn/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Help/faq/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Help/help_and_tutorials/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Help/help_index/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Monitoring/logs/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Monitoring/metrics/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operations/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operations/backup_and_restore/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operations/otel/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operations/rebalance/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operations/suspend_resume/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operators/k3s/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operators/k8s/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operators/kind/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Operators/kinetica-operators/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/database/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/helm_kinetica_operators/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_admins/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_backups/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_grants/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_reference/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_resource_groups/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_restores/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_roles/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_schemas/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_cluster_users/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_clusters/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/kinetica_workbench/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Reference/workbench/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Setup/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Support/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/Troubleshooting/troubleshooting/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.kinetica.com/7.2/tags/</loc>
-         <lastmod>2026-02-05</lastmod>
+         <lastmod>2026-02-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
