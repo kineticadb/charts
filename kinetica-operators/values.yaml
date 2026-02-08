@@ -23,8 +23,8 @@ upsertKineticaCrds:
   enabled: false
   installRbac: false
   image:
-    repository: "kinetica.azurecr.io/dev/upsert-kinetica-crds"
-    tag: "v7.2.3-7.dev-6"
+    repository: "docker.io/kineticastagingcloud/upsert-kinetica-crds"
+    tag: "v7.2.3-7.rc-6"
 
 kubeRbacProxy:
   image:
@@ -46,14 +46,14 @@ otelCollector:
 
 fluentBit:
   image:
-    repository: "kinetica.azurecr.io/dev/fluent-bit"
-    tag: "v7.2.3-7.dev-6"
+    repository: "docker.io/kineticastagingcloud/fluent-bit"
+    tag: "v7.2.3-7.rc-6"
 
 wbOperator:
   install: true
   image:
-    repository: "kinetica.azurecr.io/dev/workbench-operator"
-    tag: "v7.2.3-7.dev-6"
+    repository: "docker.io/kineticastagingcloud/workbench-operator"
+    tag: "v7.2.3-7.rc-6"
     digest: ""
 
 dbOperator:
@@ -61,8 +61,8 @@ dbOperator:
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "kinetica.azurecr.io/dev/kinetica-k8s-operator"
-    tag: "v7.2.3-7.dev-6"
+    repository: "docker.io/kineticastagingcloud/kinetica-k8s-operator"
+    tag: "v7.2.3-7.rc-6"
     digest: ""
   monitoring:
     type: "otel"
@@ -115,8 +115,8 @@ ingressNginx:
   defaultBackend:
     enabled: true
     image:
-      repository: "kinetica.azurecr.io/dev/kinetica-default-backend"
-      tag: "v7.2.3-7.dev-6"
+      repository: "docker.io/kineticastagingcloud/kinetica-default-backend"
+      tag: "v7.2.3-7.rc-6"
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -124,8 +124,8 @@ ingressNginx:
         value: "false"
   controller:
     image:
-      repository: "kinetica.azurecr.io/dev/ingress-nginx-controller"
-      tag: "v7.2.3-7.dev-6"
+      repository: "docker.io/kineticastagingcloud/ingress-nginx-controller"
+      tag: "v7.2.3-7.rc-6"
       digest: ""
       digestChroot: ""
     nodeSelector: {}
@@ -178,11 +178,11 @@ openldap:
   global:
     ldapPort: 1389
   image:
-    repository: "kinetica.azurecr.io/dev/openldap"
-    tag: "v7.2.3-7.dev-6"
+    repository: "docker.io/kineticastagingcloud/openldap"
+    tag: "v7.2.3-7.rc-6"
   initContainers:
     - name: openldap-create-directory-structure
-      image: "kinetica.azurecr.io/dev/openldap:v7.2.3-7.dev-6"
+      image: "docker.io/kineticastagingcloud/openldap:v7.2.3-7.rc-6"
       command:
         [
           "sh",
@@ -232,11 +232,11 @@ supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: "kinetica.azurecr.io/dev"
+    registry: "docker.io/kineticastagingcloud"
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "v7.2.3-7.dev-6"
+    tag: "v7.2.3-7.rc-6"
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -257,9 +257,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: kinetica-k8s-monitor
-      tag: "v7.2.3-7.dev-6"
+      tag: "v7.2.3-7.rc-6"
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -281,9 +281,9 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: busybox
-      tag: "v7.2.3-7.dev-6"
+      tag: "v7.2.3-7.rc-6"
   # stats:
   #   isEnabled: false
   gadmin:
@@ -320,13 +320,13 @@ kineticacluster:
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: kinetica-k8s-cpu
-      tag: "v7.2.3-7.dev-6"
+      tag: "v7.2.3-7.rc-6"
     metricsRegistryRepositoryTag:
-      registry: "kinetica.azurecr.io/dev"
+      registry: "docker.io/kineticastagingcloud"
       repository: fluent-bit
-      tag: "v7.2.3-7.dev-6"
+      tag: "v7.2.3-7.rc-6"
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -374,9 +374,9 @@ workbench:
   nodeSelector: {}
   storageClass: ""
   wbRegistryRepositoryTag:
-    registry: "kinetica.azurecr.io/dev"
+    registry: "docker.io/kineticastagingcloud"
     repository: workbench
-    tag: "v7.2.3-7.dev-6"
+    tag: "v7.2.3-7.rc-6"
 
 networkPolicies:
   install: false
