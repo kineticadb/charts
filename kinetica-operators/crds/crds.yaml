@@ -6055,7 +6055,6 @@ spec:
                                     format: int32
                                     type: integer
                                   mountOptions:
-                                    default: '[]'
                                     items:
                                       type: string
                                     type: array
@@ -7910,7 +7909,6 @@ spec:
                                     format: int32
                                     type: integer
                                   mountOptions:
-                                    default: '[]'
                                     items:
                                       type: string
                                     type: array
@@ -9777,7 +9775,6 @@ spec:
                                     format: int32
                                     type: integer
                                   mountOptions:
-                                    default: '[]'
                                     items:
                                       type: string
                                     type: array
@@ -11631,7 +11628,6 @@ spec:
                                         format: int32
                                         type: integer
                                       mountOptions:
-                                        default: '[]'
                                         items:
                                           type: string
                                         type: array
@@ -13554,7 +13550,6 @@ spec:
                                     format: int32
                                     type: integer
                                   mountOptions:
-                                    default: '[]'
                                     items:
                                       type: string
                                     type: array
@@ -15431,7 +15426,6 @@ spec:
                                     format: int32
                                     type: integer
                                   mountOptions:
-                                    default: '[]'
                                     items:
                                       type: string
                                     type: array
@@ -17260,7 +17254,6 @@ spec:
                                       format: int32
                                       type: integer
                                     mountOptions:
-                                      default: '[]'
                                       items:
                                         type: string
                                       type: array
@@ -19142,7 +19135,6 @@ spec:
                                     format: int32
                                     type: integer
                                   mountOptions:
-                                    default: '[]'
                                     items:
                                       type: string
                                     type: array
@@ -20971,7 +20963,6 @@ spec:
                                       format: int32
                                       type: integer
                                     mountOptions:
-                                      default: '[]'
                                       items:
                                         type: string
                                       type: array
