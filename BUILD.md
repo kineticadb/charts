@@ -1,21 +1,9 @@
-# How to create a Helm Release
+# Docs
 
-After making changes to the Helm chart, you can create a new release by running the following command:
+To test the docs before building, you can run...
 
-```bash
-earthly --push +local-helm-package --VERSION=1.2.3
-earthly --push +publish
+``` bash
+just serve-docs
 ```
 
-You can also just re-index the helm chart repo and repush with...
-
-```bash
-earthly --push local-helm-index
-earthly --push +publish
-```
-
-For additional information, run...
-
-```bash
-earthly doc
-```
+... and then open localhost:8000 in your browser

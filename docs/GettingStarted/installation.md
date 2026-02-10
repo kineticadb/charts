@@ -26,6 +26,14 @@ tags:
     _Optionally enable Kinetica On-Prem SQLAssistant (LLM)._
     <br/><br/>
     [:octicons-arrow-right-24: GPU](installation_gpu.md)
+
+-   :simple-google:{ .lg .middle } __GKE Installation__
+
+    ---
+
+    Considerations for installing on GKE.
+    <br/><br/>
+    [:octicons-arror-right-24: GKE](gke.md)
 </div>
 
 ---
