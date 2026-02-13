@@ -30476,6 +30476,10 @@ spec:
                   type: string
                 description: NodeSelector - NodeSelector to be applied to the DB Pods
                 type: object
+              secureNetwork:
+                default: false
+                description: Enable secure network mode for the workbench.
+                type: boolean
               storageClass:
                 description: Specify the storage class to use on the Workbench stateful
                   set

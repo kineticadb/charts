@@ -316,7 +316,7 @@ kineticacluster:
     license: ""
     # reference an existing secret containing the license (preferred if exists)
     # the secret must contain a 'license' key; falls back to 'license' value above if secret not found
-    licenseSecretName: ""  # name of existing secret (e.g., "kinetica-license")
+    licenseSecretName: ""  # name of existing secret (e.g., "kinetica-operators-kineticalicense")
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
@@ -361,7 +361,7 @@ dbAdminUser:
   # reference an existing secret containing the admin credentials (preferred if exists)
   # the secret must contain 'username' and 'password' keys
   # falls back to 'name' and 'password' values above if secret not found
-  adminUserSecretName: ""  # name of existing secret (e.g., "kinetica-admin-credentials")
+  adminUserSecretName: ""  # name of existing secret (e.g., "kinetica-operators-kineticaadmincredentials")
 
 workbench:
   install: true
@@ -373,6 +373,7 @@ workbench:
     environment: "staging"
   nodeSelector: {}
   storageClass: ""
+  secureNetwork: false
   wbRegistryRepositoryTag:
     registry: "REPLACEMEREGISTRY"
     repository: workbench

@@ -25,23 +25,35 @@ spec:
         app.kubernetes.io/instance: '{{ .Release.Name }}'
     spec:
       serviceAccountName: kineticacluster-operator
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65432
+        fsGroup: 2000
       containers:
       - name: upsert-kinetica-crds-job
         image: "{{ .Values.upsertKineticaCrds.image.repository }}:{{ .Values.upsertKineticaCrds.image.tag }}"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         command: ["/bin/bash", "-c"]
         args:
           - |
             set -e
-            echo "=== Checking CRD permissions ==="
-            echo -n "can-i get customresourcedefinitions: "
-            kubectl auth can-i get customresourcedefinitions || true
-            echo -n "can-i update customresourcedefinitions: "
-            kubectl auth can-i update customresourcedefinitions || true
-            echo ""
             echo "=== Starting CRD replacements ==="
             FAILED=0
             for F in /crds/db-crds/* /crds/wb-crds/*; do
               if [ -f "$F" ]; then
+                CRD_NAME=$(grep -m1 '^  name:' "$F" | awk '{print $2}')
+                if ! kubectl get crd "$CRD_NAME" >/dev/null 2>&1; then
+                  echo "Skipping (not present): $F"
+                  continue
+                fi
                 echo "Processing: $F"
                 if kubectl replace -f "$F"; then
                   echo "  SUCCESS: $F"

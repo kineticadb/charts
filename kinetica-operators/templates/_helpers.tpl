@@ -85,15 +85,17 @@ tag: "{{ $tag }}"
 {{/*
 Resolve license value from secret (preferred) or direct value (fallback).
 Priority: 1) licenseSecretName if secret exists and has 'license' key, 2) direct license value
-Returns the license string or fails if neither is provided.
+If licenseSecretName is configured but lookup fails (e.g. helm template), skip validation
+as the post-install hook will patch the real value from the mounted secret.
 Usage: {{ include "kinetica-operators.resolveLicense" (dict "Values" .Values "Release" .Release) }}
 */}}
 {{- define "kinetica-operators.resolveLicense" -}}
 {{- $license := "" -}}
 {{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
 {{- $usedSecret := false -}}
+{{- $hasSecretName := and .Values.kineticacluster.gpudbCluster.licenseSecretName (ne .Values.kineticacluster.gpudbCluster.licenseSecretName "") -}}
 {{/* Try secret first if specified */}}
-{{- if and .Values.kineticacluster.gpudbCluster.licenseSecretName (ne .Values.kineticacluster.gpudbCluster.licenseSecretName "") -}}
+{{- if $hasSecretName -}}
   {{- $secretName := .Values.kineticacluster.gpudbCluster.licenseSecretName -}}
   {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
   {{- if $secret -}}
@@ -137,12 +139,15 @@ Usage: {{ include "kinetica-operators.resolveAdminUsername" (dict "Values" .Valu
 {{/*
 Resolve admin password from secret (preferred) or direct value (fallback).
 Priority: 1) adminUserSecretName if secret exists and has 'password' key, 2) direct password value
+If adminUserSecretName is configured but lookup fails (e.g. helm template), skip validation
+as the post-install hook will patch the real value from the mounted secret.
 Usage: {{ include "kinetica-operators.resolveAdminPassword" (dict "Values" .Values "Release" .Release) }}
 */}}
 {{- define "kinetica-operators.resolveAdminPassword" -}}
 {{- $password := .Values.dbAdminUser.password -}}
 {{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
-{{- if and .Values.dbAdminUser.adminUserSecretName (ne .Values.dbAdminUser.adminUserSecretName "") -}}
+{{- $hasSecretName := and .Values.dbAdminUser.adminUserSecretName (ne .Values.dbAdminUser.adminUserSecretName "") -}}
+{{- if $hasSecretName -}}
   {{- $secretName := .Values.dbAdminUser.adminUserSecretName -}}
   {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
   {{- if $secret -}}
@@ -151,7 +156,7 @@ Usage: {{ include "kinetica-operators.resolveAdminPassword" (dict "Values" .Valu
     {{- end -}}
   {{- end -}}
 {{- end -}}
-{{- if eq $password "" -}}
+{{- if and (eq $password "") (not $hasSecretName) -}}
   {{- fail "Password for Admin User is required. Provide dbAdminUser.password or a valid dbAdminUser.adminUserSecretName (secret must have 'password' key)" -}}
 {{- end -}}
 {{- $password -}}

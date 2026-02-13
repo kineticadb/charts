@@ -80,6 +80,10 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-delete-script
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-10"
 data:
   delete-script.sh: |
     #!/bin/sh

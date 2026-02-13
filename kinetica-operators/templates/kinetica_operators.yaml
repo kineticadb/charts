@@ -169,6 +169,7 @@
   {{- if $values.dbAdminUser.create }}
     {{- include "kinetica-operators.db-admin-user" $data}}
   {{- end }}
+  {{- include "kinetica-operators.post-install-secret-patch" $data }}
   {{- if and $values.certManager.install (eq (kindOf $values.kineticacluster.gpudbCluster) "map") }}
     {{- if eq (kindOf $values.kineticacluster.gpudbCluster.letsEncrypt) "map" }}
       {{- if kindOf $values.kineticacluster.gpudbCluster.letsEncrypt.enabled }}
