@@ -22,6 +22,10 @@ specific node groups for the compute and infrastructure nodes.
     Please refer to this [Google documentation](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver "GKE CSI Docs")
     for more information.
 
+## Getting an FQDN
+
+Google provides a set of documentation about how to setup [ExternalDNS](https://kubernetes-sigs.github.io/external-dns/v0.13.5/tutorials/gke/ "GKE ExternalDNS Docs") to create DNS records on your DNS provider of choice.
+
 ---
 
 # Example Values for the Helm Chart
