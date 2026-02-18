@@ -61,26 +61,19 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "kinetica-operators.db.image" }}
-    {{- with . }}
-        {{- $rep := .repository -}}
-        {{- $tag := .tag -}}
-        {{- $registry := "docker.io" -}}
-        {{- $repository := $rep -}}
-        {{- $registryList := splitList "/" $rep -}}
-        {{- if ge (len $registryList) 2 }}
-            {{- $registryPieces := splitList "." (index $registryList 0) -}}
-            {{- if gt (len $registryPieces) 1 }}
-                {{- $registry = index $registryList 0 -}}
-                {{- $repository = join "/" (slice $registryList 1) -}}
-            {{ end -}}
-        {{ end -}}
-
-registry: "{{ $registry }}"
-repository: "{{ $repository }}"
-tag: "{{ $tag }}"
-    {{ end -}}
-{{ end -}}
+{{/*
+Construct a full image reference: registry/repository:tag or registry/repository@digest
+Usage: {{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry "repository" .Values.X.image.repository "tag" .Values.X.image.tag "digest" .Values.X.image.digest) }}
+*/}}
+{{- define "kinetica-operators.image" -}}
+{{- $registry := .registry | default "" -}}
+{{- $repository := .repository -}}
+{{- $tag := .tag | default "" -}}
+{{- $digest := .digest | default "" -}}
+{{- if $registry -}}{{ $registry }}/{{- end -}}
+{{- $repository -}}
+{{- if $digest -}}@{{- $digest -}}{{- else if $tag -}}:{{- $tag -}}{{- end -}}
+{{- end -}}
 
 {{/*
 Resolve license value from secret (preferred) or direct value (fallback).

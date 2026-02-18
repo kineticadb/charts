@@ -31,7 +31,7 @@ spec:
         fsGroup: 2000
       containers:
       - name: upsert-kinetica-crds-job
-        image: "{{ .Values.upsertKineticaCrds.image.repository }}:{{ .Values.upsertKineticaCrds.image.tag }}"
+        image: "{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry "repository" .Values.upsertKineticaCrds.image.repository "tag" .Values.upsertKineticaCrds.image.tag) }}"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

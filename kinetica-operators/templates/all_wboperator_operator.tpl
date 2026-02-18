@@ -48,10 +48,9 @@ spec:
         - --enable-leader-election
         command:
         - /manager
-        image: '{{- if .Values.wbOperator.image.repository -}}{{- .Values.wbOperator.image.repository
-          -}}{{- else -}}{{- .Values.wbOperator.image.registry -}}/{{- .Values.wbOperator.image.image
-          -}}{{- end -}}{{- if (.Values.wbOperator.image.digest) -}} @{{- .Values.wbOperator.image.digest
-          -}}{{- else -}}:{{- .Values.wbOperator.image.tag -}}{{- end -}}'
+        image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
+          "repository" .Values.wbOperator.image.repository "tag" .Values.wbOperator.image.tag
+          "digest" .Values.wbOperator.image.digest) }}'
         name: manager
         resources:
           limits:

@@ -18,13 +18,16 @@ createNamespaces: true
 
 global:
   defaultStorageClass: ""
+  image:
+    registry: &imageRegistry "REPLACEMEREGISTRY"
+    tag: &imageTag "REPLACEMETAG"
 
 upsertKineticaCrds:
   enabled: false
   installRbac: false
   image:
-    repository: "REPLACEMEREGISTRY/upsert-kinetica-crds"
-    tag: "REPLACEMETAG"
+    repository: "upsert-kinetica-crds"
+    tag: *imageTag
 
 kubeRbacProxy:
   image:
@@ -46,14 +49,14 @@ otelCollector:
 
 fluentBit:
   image:
-    repository: "REPLACEMEREGISTRY/fluent-bit"
-    tag: "REPLACEMETAG"
+    repository: "fluent-bit"
+    tag: *imageTag
 
 wbOperator:
   install: true
   image:
-    repository: "REPLACEMEREGISTRY/workbench-operator"
-    tag: "REPLACEMETAG"
+    repository: "workbench-operator"
+    tag: *imageTag
     digest: ""
 
 dbOperator:
@@ -61,8 +64,8 @@ dbOperator:
   # optional: aadpodidbinding is required when environment is marketPlace and provider is aks
   aadpodidbinding: ""
   image:
-    repository: "REPLACEMEREGISTRY/kinetica-k8s-operator"
-    tag: "REPLACEMETAG"
+    repository: "kinetica-k8s-operator"
+    tag: *imageTag
     digest: ""
   monitoring:
     type: "otel"
@@ -115,8 +118,8 @@ ingressNginx:
   defaultBackend:
     enabled: true
     image:
-      repository: "REPLACEMEREGISTRY/kinetica-default-backend"
-      tag: "REPLACEMETAG"
+      image: "kinetica-default-backend"
+      tag: *imageTag
       digest: ""
     nodeSelector: {}
     extraEnvs:
@@ -124,8 +127,8 @@ ingressNginx:
         value: "false"
   controller:
     image:
-      repository: "REPLACEMEREGISTRY/ingress-nginx-controller"
-      tag: "REPLACEMETAG"
+      image: "ingress-nginx-controller"
+      tag: *imageTag
       digest: ""
       digestChroot: ""
     nodeSelector: {}
@@ -178,11 +181,12 @@ openldap:
   global:
     ldapPort: 1389
   image:
-    repository: "REPLACEMEREGISTRY/openldap"
-    tag: "REPLACEMETAG"
+    registry: *imageRegistry
+    repository: "openldap"
+    tag: *imageTag
   initContainers:
     - name: openldap-create-directory-structure
-      image: "REPLACEMEREGISTRY/openldap:REPLACEMETAG"
+      image: '{{ if .Values.image.registry }}{{ .Values.image.registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag }}'
       command:
         [
           "sh",
@@ -232,11 +236,11 @@ supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: "REPLACEMEREGISTRY"
+    registry: *imageRegistry
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: "REPLACEMETAG"
+    tag: *imageTag
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -257,9 +261,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: "REPLACEMEREGISTRY"
+      registry: *imageRegistry
       repository: kinetica-k8s-monitor
-      tag: "REPLACEMETAG"
+      tag: *imageTag
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -281,9 +285,9 @@ kineticacluster:
     port: 1389
   supportingImages:
     busybox:
-      registry: "REPLACEMEREGISTRY"
+      registry: *imageRegistry
       repository: busybox
-      tag: "REPLACEMETAG"
+      tag: *imageTag
   # stats:
   #   isEnabled: false
   gadmin:
@@ -320,13 +324,13 @@ kineticacluster:
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: "REPLACEMEREGISTRY"
+      registry: *imageRegistry
       repository: kinetica-k8s-cpu
-      tag: "REPLACEMETAG"
+      tag: *imageTag
     metricsRegistryRepositoryTag:
-      registry: "REPLACEMEREGISTRY"
+      registry: *imageRegistry
       repository: fluent-bit
-      tag: "REPLACEMETAG"
+      tag: *imageTag
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -375,9 +379,9 @@ workbench:
   storageClass: ""
   secureNetwork: false
   wbRegistryRepositoryTag:
-    registry: "REPLACEMEREGISTRY"
+    registry: *imageRegistry
     repository: workbench
-    tag: "REPLACEMETAG"
+    tag: *imageTag
 
 networkPolicies:
   install: false

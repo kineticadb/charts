@@ -137,7 +137,7 @@ spec:
           runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
-        image: "{{ .Values.kineticacluster.supportingImages.busybox.registry }}/{{ .Values.kineticacluster.supportingImages.busybox.repository }}:{{ .Values.kineticacluster.supportingImages.busybox.tag }}"
+        image: "{{ include "kinetica-operators.image" (dict "registry" (.Values.kineticacluster.supportingImages.busybox.registry | default .Values.global.image.registry) "repository" .Values.kineticacluster.supportingImages.busybox.repository "tag" .Values.kineticacluster.supportingImages.busybox.tag) }}"
         command: ["/bin/sh"]
         args: ["/mnt/scripts/delete-script.sh"]
         volumeMounts:

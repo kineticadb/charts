@@ -97,10 +97,9 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
-        image: '{{- if .Values.dbOperator.image.repository -}}{{- .Values.dbOperator.image.repository
-          -}}{{- else }}{{- .Values.dbOperator.image.registry -}}/{{- .Values.dbOperator.image.image
-          -}}{{- end -}}{{- if (.Values.dbOperator.image.digest) -}} @{{- .Values.dbOperator.image.digest
-          -}}{{- else -}}:{{- .Values.dbOperator.image.tag -}}{{- end -}}'
+        image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
+          "repository" .Values.dbOperator.image.repository "tag" .Values.dbOperator.image.tag
+          "digest" .Values.dbOperator.image.digest) }}'
         imagePullPolicy: IfNotPresent
         name: manager
         resources:
