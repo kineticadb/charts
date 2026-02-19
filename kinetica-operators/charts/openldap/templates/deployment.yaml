@@ -40,7 +40,7 @@ spec:
         {{- include "common.tplvalues.render" (dict "value" .Values.initContainers "context" $) | nindent 8 }}
       {{- end }}
         - name: init-ldap-org-name
-          image: "{{ if .Values.image.registry }}{{ .Values.image.registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{- $registry := .Values.image.registry | default .Values.global.image.registry -}}{{ if $registry }}{{ $registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.global.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
             - configMapRef:
@@ -87,7 +87,7 @@ spec:
               mountPath: "/tmp-certs"
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ if .Values.image.registry }}{{ .Values.image.registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{- $registry := .Values.image.registry | default .Values.global.image.registry -}}{{ if $registry }}{{ $registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.global.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: ldap-port

@@ -19,8 +19,8 @@ createNamespaces: true
 global:
   defaultStorageClass: ""
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-7.rc-10"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-7.dev-11"
 
 upsertKineticaCrds:
   enabled: false
@@ -181,12 +181,12 @@ openldap:
   global:
     ldapPort: 1389
   image:
-    registry: *imageRegistry
+    registry: ""
     repository: "openldap"
-    tag: *imageTag
+    tag: ""
   initContainers:
     - name: openldap-create-directory-structure
-      image: '{{ if .Values.image.registry }}{{ .Values.image.registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag }}'
+      image: '{{- $registry := .Values.image.registry | default .Values.global.image.registry -}}{{ if $registry }}{{ $registry }}/{{ end }}{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.global.image.tag }}'
       command:
         [
           "sh",
@@ -236,11 +236,11 @@ supportBundle:
   install: true
 "support-bundle":
   image:
-    registry: *imageRegistry
+    registry: ""
     repository: "support-bundle"
     digest: ""
     pullPolicy: IfNotPresent
-    tag: *imageTag
+    tag: ""
   configMap:
     # NOTE: Should match the 'db.name' of the KineticaCluster you are creating -
     #       affects the filename of the support-bundles that are created to create
@@ -261,9 +261,9 @@ kineticacluster:
     enabled: false
   hostManagerMonitor:
     monitorRegistryRepositoryTag:
-      registry: *imageRegistry
+      registry: ""
       repository: kinetica-k8s-monitor
-      tag: *imageTag
+      tag: ""
     livenessProbe:
       failureThreshold: 30
   # you may use nginx if you want the operator to create the nginx records
@@ -324,13 +324,13 @@ kineticacluster:
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
-      registry: *imageRegistry
+      registry: ""
       repository: kinetica-k8s-cpu
-      tag: *imageTag
+      tag: ""
     metricsRegistryRepositoryTag:
-      registry: *imageRegistry
+      registry: ""
       repository: fluent-bit
-      tag: *imageTag
+      tag: ""
     config:
       postgresProxy:
         enablePostgresProxy: true
@@ -379,9 +379,9 @@ workbench:
   storageClass: ""
   secureNetwork: false
   wbRegistryRepositoryTag:
-    registry: *imageRegistry
+    registry: ""
     repository: workbench
-    tag: *imageTag
+    tag: ""
 
 networkPolicies:
   install: false

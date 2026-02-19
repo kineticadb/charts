@@ -1,5 +1,8 @@
 global:
   imageRegistry: ""
+  image:
+    registry: ""
+    tag: ""
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
