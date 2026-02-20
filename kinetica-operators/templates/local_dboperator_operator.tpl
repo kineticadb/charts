@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 data:
-  {{ (.Files.Glob "files/configmaps/local-dboperator-operator-kineticaoperator-config-map.yaml").AsConfig }}
+  {{- (tpl (.Files.Get "files/configmaps/local-dboperator-operator-kineticaoperator-config-map.yaml") . | nindent 2)  }}
 
 ---
 apiVersion: apps/v1

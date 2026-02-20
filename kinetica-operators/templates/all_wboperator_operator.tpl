@@ -48,6 +48,9 @@ spec:
         - --enable-leader-election
         command:
         - /manager
+        env:
+        - name: WATCH_NAMESPACE
+          value: '{{ .Values.kineticacluster.namespace }}'
         image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
           "repository" .Values.wbOperator.image.repository "tag" .Values.wbOperator.image.tag
           "digest" .Values.wbOperator.image.digest) }}'
