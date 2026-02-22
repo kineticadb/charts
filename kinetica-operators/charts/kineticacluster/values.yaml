@@ -626,6 +626,12 @@
   # Default: "on-prem"
   infra: "on-prem"
 
+  # ingressClassName: (required: false)
+  # -- Override the IngressClass name on created Ingress resources.
+  # Use this for per-tenant ingress controllers (e.g., "nginx-tenant-1").
+  # When unset, defaults to the IngressController provider name.
+  # Type: string
+
   # ingressController: (required: false)
   # -- The Kubernetes Ingress Controller will be running on e.g. ingress-nginx,
   # Traefik, Ambassador, Gloo, Kong etc.

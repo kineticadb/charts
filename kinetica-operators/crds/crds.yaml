@@ -24299,6 +24299,12 @@ spec:
                 - gcp
                 - on-prem
                 type: string
+              ingressClassName:
+                description: |-
+                  Override the IngressClass name on created Ingress resources.
+                  Use this for per-tenant ingress controllers (e.g., "nginx-tenant-1").
+                  When unset, defaults to the IngressController provider name.
+                type: string
               ingressController:
                 default: nginx
                 description: The Kubernetes Ingress Controller will be running on
@@ -30444,6 +30450,12 @@ spec:
               image:
                 default: kinetica/workbench:latest
                 description: Image corresponds to the workbench image
+                type: string
+              ingressClassName:
+                description: |-
+                  Override the IngressClass name on created Ingress resources.
+                  Use this for per-tenant ingress controllers (e.g., "nginx-tenant-1").
+                  When unset, defaults to the IngressController provider name.
                 type: string
               ingressController:
                 default: nginx

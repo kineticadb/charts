@@ -20,7 +20,7 @@ global:
   defaultStorageClass: ""
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-7.dev-14"
+    tag: &imageTag "v7.2.3-7.dev-15"
 
 upsertKineticaCrds:
   enabled: false
