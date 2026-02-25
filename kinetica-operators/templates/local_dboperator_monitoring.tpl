@@ -224,7 +224,7 @@ metadata:
   name: otel-collector-conf
   namespace: '{{ .Release.Namespace }}'
 data:
-  {{- (tpl (.Files.Get "files/configmaps/local-dboperator-monitoring-otel-collector-conf.yaml") . | nindent 2)  }}
+  {{ (.Files.Glob "files/configmaps/local-dboperator-monitoring-otel-collector-conf.yaml").AsConfig }}
 {{- end }}
 ---
 ---

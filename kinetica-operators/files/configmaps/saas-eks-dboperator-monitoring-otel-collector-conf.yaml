@@ -18,10 +18,10 @@ otel-collector-config: |
     zpages: {}
   exporters:
     otlphttp:
-      endpoint: "simplest-collector.{{ .Release.Namespace }}.svc.cluster.local:4417"
+      endpoint: "simplest-collector.kinetica-system.svc.cluster.local:4417"
     prometheus:
       endpoint: 0.0.0.0:8889
-      namespace: "{{ .Release.Namespace }}"
+      namespace: "kinetica-system"
     logging:
   service:
     extensions: [health_check, zpages]

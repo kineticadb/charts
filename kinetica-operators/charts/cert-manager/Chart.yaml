@@ -24,3 +24,6 @@ name: cert-manager
 sources:
 - https://github.com/cert-manager/cert-manager
 version: v1.19.1
+dependencies:
+  - name: cert-manager-crds
+    condition: crds.enabled

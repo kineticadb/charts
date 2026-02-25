@@ -22,6 +22,8 @@ global:
     registry: &imageRegistry "REPLACEMEREGISTRY"
     tag: &imageTag "REPLACEMETAG"
 
+kubectlImage: "rancher/kubectl:v1.32.8"
+
 upsertKineticaCrds:
   enabled: false
   installRbac: false

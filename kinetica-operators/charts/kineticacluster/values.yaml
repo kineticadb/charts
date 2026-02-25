@@ -517,44 +517,7 @@
     # tolerations: (required: false)
     # -- Tolerations - Allow for tolerations to be supplied for the Deployment of the
     # DB.
-    # Type: array of object
-
-    tolerations: 
-      # effect: (required: false)
-      # -- Effect indicates the taint effect to match. Empty means match all taint
-      # effects.
-      # When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
-      # Type: string
-
-      # key: (required: false)
-      # -- Key is the taint key that the toleration applies to. Empty means match all
-      # taint keys.
-      # If the key is empty, operator must be Exists; this combination means to match
-      # all values and all keys.
-      # Type: string
-
-      # operator: (required: false)
-      # -- Operator represents a key's relationship to the value.
-      # Valid operators are Exists and Equal. Defaults to Equal.
-      # Exists is equivalent to wildcard for value, so that a pod can
-      # tolerate all taints of a particular category.
-      # Type: string
-
-      # tolerationSeconds: (required: false)
-      # -- TolerationSeconds represents the period of time the toleration (which must be
-      # of effect NoExecute, otherwise this field is ignored) tolerates the taint. By
-      # default,
-      # it is not set, which means tolerate the taint forever (do not evict). Zero and
-      # negative values will be treated as 0 (evict immediately) by the system.
-      # Type: integer
-      # Format: int64
-
-      # value: (required: false)
-      # -- Value is the taint value the toleration matches to.
-      # If the operator is Exists, the value should be empty, otherwise just a regular
-      # string.
-      # Type: string
-
+    # Type: object
 
     # useTShirt: (required: false)
     # -- Whether to use T-Shirt sizing for Marketplace
@@ -625,12 +588,6 @@
   # Type: string
   # Default: "on-prem"
   infra: "on-prem"
-
-  # ingressClassName: (required: false)
-  # -- Override the IngressClass name on created Ingress resources.
-  # Use this for per-tenant ingress controllers (e.g., "nginx-tenant-1").
-  # When unset, defaults to the IngressController provider name.
-  # Type: string
 
   # ingressController: (required: false)
   # -- The Kubernetes Ingress Controller will be running on e.g. ingress-nginx,

@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-from-{{ .Release.Namespace }}
+  name: allow-from-kinetica-system
   namespace: {{ .Values.kineticacluster.namespace }}
 spec:
   policyTypes:
@@ -12,12 +12,12 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+              kubernetes.io/metadata.name: kinetica-system
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-egress-to-{{ .Values.kineticacluster.namespace }}
+  name: allow-egress-to-gpudb
   namespace: {{ .Release.Namespace }}
 spec:
   policyTypes:
@@ -26,6 +26,6 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: {{ .Values.kineticacluster.namespace }}
+              kubernetes.io/metadata.name: gpudb
 
 {{ end }}

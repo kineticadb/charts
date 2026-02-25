@@ -18,6 +18,9 @@
         "cainjector": {
           "$ref": "#/$defs/helm-values.cainjector"
         },
+        "cert-manager-crds": {
+          "$ref": "#/$defs/helm-values.cert-manager-crds"
+        },
         "clusterResourceNamespace": {
           "$ref": "#/$defs/helm-values.clusterResourceNamespace"
         },
@@ -571,6 +574,10 @@
       "description": "Additional volumes to add to the cert-manager controller pod.",
       "items": {},
       "type": "array"
+    },
+    "helm-values.cert-manager-crds": {
+      "description": "Values to pass to the cert-manager-crds subchart.",
+      "type": "object"
     },
     "helm-values.clusterResourceNamespace": {
       "default": "",

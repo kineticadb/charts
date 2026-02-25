@@ -19,8 +19,10 @@ createNamespaces: true
 global:
   defaultStorageClass: ""
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-7.rc-17"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-7.dev-18"
+
+kubectlImage: "rancher/kubectl:v1.32.8"
 
 upsertKineticaCrds:
   enabled: false

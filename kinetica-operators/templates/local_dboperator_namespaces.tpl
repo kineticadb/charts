@@ -67,8 +67,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-    app: '{{ .Values.kineticacluster.namespace }}'
-  name: '{{ .Values.kineticacluster.namespace }}'
+    app: gpudb
+  name: gpudb
   namespace: '{{ .Values.kineticacluster.namespace }}'
 rules:
 - apiGroups:
@@ -106,13 +106,13 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-    app: '{{ .Values.kineticacluster.namespace }}'
-  name: '{{ .Values.kineticacluster.namespace }}'
+    app: gpudb
+  name: gpudb
   namespace: '{{ .Values.kineticacluster.namespace }}'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: '{{ .Values.kineticacluster.namespace }}'
+  name: gpudb
 subjects:
 - kind: ServiceAccount
   name: default
