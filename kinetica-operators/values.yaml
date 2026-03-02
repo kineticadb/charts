@@ -20,7 +20,7 @@ global:
   defaultStorageClass: ""
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-7.dev-18"
+    tag: &imageTag "v7.2.3-7.dev-19"
 
 kubectlImage: "rancher/kubectl:v1.32.8"
 

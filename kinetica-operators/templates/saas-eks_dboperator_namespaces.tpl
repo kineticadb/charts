@@ -40,25 +40,6 @@ metadata:
 {{ end }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "{{ .Release.Namespace }}") }}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  annotations:
-    helm.sh/hook: pre-install
-    helm.sh/hook-weight: '-15'
-    helm.sh/resource-policy: keep
-  name: '{{ .Release.Namespace }}'
-  labels:
-    app.kubernetes.io/name: kinetica-operators
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-{{ end }}
-{{ end }}
-
-{{ if .Values.createNamespaces }}
 {{ if not (lookup "v1" "Namespace" "" "nginx") }}
 ---
 apiVersion: v1
