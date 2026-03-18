@@ -1,4 +1,4 @@
-{{- define "kinetica-operators.local-dboperator-operator" }}
+{{- define "kinetica-operators.eks-dboperator-operator" }}
 
 ---
 apiVersion: v1
@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 data:
-  {{- (tpl (.Files.Get "files/configmaps/local-dboperator-operator-kineticaoperator-config-map.yaml") . | nindent 2)  }}
+  {{- (tpl (.Files.Get "files/configmaps/eks-dboperator-operator-kineticaoperator-config-map.yaml") . | nindent 2)  }}
 
 ---
 apiVersion: apps/v1
@@ -38,8 +38,6 @@ spec:
       control-plane: controller-manager
   template:
     metadata:
-      annotations:
-        sidecar.opentelemetry.io/inject: 'true'
       labels:
         app: gpudb
         app.kinetica.com/pool: infra

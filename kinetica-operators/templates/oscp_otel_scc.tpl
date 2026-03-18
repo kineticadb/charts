@@ -45,7 +45,7 @@ seccompProfiles:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:kinetica-system:opentelemetry-collector
+- system:serviceaccount:{{ .Release.Namespace }}:opentelemetry-collector
 volumes:
 - '*'
 

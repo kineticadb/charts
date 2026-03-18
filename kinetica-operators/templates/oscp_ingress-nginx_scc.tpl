@@ -42,9 +42,9 @@ seccompProfiles:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:kinetica-system:ingress-nginx-admission
-- system:serviceaccount:kinetica-system:ingress-nginx
-- system:serviceaccount:kinetica-system:ingress-nginx-backend
+- system:serviceaccount:{{ .Release.Namespace }}:ingress-nginx-admission
+- system:serviceaccount:{{ .Release.Namespace }}:ingress-nginx
+- system:serviceaccount:{{ .Release.Namespace }}:ingress-nginx-backend
 volumes:
 - '*'
 {{- end }}

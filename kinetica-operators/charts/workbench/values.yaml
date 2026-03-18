@@ -41,6 +41,12 @@
   # Default: "kinetica/workbench:latest"
   image: "kinetica/workbench:latest"
 
+  # ingressClassName: (required: false)
+  # -- Override the IngressClass name on created Ingress resources.
+  # Use this for per-tenant ingress controllers (e.g., "nginx-tenant-1").
+  # When unset, defaults to the IngressController provider name.
+  # Type: string
+
   # ingressController: (required: false)
   # -- Specify the type of ingress controller to use on the Workbench
   # Type: string
