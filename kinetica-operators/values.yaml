@@ -19,8 +19,8 @@ createNamespaces: true
 global:
   defaultStorageClass: ""
   image:
-    registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-11.dev-3"
+    registry: &imageRegistry "docker.io/kineticastagingcloud"
+    tag: &imageTag "v7.2.3-11.rc-3"
 
 upsertKineticaCrds:
   enabled: false
