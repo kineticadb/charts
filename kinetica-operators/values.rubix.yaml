@@ -59,6 +59,7 @@ kineticacluster:
                 storageClassName: null
     letsEncrypt:
       enabled: false
+    publicTls: true
   install: true
   monitoring:
     syslog:
@@ -94,6 +95,8 @@ otelCollector:
   install: false
   installRbac: false
 
+provider: kind
+
 support-bundle:
   configMap:
     cluster: kinetica-apollo-entity
@@ -107,5 +110,6 @@ upsertKineticaCrds:
 workbench:
   letsEncrypt:
     enabled: false
+  secureNetwork: true
   storageClass: null
   useHttps: true
