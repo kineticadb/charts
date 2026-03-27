@@ -240,8 +240,8 @@ extra:
   homepage: https://www.kinetica.com
   version:
     provider: mike
-  kinetica_full_version: v7.2.3-7.ga-17
-  helm_chart_version: 72.3.7
+  kinetica_full_version: v7.2.3-11.ga-3
+  helm_chart_version: 72.3.11
 
 watch:
     - includes
