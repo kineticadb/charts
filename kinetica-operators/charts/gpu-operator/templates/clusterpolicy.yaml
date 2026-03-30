@@ -28,7 +28,7 @@ spec:
       repository: {{ .Values.operator.initContainer.repository }}
       {{- end }}
       {{- if .Values.operator.initContainer.image }}
-      image: {{ .Values.operator.initContainer.image }}
+      image: '{{ .Values.operator.initContainer.image }}'
       {{- end }}
       {{- if .Values.operator.initContainer.version }}
       version: {{ .Values.operator.initContainer.version | quote }}
@@ -67,7 +67,7 @@ spec:
     repository: {{ .Values.validator.repository }}
     {{- end }}
     {{- if .Values.validator.image }}
-    image: {{ .Values.validator.image }}
+    image: '{{ .Values.validator.image }}'
     {{- end }}
     version: {{ .Values.validator.version | default .Chart.AppVersion | quote }}
     {{- if .Values.validator.imagePullPolicy }}
@@ -142,7 +142,7 @@ spec:
     repository: {{ .Values.driver.repository }}
     {{- end }}
     {{- if .Values.driver.image }}
-    image: {{ .Values.driver.image }}
+    image: '{{ .Values.driver.image }}'
     {{- end }}
     {{- if .Values.driver.version }}
     version: {{ .Values.driver.version | quote }}
@@ -170,7 +170,7 @@ spec:
       repository: {{ .Values.driver.manager.repository }}
       {{- end }}
       {{- if .Values.driver.manager.image }}
-      image: {{ .Values.driver.manager.image }}
+      image: '{{ .Values.driver.manager.image }}'
       {{- end }}
       {{- if .Values.driver.manager.version }}
       version: {{ .Values.driver.manager.version | quote }}
@@ -234,7 +234,7 @@ spec:
     repository: {{ .Values.vgpuManager.repository }}
     {{- end }}
     {{- if .Values.vgpuManager.image }}
-    image: {{ .Values.vgpuManager.image }}
+    image: '{{ .Values.vgpuManager.image }}'
     {{- end }}
     {{- if .Values.vgpuManager.version }}
     version: {{ .Values.vgpuManager.version | quote }}
@@ -259,7 +259,7 @@ spec:
       repository: {{ .Values.vgpuManager.driverManager.repository }}
       {{- end }}
       {{- if .Values.vgpuManager.driverManager.image }}
-      image: {{ .Values.vgpuManager.driverManager.image }}
+      image: '{{ .Values.vgpuManager.driverManager.image }}'
       {{- end }}
       {{- if .Values.vgpuManager.driverManager.version }}
       version: {{ .Values.vgpuManager.driverManager.version | quote }}
@@ -277,7 +277,7 @@ spec:
     repository: {{ .Values.kataManager.repository }}
     {{- end }}
     {{- if .Values.kataManager.image }}
-    image: {{ .Values.kataManager.image }}
+    image: '{{ .Values.kataManager.image }}'
     {{- end }}
     {{- if .Values.kataManager.version }}
     version: {{ .Values.kataManager.version | quote }}
@@ -303,7 +303,7 @@ spec:
     repository: {{ .Values.vfioManager.repository }}
     {{- end }}
     {{- if .Values.vfioManager.image }}
-    image: {{ .Values.vfioManager.image }}
+    image: '{{ .Values.vfioManager.image }}'
     {{- end }}
     {{- if .Values.vfioManager.version }}
     version: {{ .Values.vfioManager.version | quote }}
@@ -328,7 +328,7 @@ spec:
       repository: {{ .Values.vfioManager.driverManager.repository }}
       {{- end }}
       {{- if .Values.vfioManager.driverManager.image }}
-      image: {{ .Values.vfioManager.driverManager.image }}
+      image: '{{ .Values.vfioManager.driverManager.image }}'
       {{- end }}
       {{- if .Values.vfioManager.driverManager.version }}
       version: {{ .Values.vfioManager.driverManager.version | quote }}
@@ -345,7 +345,7 @@ spec:
     repository: {{ .Values.vgpuDeviceManager.repository }}
     {{- end }}
     {{- if .Values.vgpuDeviceManager.image }}
-    image: {{ .Values.vgpuDeviceManager.image }}
+    image: '{{ .Values.vgpuDeviceManager.image }}'
     {{- end }}
     {{- if .Values.vgpuDeviceManager.version }}
     version: {{ .Values.vgpuDeviceManager.version | quote }}
@@ -375,7 +375,7 @@ spec:
     repository: {{ .Values.ccManager.repository }}
     {{- end }}
     {{- if .Values.ccManager.image }}
-    image: {{ .Values.ccManager.image }}
+    image: '{{ .Values.ccManager.image }}'
     {{- end }}
     {{- if .Values.ccManager.version }}
     version: {{ .Values.ccManager.version | quote }}
@@ -401,7 +401,7 @@ spec:
     repository: {{ .Values.toolkit.repository }}
     {{- end }}
     {{- if .Values.toolkit.image }}
-    image: {{ .Values.toolkit.image }}
+    image: '{{ .Values.toolkit.image }}'
     {{- end }}
     {{- if .Values.toolkit.version }}
     version: {{ .Values.toolkit.version | quote }}
@@ -427,7 +427,7 @@ spec:
     repository: {{ .Values.devicePlugin.repository }}
     {{- end }}
     {{- if .Values.devicePlugin.image }}
-    image: {{ .Values.devicePlugin.image }}
+    image: '{{ .Values.devicePlugin.image }}'
     {{- end }}
     {{- if .Values.devicePlugin.version }}
     version: {{ .Values.devicePlugin.version | quote }}
@@ -458,7 +458,7 @@ spec:
     repository: {{ .Values.dcgm.repository }}
     {{- end }}
     {{- if .Values.dcgm.image }}
-    image: {{ .Values.dcgm.image }}
+    image: '{{ .Values.dcgm.image }}'
     {{- end }}
     {{- if .Values.dcgm.version }}
     version: {{ .Values.dcgm.version | quote }}
@@ -487,7 +487,7 @@ spec:
     repository: {{ .Values.dcgmExporter.repository }}
     {{- end }}
     {{- if .Values.dcgmExporter.image }}
-    image: {{ .Values.dcgmExporter.image }}
+    image: '{{ .Values.dcgmExporter.image }}'
     {{- end }}
     {{- if .Values.dcgmExporter.version }}
     version: {{ .Values.dcgmExporter.version | quote }}
@@ -519,7 +519,7 @@ spec:
     repository: {{ .Values.gfd.repository }}
     {{- end }}
     {{- if .Values.gfd.image }}
-    image: {{ .Values.gfd.image }}
+    image: '{{ .Values.gfd.image }}'
     {{- end }}
     {{- if .Values.gfd.version }}
     version: {{ .Values.gfd.version | quote }}
@@ -545,7 +545,7 @@ spec:
     repository: {{ .Values.migManager.repository }}
     {{- end }}
     {{- if .Values.migManager.image }}
-    image: {{ .Values.migManager.image }}
+    image: '{{ .Values.migManager.image }}'
     {{- end }}
     {{- if .Values.migManager.version }}
     version: {{ .Values.migManager.version | quote }}
@@ -577,7 +577,7 @@ spec:
     repository: {{ .Values.nodeStatusExporter.repository }}
     {{- end }}
     {{- if .Values.nodeStatusExporter.image }}
-    image: {{ .Values.nodeStatusExporter.image }}
+    image: '{{ .Values.nodeStatusExporter.image }}'
     {{- end }}
     version: {{ .Values.nodeStatusExporter.version | default .Chart.AppVersion | quote }}
     {{- if .Values.nodeStatusExporter.imagePullPolicy }}
@@ -602,7 +602,7 @@ spec:
     repository: {{ .Values.gds.repository }}
     {{- end }}
     {{- if .Values.gds.image }}
-    image: {{ .Values.gds.image }}
+    image: '{{ .Values.gds.image }}'
     {{- end }}
     version: {{ .Values.gds.version | quote }}
     {{- if .Values.gds.imagePullPolicy }}
@@ -631,7 +631,7 @@ spec:
     repository: {{ .Values.sandboxDevicePlugin.repository }}
     {{- end }}
     {{- if .Values.sandboxDevicePlugin.image }}
-    image: {{ .Values.sandboxDevicePlugin.image }}
+    image: '{{ .Values.sandboxDevicePlugin.image }}'
     {{- end }}
     {{- if .Values.sandboxDevicePlugin.version }}
     version: {{ .Values.sandboxDevicePlugin.version | quote }}

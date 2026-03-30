@@ -1698,7 +1698,7 @@ gpudb_conf.tmpl: |
   event_server_port = {{ if .Cluster.Spec.GPUDBCluster.Config.Events.Port }}{{ .Cluster.Spec.GPUDBCluster.Config.Events.Port }}{{ else }}2003{{ end }}
 
   # Enable running promtail to parse and send logs to the event_server_address.
-  enable_promtail = false
+  enable_promtail = {{ .Cluster.Spec.GPUDBCluster.Config.Events.EnablePromtail }}
 
   # Alertmanager server address and port.
   alertmanager_address = {{ .Cluster.Spec.GPUDBCluster.Config.AlertManager.IPAddress }}

@@ -52,7 +52,7 @@ supportBundle:
   install: true
 
 upsertKineticaCrds:
-  enable: false
+  enabled: false
 
 workbench:
   storageClass: local-path

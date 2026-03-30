@@ -3645,6 +3645,11 @@ spec:
                           port: 9080
                         description: EventConfig
                         properties:
+                          enablePromtail:
+                            default: false
+                            description: Enable running promtail to parse and send
+                              logs to the event_server_address.
+                            type: boolean
                           internal:
                             default: true
                             description: |-
