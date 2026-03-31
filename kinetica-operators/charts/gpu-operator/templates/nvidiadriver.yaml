@@ -4,9 +4,9 @@ kind: NVIDIADriver
 metadata:
   name: default
 spec:
-  repository: {{ .Values.driver.repository }}
+  repository: '{{ .Values.driver.repository }}'
   image: '{{ .Values.driver.image }}'
-  version: {{ .Values.driver.version }}
+  version: '{{ .Values.driver.version }}'
   useOpenKernelModules: {{ .Values.driver.useOpenKernelModules }}
   usePrecompiled: {{ .Values.driver.usePrecompiled }}
   driverType: {{ .Values.driver.nvidiaDriverCRD.driverType | default "gpu" }}
@@ -65,7 +65,7 @@ spec:
   gds:
     enabled: {{ .Values.gds.enabled }}
     {{- if .Values.gds.repository }}
-    repository: {{ .Values.gds.repository }}
+    repository: '{{ .Values.gds.repository }}'
     {{- end }}
     {{- if .Values.gds.image }}
     image: '{{ .Values.gds.image }}'

@@ -25,7 +25,7 @@ spec:
     {{- if .Values.operator.initContainer }}
     initContainer:
       {{- if .Values.operator.initContainer.repository }}
-      repository: {{ .Values.operator.initContainer.repository }}
+      repository: '{{ .Values.operator.initContainer.repository }}'
       {{- end }}
       {{- if .Values.operator.initContainer.image }}
       image: '{{ .Values.operator.initContainer.image }}'
@@ -64,7 +64,7 @@ spec:
     {{- end }}
   validator:
     {{- if .Values.validator.repository }}
-    repository: {{ .Values.validator.repository }}
+    repository: '{{ .Values.validator.repository }}'
     {{- end }}
     {{- if .Values.validator.image }}
     image: '{{ .Values.validator.image }}'
@@ -139,7 +139,7 @@ spec:
     useOpenKernelModules: {{ .Values.driver.useOpenKernelModules }}
     usePrecompiled: {{ .Values.driver.usePrecompiled }}
     {{- if .Values.driver.repository }}
-    repository: {{ .Values.driver.repository }}
+    repository: '{{ .Values.driver.repository }}'
     {{- end }}
     {{- if .Values.driver.image }}
     image: '{{ .Values.driver.image }}'
@@ -167,7 +167,7 @@ spec:
       useHostMofed: {{ .Values.driver.rdma.useHostMofed }}
     manager:
       {{- if .Values.driver.manager.repository }}
-      repository: {{ .Values.driver.manager.repository }}
+      repository: '{{ .Values.driver.manager.repository }}'
       {{- end }}
       {{- if .Values.driver.manager.image }}
       image: '{{ .Values.driver.manager.image }}'
@@ -231,7 +231,7 @@ spec:
   vgpuManager:
     enabled: {{ .Values.vgpuManager.enabled }}
     {{- if .Values.vgpuManager.repository }}
-    repository: {{ .Values.vgpuManager.repository }}
+    repository: '{{ .Values.vgpuManager.repository }}'
     {{- end }}
     {{- if .Values.vgpuManager.image }}
     image: '{{ .Values.vgpuManager.image }}'
@@ -256,7 +256,7 @@ spec:
     {{- end }}
     driverManager:
       {{- if .Values.vgpuManager.driverManager.repository }}
-      repository: {{ .Values.vgpuManager.driverManager.repository }}
+      repository: '{{ .Values.vgpuManager.driverManager.repository }}'
       {{- end }}
       {{- if .Values.vgpuManager.driverManager.image }}
       image: '{{ .Values.vgpuManager.driverManager.image }}'
@@ -274,7 +274,7 @@ spec:
     enabled: {{ .Values.kataManager.enabled }}
     config: {{ toYaml .Values.kataManager.config | nindent 6 }}
     {{- if .Values.kataManager.repository }}
-    repository: {{ .Values.kataManager.repository }}
+    repository: '{{ .Values.kataManager.repository }}'
     {{- end }}
     {{- if .Values.kataManager.image }}
     image: '{{ .Values.kataManager.image }}'
@@ -300,7 +300,7 @@ spec:
   vfioManager:
     enabled: {{ .Values.vfioManager.enabled }}
     {{- if .Values.vfioManager.repository }}
-    repository: {{ .Values.vfioManager.repository }}
+    repository: '{{ .Values.vfioManager.repository }}'
     {{- end }}
     {{- if .Values.vfioManager.image }}
     image: '{{ .Values.vfioManager.image }}'
@@ -325,7 +325,7 @@ spec:
     {{- end }}
     driverManager:
       {{- if .Values.vfioManager.driverManager.repository }}
-      repository: {{ .Values.vfioManager.driverManager.repository }}
+      repository: '{{ .Values.vfioManager.driverManager.repository }}'
       {{- end }}
       {{- if .Values.vfioManager.driverManager.image }}
       image: '{{ .Values.vfioManager.driverManager.image }}'
@@ -342,7 +342,7 @@ spec:
   vgpuDeviceManager:
     enabled: {{ .Values.vgpuDeviceManager.enabled }}
     {{- if .Values.vgpuDeviceManager.repository }}
-    repository: {{ .Values.vgpuDeviceManager.repository }}
+    repository: '{{ .Values.vgpuDeviceManager.repository }}'
     {{- end }}
     {{- if .Values.vgpuDeviceManager.image }}
     image: '{{ .Values.vgpuDeviceManager.image }}'
@@ -372,7 +372,7 @@ spec:
     enabled: {{ .Values.ccManager.enabled }}
     defaultMode: {{ .Values.ccManager.defaultMode | quote }}
     {{- if .Values.ccManager.repository }}
-    repository: {{ .Values.ccManager.repository }}
+    repository: '{{ .Values.ccManager.repository }}'
     {{- end }}
     {{- if .Values.ccManager.image }}
     image: '{{ .Values.ccManager.image }}'
@@ -398,7 +398,7 @@ spec:
   toolkit:
     enabled: {{ .Values.toolkit.enabled }}
     {{- if .Values.toolkit.repository }}
-    repository: {{ .Values.toolkit.repository }}
+    repository: '{{ .Values.toolkit.repository }}'
     {{- end }}
     {{- if .Values.toolkit.image }}
     image: '{{ .Values.toolkit.image }}'
@@ -424,7 +424,7 @@ spec:
   devicePlugin:
     enabled: {{ .Values.devicePlugin.enabled }}
     {{- if .Values.devicePlugin.repository }}
-    repository: {{ .Values.devicePlugin.repository }}
+    repository: '{{ .Values.devicePlugin.repository }}'
     {{- end }}
     {{- if .Values.devicePlugin.image }}
     image: '{{ .Values.devicePlugin.image }}'
@@ -455,7 +455,7 @@ spec:
   dcgm:
     enabled: {{ .Values.dcgm.enabled }}
     {{- if .Values.dcgm.repository }}
-    repository: {{ .Values.dcgm.repository }}
+    repository: '{{ .Values.dcgm.repository }}'
     {{- end }}
     {{- if .Values.dcgm.image }}
     image: '{{ .Values.dcgm.image }}'
@@ -484,7 +484,7 @@ spec:
   dcgmExporter:
     enabled: {{ .Values.dcgmExporter.enabled }}
     {{- if .Values.dcgmExporter.repository }}
-    repository: {{ .Values.dcgmExporter.repository }}
+    repository: '{{ .Values.dcgmExporter.repository }}'
     {{- end }}
     {{- if .Values.dcgmExporter.image }}
     image: '{{ .Values.dcgmExporter.image }}'
@@ -516,7 +516,7 @@ spec:
   gfd:
     enabled: {{ .Values.gfd.enabled }}
     {{- if .Values.gfd.repository }}
-    repository: {{ .Values.gfd.repository }}
+    repository: '{{ .Values.gfd.repository }}'
     {{- end }}
     {{- if .Values.gfd.image }}
     image: '{{ .Values.gfd.image }}'
@@ -542,7 +542,7 @@ spec:
   migManager:
     enabled: {{ .Values.migManager.enabled }}
     {{- if .Values.migManager.repository }}
-    repository: {{ .Values.migManager.repository }}
+    repository: '{{ .Values.migManager.repository }}'
     {{- end }}
     {{- if .Values.migManager.image }}
     image: '{{ .Values.migManager.image }}'
@@ -574,7 +574,7 @@ spec:
   nodeStatusExporter:
     enabled: {{ .Values.nodeStatusExporter.enabled }}
     {{- if .Values.nodeStatusExporter.repository }}
-    repository: {{ .Values.nodeStatusExporter.repository }}
+    repository: '{{ .Values.nodeStatusExporter.repository }}'
     {{- end }}
     {{- if .Values.nodeStatusExporter.image }}
     image: '{{ .Values.nodeStatusExporter.image }}'
@@ -599,7 +599,7 @@ spec:
   gds:
     enabled: {{ .Values.gds.enabled }}
     {{- if .Values.gds.repository }}
-    repository: {{ .Values.gds.repository }}
+    repository: '{{ .Values.gds.repository }}'
     {{- end }}
     {{- if .Values.gds.image }}
     image: '{{ .Values.gds.image }}'
@@ -628,7 +628,7 @@ spec:
     enabled: {{ .Values.sandboxDevicePlugin.enabled }}
     {{- end }}
     {{- if .Values.sandboxDevicePlugin.repository }}
-    repository: {{ .Values.sandboxDevicePlugin.repository }}
+    repository: '{{ .Values.sandboxDevicePlugin.repository }}'
     {{- end }}
     {{- if .Values.sandboxDevicePlugin.image }}
     image: '{{ .Values.sandboxDevicePlugin.image }}'
