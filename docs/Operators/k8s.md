@@ -55,11 +55,20 @@ For the generic Kubernetes install use the following values file without modific
 wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k8s.yaml
 ```
 
-### 3. Determine the following prior to the chart install
+### 3. Create the required Kubernetes Secrets
 
-(a) Obtain a LICENSE-KEY as described in the introduction above.
-(b) Choose a PASSWORD for the initial administrator user (Note: the default in the chart for this user is `kadmin` but this is configurable). Non-ASCII characters and typographical symbols in the password must be escaped with a "\". For example, `--set dbAdminUser.password="MyPassword\!"`
-(c) As storage class name varies between K8s flavor and/or there can be multiple, this must be prescribed in the chart installation. Obtain DEFAULT-STORAGE-CLASS name with the command:
+Create the database namespace and the required secrets before installing. See the full
+[Preparation & Prerequisites](../GettingStarted/preparation_and_prerequisites.md#create-the-required-kubernetes-secrets) guide for details.
+
+```bash
+kubectl create namespace gpudb
+kubectl create secret generic kinetica-license --from-literal=license="LICENSE-KEY" -n gpudb
+kubectl create secret generic kinetica-admin-credentials --from-literal=username="kadmin" --from-literal=password="PASSWORD" -n gpudb
+```
+
+### 4. Determine the storage class
+
+As storage class name varies between K8s flavor and/or there can be multiple, this must be prescribed in the chart installation. Obtain DEFAULT-STORAGE-CLASS name with the command:
 
 ```bash
 kubectl get sc -o name 
@@ -67,21 +76,21 @@ kubectl get sc -o name
 
 use the name found after the /, For example, in `"storageclass.storage.k8s.io/TheName"` use "TheName" as the parameter.
 
-### 4. Install the helm chart
+### 5. Install the helm chart
 
-Run the following Helm install command after substituting values from section 3 above:
+Run the following Helm install command after substituting values from the steps above:
 
 ```bash
 helm -n kinetica-system install \
 kinetica-operators kinetica-operators/kinetica-operators \
 --create-namespace \
 --values values.onPrem.k8s.yaml \
---set kineticacluster.gpudbCluster.license="LICENSE-KEY" \
---set dbAdminUser.password="PASSWORD" \
+--set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" \
+--set dbAdminUser.adminUserSecretName="kinetica-admin-credentials" \
 --set global.defaultStorageClass="DEFAULT-STORAGE-CLASS"
 ```
 
-### 5. Check installation progress
+### 6. Check installation progress
 
 After a few moments, follow the progression of the main database pod startup with:
 
@@ -91,7 +100,7 @@ kubectl -n gpudb get po gpudb-0 -w
 
 until it reaches `"gpudb-0  3/3  Running"` at which point the database should be ready and all other software installed in the cluster. You may have to run this command in a different terminal if the `helm` command from step 4 has not yet returned to the system prompt. Once running, you can quit this kubectl watch command using *ctrl-c*.
 
-### 6. Accessing the Kinetica installation
+### 7. Accessing the Kinetica installation
 
 ## (Optional) Install a development chart version
 
@@ -101,7 +110,7 @@ Find all alternative chart versions with:
 helm search repo kinetica-operators --devel --versions
 ```
 
-Then append `--devel --version [CHART-DEVEL-VERSION]` to the end of the Helm install command in section 4 above.
+Then append `--devel --version [CHART-DEVEL-VERSION]` to the end of the Helm install command in section 5 above.
 
 ## K8s Flavour specific notes
 

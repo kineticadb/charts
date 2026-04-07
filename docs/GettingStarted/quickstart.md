@@ -59,10 +59,16 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     --8<-- "docs/GettingStarted/local_kinetica_etc_hosts.md"
 
-    ``` sh title="Get & install the Kinetica-Operators Chart"
+    ``` sh title="Get the values file & create secrets"
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.kind.yaml
 
-    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+    kubectl create namespace gpudb
+    kubectl create secret generic kinetica-license --from-literal=license="your_license_key" -n gpudb
+    kubectl create secret generic kinetica-admin-credentials --from-literal=username="kadmin" --from-literal=password="Kinetica1234!" -n gpudb
+    ```
+
+    ``` sh title="Install the Kinetica-Operators Chart"
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.kind.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials"
     ```
     
     or if you have been asked by the Kinetica Support team to try a development version
@@ -71,7 +77,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     helm search repo kinetica-operators --devel --versions
 
-    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version {{helm_chart_version}}
+    helm -n kinetica-system upgrade -i kinetica-operators kinetica-operators/kinetica-operators/ --create-namespace --values values.onPrem.kind.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials" --devel --version {{helm_chart_version}}
     ```
  
     !!! success "Accessing the Workbench"
@@ -128,10 +134,16 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 
     --8<-- "docs/GettingStarted/helm_repo_add.md"
 
-    ``` shell title="Download Template values.yaml" 
+    ``` shell title="Download values file & create secrets" 
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k3s.yaml
-    
-    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+
+    kubectl create namespace gpudb
+    kubectl create secret generic kinetica-license --from-literal=license="your_license_key" -n gpudb
+    kubectl create secret generic kinetica-admin-credentials --from-literal=username="kadmin" --from-literal=password="Kinetica1234!" -n gpudb
+    ```
+
+    ``` shell title="Install the Kinetica-Operators Chart"
+    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials"
     ```
 
     or if you have been asked by the Kinetica Support team to try a development version
@@ -139,7 +151,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     ``` sh title="Using a development version"
     helm search repo kinetica-operators --devel --versions
     
-    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
+    helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials" --devel --version 7.2.0-2.rc-2
     ```
 
     #### K3S - Install the  Kinetica-Operators Chart (GPU)
@@ -150,7 +162,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
     ``` sh title="k3s GPU Installation"
     wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k3s.gpu.yaml
     
-    helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+    helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials"
     ```
     
     !!! success "Accessing the Workbench"
@@ -165,7 +177,7 @@ For the quickstart we have examples for [Kind](https://kind.sigs.k8s.io "Kind Ho
 ---
 
 !!! note "Default User"
-    Username as per the values file mentioned above is `kadmin` and password is `Kinetica1234!`
+    Username as per the secrets created above is `kadmin` and password is as specified in the `kinetica-admin-credentials` secret.
 
 ## Connecting to the Cluster
 

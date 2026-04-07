@@ -14,7 +14,8 @@ Checks & steps to ensure a smooth installation.
     A product license key will be required for install.
     Please contact [Kinetica Support](mailto:support@kinetica.com "Kinetica Support Email") to request a trial key.
     
-    Failing to provide a license key at installation time will prevent the DB from starting.
+    The license key must be provided as a pre-created Kubernetes secret before installing the chart.
+    See [Create the required Kubernetes Secrets](#create-the-required-kubernetes-secrets) below.
 
 ## Preparation and prerequisites
 
@@ -140,18 +141,60 @@ Advanced users with specific requirements may need to adjust parameters in this 
 wget https://raw.githubusercontent.com/kineticadb/charts/{{helm_chart_version}}/kinetica-operators/values.onPrem.k8s.yaml
 ```
 
-### Determine the following prior to the chart install
+### Create the required Kubernetes Secrets
 
-!!! info inline end "Default Admin User"
-    the default admin user in the Helm chart is `kadmin` but this is configurable.
-    Non-ASCII characters and typographical symbols in the password must be escaped with a "\". For
-    example, `--set dbAdminUser.password="MyPassword\!"`
+Before installing, create the database namespace and the required secrets.
 
-1. Obtain a LICENSE-KEY as described in the introduction above.
-2. Choose a PASSWORD for the initial administrator user
-3. As the storage class name varies between K8s flavor and/or there can be multiple,
-   this must be prescribed in the chart installation.
-   Obtain the DEFAULT-STORAGE-CLASS name with the command:
+#### 1. Create the database namespace
+
+``` sh title="Create the database namespace"
+kubectl create namespace gpudb
+```
+
+#### 2. License Secret
+
+A product license key is required. Contact [Kinetica Support](mailto:support@kinetica.com) to obtain one.
+
+``` sh title="Create the license secret"
+kubectl create secret generic kinetica-license \
+  --from-literal=license="YOUR-LICENSE-KEY" \
+  -n gpudb
+```
+
+#### 3. Admin User Credentials Secret
+
+Create a secret containing the initial administrator username and password.
+
+``` sh title="Create the admin credentials secret"
+kubectl create secret generic kinetica-admin-credentials \
+  --from-literal=username="kadmin" \
+  --from-literal=password="YOUR-PASSWORD" \
+  -n gpudb
+```
+
+!!! info "Credential Requirements"
+    **Username** must be 5–10 characters and cannot be a reserved name (`admin`, `graph`, `planner`).  
+    **Password** must be at least 12 characters with uppercase, lowercase, digit, and special character (`!@#$%^&*`).
+
+#### 4. OpenLDAP Secret (Optional)
+
+By default, the chart auto-generates the OpenLDAP admin password. To specify your own:
+
+``` sh title="Create the OpenLDAP secret"
+kubectl create secret generic openldap \
+  --from-literal=LDAP_ADMIN_PASSWORD="YOUR-LDAP-ADMIN-PASSWORD" \
+  --from-literal=LDAP_CONFIG_ADMIN_PASSWORD="YOUR-LDAP-CONFIG-PASSWORD" \
+  -n gpudb
+```
+
+!!! note
+    The secret must be named `openldap` in the `gpudb` namespace to match the chart's default.
+
+### Determine the storage class
+
+As the storage class name varies between K8s flavor and/or there can be multiple,
+this must be prescribed in the chart installation.
+Obtain the DEFAULT-STORAGE-CLASS name with the command:
 
 <br/>
 

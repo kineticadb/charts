@@ -30,17 +30,21 @@ If you are on a local machine which is not having a domain name, you add the fol
 
 ##### K3s - Install the kinetica-operators chart
 
-
-
 ```bash
 wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k3s.yaml
 
-helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+kubectl create namespace gpudb
+kubectl create secret generic kinetica-license --from-literal=license="your_license_key" -n gpudb
+kubectl create secret generic kinetica-admin-credentials --from-literal=username="kadmin" --from-literal=password="your_password" -n gpudb
+```
+
+```bash
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials"
 
 # if you want to try out a development version,
 helm search repo kinetica-operators --devel --versions
 
-helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password" --devel --version 7.2.0-2.rc-2
+helm -n kinetica-system install kinetica-operators kinetica-operators/kinetica-operators --create-namespace --values values.onPrem.k3s.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials" --devel --version 7.2.0-2.rc-2
 
 ```
 
@@ -51,12 +55,12 @@ If you wish to try out the GPU capabilities, you can use the following values fi
 ```bash
 wget https://raw.githubusercontent.com/kineticadb/charts/master/kinetica-operators/values.onPrem.k3s.gpu.yaml
 
-helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set kineticacluster.gpudbCluster.license="your_license_key" --set dbAdminUser.password="your_password"
+helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --create-namespace --values values.onPrem.k3s.gpu.yaml --set kineticacluster.gpudbCluster.licenseSecretName="kinetica-license" --set dbAdminUser.adminUserSecretName="kinetica-admin-credentials"
 ```
 
 You should be able to access the workbench at [http://local.kinetica](http://local.kinetica)
 
-Username as per the values file mentioned above is kadmin and password is Kinetica1234!
+Username as per the secrets created above is kadmin and password is as specified in the `kinetica-admin-credentials` secret.
 
 ## Uninstall k3s
 
