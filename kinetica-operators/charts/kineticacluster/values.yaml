@@ -647,6 +647,18 @@
   # -- Where to send monitoring information e.g. OTEL collector etc.
   # Type: object
 
+  # pathPrefix: (required: false)
+  # -- Path prefix for sub-path multi-tenancy routing.
+  # When set, all ingress paths are prefixed with /{PathPrefix}/service.
+  # Set by the operator to metadata.name during reconciliation.
+  # When empty, services use root-level paths (backward compatible).
+  # Uses metadata.name (K8s identity, external routing), not
+  # spec.gpudbCluster.clusterName
+  # (Kinetica DB internal identity). Consistent with existing rank ingress pattern.
+  # Type: string
+  # Default: ""
+  pathPrefix: ""
+
   # payAsYouGo: (required: false)
   # -- Tells the operator to use Cloud Provider Pay As You Go functionality.
   # Type: boolean

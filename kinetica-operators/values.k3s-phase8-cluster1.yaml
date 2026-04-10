@@ -1,0 +1,164 @@
+# Phase 8: Multi-cluster validation -- Cluster 1
+# Helm install namespace: kinetica-system-cluster1 (operators + NGINX controller)
+# Data namespace: gpudb-cluster1 (KineticaCluster pods, workbench, LDAP)
+# FQDN: kinetica.local (shared with cluster0)
+# Routing: K3s Traefik -> per-cluster NGINX (ClusterIP) -> backend pods
+#
+# CRITICAL: Do NOT add "ingress-nginx".namespaceOverride -- NGINX must deploy
+# to the Helm install namespace (kinetica-system-cluster1) so Traefik
+# IngressRoutes can find the controller Service there.
+
+environment: onPrem
+provider: k3s
+
+global:
+  defaultStorageClass: local-path
+  kineticaClusterName: "cluster1"
+
+# --- Kinetica Cluster ---
+kineticacluster:
+  install: true
+  name: cluster1
+  pathPrefix: "cluster1"
+  namespace: gpudb-cluster1
+  ldap:
+    namespace: gpudb-cluster1
+  ingressClassName: "nginx-cluster1"
+  gpudbCluster:
+    clusterName: cluster1
+    fqdn: kinetica.local
+    resources:
+      requests:
+        cpu: "2"
+        memory: 2Gi
+      limits:
+        cpu: "4"
+        memory: 4Gi
+    config:
+      processes:
+        asyncIoThreads: "4"
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: 50Gi
+            provisioner: rancher.io/local-path
+            volumeClaim:
+              spec:
+                storageClassName: local-path
+  hostManagerMonitor:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+# --- Workbench ---
+workbench:
+  pathPrefix: "cluster1"
+  storageClass: local-path
+  namespace: gpudb-cluster1
+  fqdn: kinetica.local
+  ingressClassName: "nginx-cluster1"
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+# --- OpenLDAP ---
+openldap:
+  openldapNamespace: "gpudb-cluster1"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# --- Operators ---
+dbOperator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+wbOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
+
+# --- Disable cert-manager ---
+certManager:
+  install: false
+
+# --- Ingress-nginx: ClusterIP service, scoped to data namespace ---
+# NGINX controller deploys to Helm install namespace (kinetica-system-cluster1).
+# Traefik routes /cluster1/* to this controller's ClusterIP Service.
+# No namespaceOverride -- this is intentional and critical.
+ingressNginx:
+  install: true
+"ingress-nginx":
+  fullnameOverride: "ingress-nginx-cluster1"
+  rbac:
+    create: true
+    scope: false
+  controller:
+    electionID: "ingress-controller-leader-cluster1"
+    ingressClassResource:
+      name: "nginx-cluster1"
+      controllerValue: "k8s.io/ingress-nginx-cluster1"
+    ingressClass: "nginx-cluster1"
+    allowSnippetAnnotations: true
+    watchIngressWithoutClass: true
+    config:
+      use-forwarded-headers: "true"
+    hostNetwork: false
+    hostPort:
+      enabled: false
+    kind: DaemonSet
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+    publishService:
+      enabled: true
+    service:
+      enabled: true
+      type: ClusterIP
+    scope:
+      enabled: true
+      namespace: "gpudb-cluster1"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+# --- Disable non-essential components ---
+networkPolicies:
+  install: false
+
+supportBundle:
+  install: false
+
+otelCollector:
+  install: false
+
+upsertKineticaCrds:
+  enabled: false

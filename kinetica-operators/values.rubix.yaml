@@ -31,7 +31,7 @@ ingress-nginx:
             "endpoints": [
               {
                 "name": "https",
-                "prefix": "/",
+                "prefix": "{{ $n := .Values.global.kineticaClusterName }}{{ if and $n (ne $n "kineticacluster") }}/{{ $n }}{{ else }}/{{ end }}",
                 "domain-aliases": ["DEFAULT"]
               }
             ]

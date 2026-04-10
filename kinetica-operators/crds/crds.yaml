@@ -24408,6 +24408,16 @@ spec:
                 required:
                 - syslog
                 type: object
+              pathPrefix:
+                default: ''
+                description: |-
+                  Path prefix for sub-path multi-tenancy routing.
+                  When set, all ingress paths are prefixed with /{PathPrefix}/service.
+                  Set by the operator to metadata.name during reconciliation.
+                  When empty, services use root-level paths (backward compatible).
+                  Uses metadata.name (K8s identity, external routing), not spec.gpudbCluster.clusterName
+                  (Kinetica DB internal identity). Consistent with existing rank ingress pattern.
+                type: string
               payAsYouGo:
                 default: false
                 description: Tells the operator to use Cloud Provider Pay As You Go
@@ -30492,6 +30502,14 @@ spec:
                   type: string
                 description: NodeSelector - NodeSelector to be applied to the DB Pods
                 type: object
+              pathPrefix:
+                default: ''
+                description: |-
+                  Path prefix for sub-path multi-tenancy routing.
+                  When set, workbench ingress paths are prefixed with /{PathPrefix}/workbench.
+                  Populated via Helm values from the parent KineticaCluster name.
+                  When empty, workbench uses root-level paths (backward compatible).
+                type: string
               secureNetwork:
                 default: false
                 description: Enable secure network mode for the workbench.

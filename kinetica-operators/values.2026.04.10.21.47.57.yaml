@@ -20,7 +20,7 @@ global:
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-12.dev-5"
+    tag: &imageTag "v7.2.3-12.dev-1"
 
 upsertKineticaCrds:
   enabled: false
@@ -291,6 +291,8 @@ kineticacluster:
       registry: *imageRegistry
       repository: busybox
       tag: *imageTag
+  # stats:
+  #   isEnabled: false
   gadmin:
     isEnabled: true
     containerPort:
@@ -379,7 +381,7 @@ workbench:
   nodeSelector: {}
   storageClass: ""
   secureNetwork: false
-  pathPrefix: ""  # Set to cluster name for sub-path routing (mirrors kineticacluster.name)
+  pathPrefix: ""
   wbRegistryRepositoryTag:
     registry: ""
     repository: workbench

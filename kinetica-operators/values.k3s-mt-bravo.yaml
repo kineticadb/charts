@@ -1,0 +1,159 @@
+# Multi-tenancy test — Tenant Bravo
+# Namespaces: opr-2 (operators), db-2 (database/workbench)
+# IngressClass: nginx-bravo (NodePort service)
+# FQDN: local2.kinetica (access via http://local2.kinetica:<nodeport>)
+
+environment: onPrem
+provider: k3s
+
+global:
+  defaultStorageClass: local-path
+  kineticaClusterName: "bravo"
+
+# --- Kinetica Cluster ---
+kineticacluster:
+  install: true
+  name: bravo
+  pathPrefix: "bravo"
+  namespace: db-2
+  ldap:
+    namespace: db-2
+  ingressClassName: "nginx-bravo"
+  gpudbCluster:
+    clusterName: bravo
+    fqdn: local2.kinetica
+    resources:
+      requests:
+        cpu: "2"
+        memory: 2Gi
+      limits:
+        cpu: "4"
+        memory: 4Gi
+    config:
+      processes:
+        asyncIoThreads: "4"
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: 50Gi
+            provisioner: rancher.io/local-path
+            volumeClaim:
+              spec:
+                storageClassName: local-path
+  hostManagerMonitor:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+# --- Workbench ---
+workbench:
+  pathPrefix: "bravo"
+  storageClass: local-path
+  namespace: db-2
+  fqdn: local2.kinetica
+  ingressClassName: "nginx-bravo"
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+# --- OpenLDAP ---
+openldap:
+  openldapNamespace: "db-2"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# --- Operators ---
+dbOperator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+wbOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
+
+# --- Disable cert-manager (user requested) ---
+certManager:
+  install: false
+
+# --- Ingress-nginx with unique IngressClass (NodePort service) ---
+ingressNginx:
+  install: true
+"ingress-nginx":
+  fullnameOverride: "ingress-nginx-bravo"
+  namespaceOverride: "db-2"
+  rbac:
+    create: true
+    scope: false
+  controller:
+    electionID: "ingress-controller-leader-bravo"
+    ingressClassResource:
+      name: "nginx-bravo"
+      controllerValue: "k8s.io/ingress-nginx-bravo"
+    ingressClass: "nginx-bravo"
+    allowSnippetAnnotations: true
+    config:
+      use-forwarded-headers: "true"
+    hostNetwork: false
+    hostPort:
+      enabled: false
+    kind: DaemonSet
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+    publishService:
+      enabled: true
+    service:
+      enabled: true
+      type: NodePort
+      nodePorts:
+        http: 30080
+        https: 30443
+    scope:
+      enabled: true
+      namespace: "db-2"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+# --- Disable non-essential components ---
+networkPolicies:
+  install: false
+
+supportBundle:
+  install: false
+
+otelCollector:
+  install: false
+
+upsertKineticaCrds:
+  enabled: false

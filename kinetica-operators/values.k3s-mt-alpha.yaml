@@ -1,0 +1,155 @@
+# Multi-tenancy test — Tenant Alpha
+# Namespaces: opr-1 (operators), db-1 (database/workbench)
+# IngressClass: nginx-alpha (hostNetwork ports 80/443)
+# FQDN: local1.kinetica
+
+environment: onPrem
+provider: k3s
+
+global:
+  defaultStorageClass: local-path
+  kineticaClusterName: "alpha"
+
+# --- Kinetica Cluster ---
+kineticacluster:
+  install: true
+  name: alpha
+  pathPrefix: "alpha"
+  namespace: db-1
+  ldap:
+    namespace: db-1
+  ingressClassName: "nginx-alpha"
+  gpudbCluster:
+    clusterName: alpha
+    fqdn: local1.kinetica
+    resources:
+      requests:
+        cpu: "2"
+        memory: 2Gi
+      limits:
+        cpu: "4"
+        memory: 4Gi
+    config:
+      processes:
+        asyncIoThreads: "4"
+      tieredStorage:
+        globalTier:
+          colocateDisks: true
+        persistTier:
+          default:
+            limit: 50Gi
+            provisioner: rancher.io/local-path
+            volumeClaim:
+              spec:
+                storageClassName: local-path
+  hostManagerMonitor:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+# --- Workbench ---
+workbench:
+  pathPrefix: "alpha"
+  storageClass: local-path
+  namespace: db-1
+  fqdn: local1.kinetica
+  ingressClassName: "nginx-alpha"
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+# --- OpenLDAP ---
+openldap:
+  openldapNamespace: "db-1"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+# --- Operators ---
+dbOperator:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+wbOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
+
+# --- Disable cert-manager (user requested) ---
+certManager:
+  install: false
+
+# --- Ingress-nginx with unique IngressClass ---
+ingressNginx:
+  install: true
+"ingress-nginx":
+  fullnameOverride: "ingress-nginx-alpha"
+  namespaceOverride: "db-1"
+  rbac:
+    create: true
+    scope: false
+  controller:
+    electionID: "ingress-controller-leader-alpha"
+    ingressClassResource:
+      name: "nginx-alpha"
+      controllerValue: "k8s.io/ingress-nginx-alpha"
+    ingressClass: "nginx-alpha"
+    allowSnippetAnnotations: true
+    config:
+      use-forwarded-headers: "true"
+    hostNetwork: true
+    hostPort:
+      enabled: true
+    kind: DaemonSet
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+    publishService:
+      enabled: false
+    service:
+      enabled: false
+    scope:
+      enabled: true
+      namespace: "db-1"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+# --- Disable non-essential components ---
+networkPolicies:
+  install: false
+
+supportBundle:
+  install: false
+
+otelCollector:
+  install: false
+
+upsertKineticaCrds:
+  enabled: false

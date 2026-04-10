@@ -69,7 +69,7 @@ helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --
 
 You should be able to access the workbench at [http://local.kinetica](http://local.kinetica)
 
-Username as per the values file mentioned above is kadmin and password is Kinetica1234!
+Admin credentials are provided via a pre-created Kubernetes secret (see `dbAdminUser.adminUserSecretName` in values).
 
 ## Uninstall k3s
 
@@ -125,5 +125,5 @@ helm -n kinetica-system install kinetica-operators charts/kinetica-operators/ --
 
 You should be able to access the workbench at [http://local.kinetica](http://local.kinetica)
 
-Username as per the values file mentioned above is kadmin and password is Kinetica1234!
+Admin credentials are provided via a pre-created Kubernetes secret (see `dbAdminUser.adminUserSecretName` in values).
 

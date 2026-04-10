@@ -20,7 +20,7 @@ metadata:
 {{ end }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "{{ .Values.kineticacluster.namespace }}") }}
+{{ if not (lookup "v1" "Namespace" "" .Values.kineticacluster.namespace) }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -39,7 +39,7 @@ metadata:
 {{ end }}
 
 {{ if .Values.createNamespaces }}
-{{ if not (lookup "v1" "Namespace" "" "{{ .Release.Namespace }}") }}
+{{ if not (lookup "v1" "Namespace" "" .Release.Namespace) }}
 ---
 apiVersion: v1
 kind: Namespace

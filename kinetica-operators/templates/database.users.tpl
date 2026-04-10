@@ -1,51 +1,6 @@
 
 {{- define "kinetica-operators.db-admin-user" }}
 
-{{/*
-Resolve admin username and password from secret (if provided) or direct values.
-Uses helper functions from _helpers.tpl:
-  - kinetica-operators.resolveAdminUsername: resolves username from secret or direct value
-  - kinetica-operators.resolveAdminPassword: resolves password from secret or direct value
-*/}}
-{{- $adminUsername := include "kinetica-operators.resolveAdminUsername" . }}
-{{- $adminPassword := include "kinetica-operators.resolveAdminPassword" . }}
-
----
-apiVersion: v1
-stringData:
-  password: {{ $adminPassword }}
-kind: Secret
-metadata:
-  name: admin-pwd
-  namespace: {{ .Values.kineticacluster.namespace }}
-  labels:
-    "app.kubernetes.io/name": "kinetica-operators"
-    "app.kubernetes.io/managed-by": "Helm"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
-    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
-type: Opaque
----
-apiVersion: app.kinetica.com/v1
-kind: KineticaUser
-metadata:
-  name: {{ $adminUsername }}
-  namespace: {{ .Values.kineticacluster.namespace }}
-  labels:
-    "app.kubernetes.io/name": "kinetica-operators"
-    "app.kubernetes.io/managed-by": "Helm"
-    "app.kubernetes.io/instance": "{{ .Release.Name }}"
-    "helm.sh/chart": '{{ include "kinetica-operators.chart" . }}'
-spec:
-  ringName: {{ .Values.kineticacluster.name }}
-  uid: {{ $adminUsername }}
-  action: upsert
-  reveal: true
-  upsert:
-    givenName: Admin
-    displayName: "Admin Account"
-    lastName: Account
-    passwordSecret: admin-pwd
-    userPrincipalName: admin@acct.com
 ---
 apiVersion: app.kinetica.com/v1
 kind: KineticaGrant
@@ -64,17 +19,6 @@ spec:
       name: "global_admins"
       permission: "system_admin"
 ---
-apiVersion: app.kinetica.com/v1
-kind: KineticaGrant
-metadata:
-  name: "{{ $adminUsername }}-global-admin-create"
-  namespace: {{ .Values.kineticacluster.namespace }}
-spec:
-  ringName: {{ .Values.kineticacluster.name }}
-  addGrantRoleRequest:
-    role: global_admins
-    member: {{ $adminUsername }}
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -87,14 +31,16 @@ metadata:
 data:
   delete-script.sh: |
     #!/bin/sh
-    ku="$(kubectl -n "{{ .Values.kineticacluster.namespace }}" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
+    NS="{{ .Values.kineticacluster.namespace }}"
+    ku="$(kubectl -n "$NS" get ku -l app.kubernetes.io/name=kinetica-operators -o name 2>/dev/null)"
     if [ -n "$ku" ]; then
       op="$(kubectl -n "{{ .Release.Namespace }}" get deployments kineticaoperator-controller-manager -o name 2>/dev/null)"
       if [ -n "$op" ]; then
         kubectl -n "{{ .Release.Namespace }}" scale "$op" --replicas=0
       fi
-      kubectl -n "{{ .Values.kineticacluster.namespace }}" patch "$ku" -p '{"metadata":{"finalizers":null}}' --type=merge
-      kubectl -n "{{ .Values.kineticacluster.namespace }}" delete KineticaUser "{{ $adminUsername }}"
+      kubectl -n "$NS" patch $ku -p '{"metadata":{"finalizers":null}}' --type=merge
+      kubectl -n "$NS" delete $ku
+      kubectl -n "$NS" delete kineticagrants -l app.kubernetes.io/name=kinetica-operators --ignore-not-found
     fi
     exit 0
 ---

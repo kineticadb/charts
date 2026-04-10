@@ -65,6 +65,15 @@
   # -- NodeSelector - NodeSelector to be applied to the DB Pods
   # Type: object
 
+  # pathPrefix: (required: false)
+  # -- Path prefix for sub-path multi-tenancy routing.
+  # When set, workbench ingress paths are prefixed with /{PathPrefix}/workbench.
+  # Populated via Helm values from the parent KineticaCluster name.
+  # When empty, workbench uses root-level paths (backward compatible).
+  # Type: string
+  # Default: ""
+  pathPrefix: ""
+
   # secureNetwork: (required: false)
   # -- Enable secure network mode for the workbench.
   # Type: boolean

@@ -13,11 +13,11 @@ provider: ""
 clusterName: ""
 clusterRegion: ""
 letsEncryptEmail: devops@kinetica.com
-openshift: false
 createNamespaces: true
 
 global:
   defaultStorageClass: ""
+  kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "REPLACEMEREGISTRY"
     tag: &imageTag "REPLACEMETAG"
@@ -253,6 +253,7 @@ kineticacluster:
   install: true
   payAsYouGo: false
   name: ""
+  pathPrefix: ""  # Set to cluster name for sub-path routing (mirrors kineticacluster.name)
   namespace: gpudb
   debug: false
   # for environment onPrem, provide the following
@@ -290,8 +291,6 @@ kineticacluster:
       registry: *imageRegistry
       repository: busybox
       tag: *imageTag
-  # stats:
-  #   isEnabled: false
   gadmin:
     isEnabled: true
     containerPort:
@@ -318,11 +317,13 @@ kineticacluster:
       enabled: false
       # only allowed values are staging and production
       environment: "staging"
-    # license - provide directly or via licenseSecretName (secret takes priority if it exists)
-    license: ""
-    # reference an existing secret containing the license (preferred if exists)
-    # the secret must contain a 'license' key; falls back to 'license' value above if secret not found
-    licenseSecretName: ""  # name of existing secret (e.g., "kinetica-operators-kineticalicense")
+    # Internal placeholder — do not edit. Real license comes from licenseSecretName secret.
+    # Exists to satisfy subchart required() validation during template rendering.
+    license: "PENDING"
+    # Pre-created secret containing the Kinetica license (REQUIRED)
+    # The secret must contain a 'license' key with the license string
+    # Create with: kubectl create secret generic <name> --from-literal=license=<your-license> -n <db-namespace>
+    licenseSecretName: ""  # e.g., "kinetica-operators-kineticalicense"
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:
@@ -360,14 +361,12 @@ kineticacluster:
 
 dbAdminUser:
   create: true
-  # allowed pattern "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
-  name: "kadmin"
-  # allowed pattern "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
-  password: ""
-  # reference an existing secret containing the admin credentials (preferred if exists)
-  # the secret must contain 'username' and 'password' keys
-  # falls back to 'name' and 'password' values above if secret not found
-  adminUserSecretName: ""  # name of existing secret (e.g., "kinetica-operators-kineticaadmincredentials")
+  # Pre-created secret containing admin credentials (REQUIRED when create: true)
+  # The secret must contain 'username' and 'password' keys
+  # username allowed pattern: "^(?:(?!^graph$|^admin$|^planner$|^[a-zA-Z0-9-]$).){5,10}$"
+  # password allowed pattern: "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@\\#$%^&*]).{12,}$"
+  # Create with: kubectl create secret generic <name> --from-literal=username=<user> --from-literal=password=<pass> -n <db-namespace>
+  adminUserSecretName: ""  # e.g., "kinetica-operators-kineticaadmincredentials"
 
 workbench:
   install: true
@@ -380,6 +379,7 @@ workbench:
   nodeSelector: {}
   storageClass: ""
   secureNetwork: false
+  pathPrefix: ""  # Set to cluster name for sub-path routing (mirrors kineticacluster.name)
   wbRegistryRepositoryTag:
     registry: ""
     repository: workbench

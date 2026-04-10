@@ -429,7 +429,11 @@ gadmin_settings_js.tmpl: |
   var APPLICATION_NAME = "Kinetica"; // change this to gaia if you want to show gaia instead of GPUdb and viceversa
   var APPLICATION_FULL_NAME = APPLICATION_NAME  + (HA_ENABLED ? "-HA" : "");
   var COLORING_LEGEND = true; // determines whether coloring legends are used for fields depending on where the fields are stored
+  {{- if .PathPrefix }}
+  var WEBAPP_CONTEXT = "{{ .PathPrefix }}/gadmin";
+  {{- else }}
   var WEBAPP_CONTEXT = "gadmin";
+  {{- end }}
 
   // URL to Kinetica proxy servlet
   // Change this if you want to access gadmin from a reverse proxy that uses a different URL
