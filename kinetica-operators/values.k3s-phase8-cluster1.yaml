@@ -59,6 +59,8 @@ kineticacluster:
 # --- Workbench ---
 workbench:
   pathPrefix: "cluster1"
+  wbRegistryRepositoryTag:
+    tag: "v7.2.3-12.dev-6"
   storageClass: local-path
   namespace: gpudb-cluster1
   fqdn: kinetica.local
@@ -84,6 +86,8 @@ openldap:
 
 # --- Operators ---
 dbOperator:
+  image:
+    tag: "v7.2.3-palantir-stable-5cb98caf"
   resources:
     requests:
       cpu: 100m
@@ -93,6 +97,8 @@ dbOperator:
       memory: 256Mi
 
 wbOperator:
+  image:
+    tag: "v7.2.3-palantir-stable-757e684b"
   resources:
     requests:
       cpu: 50m
@@ -112,6 +118,7 @@ certManager:
 ingressNginx:
   install: true
 "ingress-nginx":
+  namespaceOverride: ""
   fullnameOverride: "ingress-nginx-cluster1"
   rbac:
     create: true
