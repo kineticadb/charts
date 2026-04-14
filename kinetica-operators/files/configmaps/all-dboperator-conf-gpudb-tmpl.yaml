@@ -725,6 +725,15 @@ gadmin_settings_js.tmpl: |
 
   var ENABLE_LOGIN_ANIMATION = true;
 
+  // Global variables consumed by login.html and init.js before the full
+  // initialization completes. init.js overwrites these after the API responds.
+  // Without these defaults, document.ready and loadClusterInfo callbacks crash
+  // on undefined references.
+  var isTrialEditionEnabled = false;
+  var isDevEditionEnabled = false;
+  var isLoginAnimationEnabled = ENABLE_LOGIN_ANIMATION;
+  var hostname = "";
+
   // KiSQL related parameters
   var KISQL_RESPONSE_SIZE_LIMIT = 10485760; // bytes
   var KISQL_ENABLE_MUTATE_CONFIRMATION = false;
