@@ -20,7 +20,7 @@ global:
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-12.dev-14"
+    tag: &imageTag "v7.2.3-12.dev-15"
 
 upsertKineticaCrds:
   enabled: false
