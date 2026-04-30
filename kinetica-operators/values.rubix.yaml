@@ -84,7 +84,7 @@ openldap:
     image:
       registry: docker.io
       repository: alpine/openssl
-      tag: 3.5.3
+      tag: 3.5.6
   persistence:
     storageClass: null
   service:

@@ -13,11 +13,18 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    # hook-succeeded is intentionally omitted so Helm doesn't delete the
+    # Job on success — pod log stays around for inspection.
+    # before-hook-creation cleans up the previous Job at the start of
+    # the next deploy. ttlSecondsAfterFinished=1200 bounds retention.
+    helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: '-5'
 spec:
-  ttlSecondsAfterFinished: 300
-  backoffLimit: 3
+  # 20-minute log-inspection window, then K8s TTL controller deletes the Job.
+  ttlSecondsAfterFinished: 1200
+  # backoffLimit: 0 — exactly one pod runs (no retries). Script always
+  # exits 0 so the Job enters Complete state regardless of kubectl errors.
+  backoffLimit: 0
   template:
     metadata:
       labels:
@@ -44,32 +51,32 @@ spec:
         command: ["/bin/bash", "-c"]
         args:
           - |
-            set -e
-            echo "=== Starting CRD replacements ==="
-            FAILED=0
+            set +e
+            REPLACED=""
+            FAILED=""
             for F in /crds/db-crds/* /crds/wb-crds/*; do
-              if [ -f "$F" ]; then
-                CRD_NAME=$(grep -m1 '^  name:' "$F" | awk '{print $2}')
-                if ! kubectl get crd "$CRD_NAME" >/dev/null 2>&1; then
-                  echo "Skipping (not present): $F"
-                  continue
-                fi
-                echo "Processing: $F"
-                if kubectl replace -f "$F"; then
-                  echo "  SUCCESS: $F"
-                else
-                  echo "  FAILED: $F"
-                  FAILED=$((FAILED + 1))
-                fi
+              [ -f "$F" ] || continue
+              CRD=$(grep -m1 '^  name:' "$F" | awk '{print $2}')
+              [ -n "$CRD" ] || continue
+              # Only attempt replace if the CRD already exists; first install
+              # lets Helm create it.
+              kubectl get crd "$CRD" >/dev/null 2>&1 || continue
+              if ERR=$(kubectl replace -f "$F" 2>&1); then
+                REPLACED="$REPLACED $CRD"
+              else
+                FAILED="$FAILED $CRD"
+                printf 'FAILED %s: %s\n' "$CRD" "$(printf '%s' "$ERR" | head -1)"
               fi
             done
-            echo ""
-            echo "=== CRD replacement complete ==="
-            if [ $FAILED -gt 0 ]; then
-              echo "WARNING: $FAILED CRD(s) failed to update"
-              exit 1
+            if [ -n "$REPLACED" ]; then
+              echo "Replaced CRDs:"
+              for C in $REPLACED; do echo "  - $C"; done
+            else
+              echo "No CRDs required replacement."
             fi
-            echo "All CRDs updated successfully"
+            # Always exit 0 so the Job reaches Complete; ttlSecondsAfterFinished
+            # bounds how long the pod log stays available for inspection.
+            exit 0
       restartPolicy: Never
 
 {{- end }}
