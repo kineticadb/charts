@@ -54,7 +54,8 @@ spec:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
         - --v=0
-        image: '{{ .Values.kubeRbacProxy.image.repository }}:{{ .Values.kubeRbacProxy.image.tag
+        image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
+          "repository" .Values.kubeRbacProxy.image.repository "tag" .Values.kubeRbacProxy.image.tag)
           }}'
         imagePullPolicy: IfNotPresent
         name: kube-rbac-proxy

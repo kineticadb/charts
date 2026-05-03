@@ -20,7 +20,7 @@ global:
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-12.dev-24"
+    tag: &imageTag "v7.2.3-12.dev-25"
 
 upsertKineticaCrds:
   enabled: false
@@ -31,7 +31,7 @@ upsertKineticaCrds:
 
 kubeRbacProxy:
   image:
-    repository: "quay.io/brancz/kube-rbac-proxy"
+    repository: "kube-rbac-proxy"
     tag: "v0.22.0"
 
 kubeStateMetrics:

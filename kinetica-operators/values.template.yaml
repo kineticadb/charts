@@ -31,7 +31,7 @@ upsertKineticaCrds:
 
 kubeRbacProxy:
   image:
-    repository: "quay.io/brancz/kube-rbac-proxy"
+    repository: "kube-rbac-proxy"
     tag: "v0.22.0"
 
 kubeStateMetrics:
