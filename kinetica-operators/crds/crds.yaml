@@ -30518,6 +30518,24 @@ spec:
                 description: Specify the storage class to use on the Workbench stateful
                   set
                 type: string
+              telemetry:
+                description: |-
+                  Telemetry holds third-party analytics keys consumed by the workbench
+                  frontend and server. Both fields default to empty strings, which the
+                  frontend gates on (no Segment SDK / Intercom widget loaded). Populate
+                  per deployment to opt in.
+                properties:
+                  intercomAppId:
+                    description: |-
+                      IntercomAppId is the Intercom workspace App ID for the support
+                      widget. Empty (default) disables Intercom.
+                    type: string
+                  segmentApiKey:
+                    description: |-
+                      SegmentApiKey is the Segment.io write key for analytics events.
+                      Empty (default) disables Segment client-side and server-side.
+                    type: string
+                type: object
               useHttps:
                 default: false
                 description: When not using LetsEncrypt, whether the workbench is

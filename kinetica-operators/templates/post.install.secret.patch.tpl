@@ -42,7 +42,10 @@ data:
       # Prefer volume-mounted secret
       if [ -n "$_mount_type" ] && [ -f "/mnt/secrets/$_mount_type/$_key" ]; then
         _val="$(cat "/mnt/secrets/$_mount_type/$_key" 2>/dev/null || true)"
-        # Strip wrapping double quotes (some platforms store values quoted)
+        # Strip wrapping double quotes (some platforms serialize secret values
+        # with surrounding quotes; this is format normalization, not
+        # sanitization — callers MUST validate the result before interpolating
+        # it into YAML/shell contexts).
         _val="$(printf '%s' "$_val" | sed -e 's/^"//' -e 's/"$//')"
         if [ -n "$_val" ]; then
           printf '%s' "$_val"
@@ -100,6 +103,34 @@ data:
 
     json_escape() {
       printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
+    }
+
+    # Validate that a value is a safe identifier for use in YAML manifests
+    # interpolated below. Pattern: 1-63 chars, alphanumeric/underscore/hyphen,
+    # must start and end with an alphanumeric (so the lowercased+hyphenated
+    # variant used for metadata.name is RFC1123-compliant). Returns 0 if
+    # valid, non-zero otherwise.
+    #
+    # Implementation note: uses POSIX 'case' rather than 'grep -E'. grep is
+    # line-oriented — its ^ and $ anchors match line-start/line-end, so a
+    # value like "admin\nmaliciousField: x" would have its first line match
+    # the regex and grep -q would return success, defeating the validator.
+    # 'case' patterns operate on the entire string as one unit and treat
+    # newline as just another character (correctly excluded by the bracket
+    # expression below).
+    validate_identifier() {
+      case "$1" in
+        '' | *[!a-zA-Z0-9_-]* ) return 1 ;;
+        [-_]* | *[-_] ) return 1 ;;
+      esac
+      _len=${#1}
+      [ "$_len" -ge 1 ] && [ "$_len" -le 63 ]
+    }
+
+    # Lowercase + translate underscores to hyphens for k8s metadata.name use.
+    # Safe to apply only after validate_identifier has accepted the input.
+    to_k8s_name() {
+      printf '%s' "$1" | tr 'A-Z_' 'a-z-'
     }
 
     # 1. Patch license from secret
@@ -180,12 +211,17 @@ data:
       # 5. Create admin KineticaUser
       USERNAME="$(read_secret_key "$ADMIN_SECRET_NAME" "username" "admin" || true)"
       if [ -n "$USERNAME" ]; then
-        echo "Creating/updating admin KineticaUser '$USERNAME'..."
+        if ! validate_identifier "$USERNAME"; then
+          echo "ERROR: USERNAME from secret '$ADMIN_SECRET_NAME' is not a valid identifier (must match [A-Za-z0-9][A-Za-z0-9_-]{0,61}[A-Za-z0-9]); refusing to create admin KineticaUser/Grant" >&2
+          exit 1
+        fi
+        USER_K8S_NAME="$(to_k8s_name "$USERNAME")"
+        echo "Creating/updating admin KineticaUser '$USERNAME' (k8s name: '$USER_K8S_NAME')..."
         cat <<EOUSER | kubectl apply -f -
     apiVersion: app.kinetica.com/v1
     kind: KineticaUser
     metadata:
-      name: $USERNAME
+      name: $USER_K8S_NAME
       namespace: $CLUSTER_NS
       labels:
         app.kubernetes.io/name: kinetica-operators
@@ -209,7 +245,7 @@ data:
     apiVersion: app.kinetica.com/v1
     kind: KineticaGrant
     metadata:
-      name: ${USERNAME}-global-admin-create
+      name: ${USER_K8S_NAME}-global-admin-create
       namespace: $CLUSTER_NS
       labels:
         app.kubernetes.io/name: kinetica-operators
