@@ -85,10 +85,9 @@
   # Type: string
 
   # telemetry: (required: false)
-  # -- Telemetry holds third-party analytics keys consumed by the workbench
-  # frontend and server. Both fields default to empty strings, which the
-  # frontend gates on (no Segment SDK / Intercom widget loaded). Populate
-  # per deployment to opt in.
+  # -- Telemetry holds third-party analytics configuration consumed by the
+  # workbench frontend and server. Defaults to disabled (no Segment SDK,
+  # no Intercom widget) — set Telemetry.Enabled to true to opt in.
   # Type: object
 
   # useHttps: (required: true)

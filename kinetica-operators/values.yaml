@@ -20,7 +20,7 @@ global:
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-12.dev-27"
+    tag: &imageTag "v7.2.3-12.dev-28"
 
 upsertKineticaCrds:
   enabled: false
@@ -385,11 +385,15 @@ workbench:
     repository: workbench
     tag: ""
   # Third-party telemetry destinations for the workbench frontend.
-  # Empty values (default) disable Segment and Intercom entirely; populate
-  # per deployment to opt in. The frontend's existing if (KEY) guards in
+  # `enabled: false` (default) is a master kill-switch for ALL telemetry
+  # destinations regardless of per-key values — sets INTERCOM_APP_ID and
+  # SEGMENT_API_KEY to empty strings and the Pod's SEGMENT_API_KEY env var
+  # to empty, which the frontend's existing if (KEY) guards in
   # client/src/hooks/useAnalytics.js and client/src/components/auth/Login.js
-  # treat empty strings as "off" without further code changes.
+  # treat as "off". When enabled is true, each per-destination field opts
+  # that destination in (empty key disables only that one).
   telemetry:
+    enabled: false
     segmentApiKey: ""
     intercomAppId: ""
 
