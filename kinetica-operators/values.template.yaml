@@ -384,14 +384,6 @@ workbench:
     registry: ""
     repository: workbench
     tag: ""
-  # Third-party telemetry destinations for the workbench frontend.
-  # `enabled: false` (default) is a master kill-switch for ALL telemetry
-  # destinations regardless of per-key values — sets INTERCOM_APP_ID and
-  # SEGMENT_API_KEY to empty strings and the Pod's SEGMENT_API_KEY env var
-  # to empty, which the frontend's existing if (KEY) guards in
-  # client/src/hooks/useAnalytics.js and client/src/components/auth/Login.js
-  # treat as "off". When enabled is true, each per-destination field opts
-  # that destination in (empty key disables only that one).
   telemetry:
     enabled: false
     segmentApiKey: ""

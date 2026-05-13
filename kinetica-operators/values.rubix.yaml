@@ -70,8 +70,8 @@ kineticacluster:
 
 kubeRbacProxy:
   image:
-    repository: kineticastagingcloud/kube-rbac-proxy
-    tag: v0.20.0
+    repository: kube-rbac-proxy
+    tag: v0.22.0
 
 kubeStateMetrics:
   install: false
@@ -105,7 +105,7 @@ supportBundle:
   install: false
 
 upsertKineticaCrds:
-  enabled: false
+  enabled: true
 
 workbench:
   letsEncrypt:
