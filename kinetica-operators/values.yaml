@@ -19,8 +19,8 @@ global:
   defaultStorageClass: ""
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
-    registry: &imageRegistry "docker.io/kinetica"
-    tag: &imageTag "v7.2.3-13.ga-2"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-14.dev-2"
 
 upsertKineticaCrds:
   enabled: false
@@ -28,6 +28,20 @@ upsertKineticaCrds:
   image:
     repository: "upsert-kinetica-crds"
     tag: *imageTag
+
+# persistPvcResize:
+#   # Pre-upgrade Job patches persist-tier PVCs to a new size and waits for CSI
+#   # to finish resizing. Post-upgrade Job restarts the DB pods so they pick up
+#   # the new disk size from the regenerated gpudb.conf. Idempotent: a no-op
+#   # run writes a "noop" sentinel and skips the pod restart on the next upgrade.
+#   #
+#   # Reuses the upsertKineticaCrds image (above) since it ships kubectl.
+#   # See templates/persist-pvc-resize.tpl for full docs and escape-hatch overrides.
+#   enabled: false
+#   # namespace: gpudb               # defaults to kineticacluster.namespace
+#   # size: "150Gi"                  # defaults to persistTier.default.limit
+#   # pvcNames: []                   # defaults to <clusterName>-persist-gpudb-<N>
+#   # dbPodNames: []                 # defaults to gpudb-<N>
 
 kubeRbacProxy:
   image:
@@ -132,6 +146,13 @@ ingressNginx:
       digest: ""
       digestChroot: ""
     nodeSelector: {}
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 4
+        memory: 1Gi
     allowSnippetAnnotations: true
     config:
       annotations-risk-level: Critical
