@@ -19,8 +19,8 @@ global:
   defaultStorageClass: ""
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-14.rc-2"
+    registry: &imageRegistry "docker.io/kinetica"
+    tag: &imageTag "v7.2.3-14.ga-2"
 
 upsertKineticaCrds:
   enabled: false
