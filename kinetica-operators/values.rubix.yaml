@@ -65,8 +65,6 @@ kineticacluster:
     syslog:
       enabled: false
   name: kinetica-apollo-entity
-  stats:
-    isEnabled: false
 
 kubeRbacProxy:
   image:
@@ -80,11 +78,6 @@ networkPolicies:
   install: true
 
 openldap:
-  initTLSSecret:
-    image:
-      registry: docker.io
-      repository: alpine/openssl
-      tag: 3.5.6
   persistence:
     storageClass: null
   service:
@@ -99,7 +92,7 @@ provider: kind
 
 support-bundle:
   configMap:
-    cluster: kinetica-apollo-entity
+    cluster: cluster0
 
 supportBundle:
   install: false

@@ -19,8 +19,8 @@ global:
   defaultStorageClass: ""
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-15.rc-1"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-15.dev-3"
 
 upsertKineticaCrds:
   enabled: false
@@ -254,6 +254,11 @@ openldap:
     timeoutSeconds: 1
     successThreshold: 1
     failureThreshold: 30
+  initTLSSecret:
+    image:
+      registry: *imageRegistry
+      repository: openssl
+      tag: 3.5.6
 
 supportBundle:
   install: true

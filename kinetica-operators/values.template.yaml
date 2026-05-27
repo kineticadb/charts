@@ -254,6 +254,11 @@ openldap:
     timeoutSeconds: 1
     successThreshold: 1
     failureThreshold: 30
+  initTLSSecret:
+    image:
+      registry: *imageRegistry
+      repository: openssl
+      tag: 3.5.6
 
 supportBundle:
   install: true
