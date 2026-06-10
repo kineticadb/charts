@@ -92,7 +92,7 @@ provider: kind
 
 support-bundle:
   configMap:
-    cluster: cluster0
+    cluster: ""
 
 supportBundle:
   install: false
