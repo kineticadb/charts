@@ -1,0 +1,111 @@
+suite: DB operator Deployment, Services, Webhooks, Certs
+values:
+  - __base_values.yaml
+
+tests:
+  - it: creates DB operator Deployment with correct image
+    template: kinetica_operators.yaml
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: kineticaoperator-controller-manager
+          any: true
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "test.registry.io/kinetica-k8s-operator:v0.0.1-test"
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+
+  - it: sets serviceAccountName on Deployment
+    template: kinetica_operators.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: controller-manager
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+
+  - it: creates webhook Service on port 443
+    template: kinetica_operators.yaml
+    asserts:
+      - containsDocument:
+          kind: Service
+          apiVersion: v1
+          name: kineticaoperator-webhook-service
+          any: true
+      - equal:
+          path: spec.ports[0].port
+          value: 443
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-webhook-service
+
+  - it: creates metrics Service on port 8443
+    template: kinetica_operators.yaml
+    asserts:
+      - containsDocument:
+          kind: Service
+          apiVersion: v1
+          name: kineticaoperator-controller-manager-metrics-service
+          any: true
+      - equal:
+          path: spec.ports[0].port
+          value: 8443
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager-metrics-service
+
+  - it: creates self-signed Issuer
+    template: kinetica_operators.yaml
+    asserts:
+      - containsDocument:
+          kind: Issuer
+          apiVersion: cert-manager.io/v1
+          name: kineticaoperator-selfsigned-issuer
+          any: true
+      - exists:
+          path: spec.selfSigned
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-selfsigned-issuer
+
+  - it: creates metrics Certificate referencing selfsigned issuer
+    template: kinetica_operators.yaml
+    asserts:
+      - equal:
+          path: spec.issuerRef.name
+          value: kineticaoperator-selfsigned-issuer
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-metrics-certs
+
+  - it: creates serving Certificate referencing selfsigned issuer
+    template: kinetica_operators.yaml
+    asserts:
+      - equal:
+          path: spec.issuerRef.name
+          value: kineticaoperator-selfsigned-issuer
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-serving-cert
+
+  - it: MutatingWebhookConfiguration has cert-manager annotation
+    template: kinetica_operators.yaml
+    asserts:
+      - isNotEmpty:
+          path: metadata.annotations["cert-manager.io/inject-ca-from"]
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-mutating-webhook-configuration
+
+  - it: ValidatingWebhookConfiguration has cert-manager annotation
+    template: kinetica_operators.yaml
+    asserts:
+      - isNotEmpty:
+          path: metadata.annotations["cert-manager.io/inject-ca-from"]
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-validating-webhook-configuration

@@ -1,0 +1,49 @@
+suite: onPrem/k3s dispatch
+values:
+  - __base_values.yaml
+
+tests:
+  - it: renders successfully with k3s provider
+    template: kinetica_operators.yaml
+    set:
+      provider: "k3s"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: uses same local template path as kind (DB operator Deployment present)
+    template: kinetica_operators.yaml
+    set:
+      provider: "k3s"
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: kineticaoperator-controller-manager
+          any: true
+
+  - it: creates WB operator Deployment for k3s
+    template: kinetica_operators.yaml
+    set:
+      provider: "k3s"
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: workbench-operator-controller-manager
+          any: true
+
+  - it: creates namespaces for k3s
+    template: kinetica_operators.yaml
+    set:
+      provider: "k3s"
+    asserts:
+      - containsDocument:
+          kind: Namespace
+          apiVersion: v1
+          name: cert-manager
+          any: true
+      - containsDocument:
+          kind: Namespace
+          apiVersion: v1
+          name: gpudb
+          any: true

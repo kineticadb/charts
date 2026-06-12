@@ -100,7 +100,7 @@ supportBundle:
   install: true
 
 upsertKineticaCrds:
-  enabled: false
+  enable: false
 
 workbench:
   install: false
