@@ -45,7 +45,7 @@ seccompProfiles:
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:{{ .Release.Namespace }}:kineticaoperator-kineticacluster-operator
+- system:serviceaccount:{{ .Release.Namespace }}:controller-manager
 volumes:
 - '*'
 

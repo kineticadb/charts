@@ -24,7 +24,7 @@ spec:
         app.kubernetes.io/name: kinetica-operators
         app.kubernetes.io/instance: '{{ .Release.Name }}'
     spec:
-      serviceAccountName: kineticacluster-operator
+      serviceAccountName: controller-manager
       securityContext:
         runAsNonRoot: true
         runAsUser: 65432

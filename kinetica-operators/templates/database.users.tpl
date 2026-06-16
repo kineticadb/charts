@@ -115,8 +115,8 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccount: kineticacluster-operator
-      serviceAccountName: kineticacluster-operator
+      serviceAccount: controller-manager
+      serviceAccountName: controller-manager
       securityContext:
         fsGroup: 2000
         runAsGroup: 3000

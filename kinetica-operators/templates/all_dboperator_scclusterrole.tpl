@@ -48,7 +48,7 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: kineticacluster-operator
+  name: controller-manager
   namespace: '{{ .Release.Namespace }}'
 
 {{- end }}

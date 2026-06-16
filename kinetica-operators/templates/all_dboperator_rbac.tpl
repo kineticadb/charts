@@ -11,6 +11,10 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: controller-manager
   namespace: '{{ .Release.Namespace }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
