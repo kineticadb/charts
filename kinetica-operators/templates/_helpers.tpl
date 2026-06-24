@@ -76,82 +76,29 @@ Usage: {{ include "kinetica-operators.image" (dict "registry" .Values.global.ima
 {{- end -}}
 
 {{/*
-Resolve license value from secret (preferred) or direct value (fallback).
-Priority: 1) licenseSecretName if secret exists and has 'license' key, 2) direct license value
-If licenseSecretName is configured but lookup fails (e.g. helm template), skip validation
-as the post-install hook will patch the real value from the mounted secret.
+Resolve license value from a pre-created Kubernetes Secret.
+Requires kineticacluster.gpudbCluster.licenseSecretName to be set.
+The secret must contain a 'license' key.
+During helm template (dry-run), lookup returns empty — a placeholder is used
+and the post-install hook patches the real license from the mounted secret.
 Usage: {{ include "kinetica-operators.resolveLicense" (dict "Values" .Values "Release" .Release) }}
 */}}
 {{- define "kinetica-operators.resolveLicense" -}}
-{{- $license := "" -}}
 {{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
-{{- $usedSecret := false -}}
-{{- $hasSecretName := and .Values.kineticacluster.gpudbCluster.licenseSecretName (ne .Values.kineticacluster.gpudbCluster.licenseSecretName "") -}}
-{{/* Try secret first if specified */}}
-{{- if $hasSecretName -}}
-  {{- $secretName := .Values.kineticacluster.gpudbCluster.licenseSecretName -}}
-  {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
-  {{- if $secret -}}
-    {{- if hasKey $secret.data "license" -}}
-      {{- $license = index $secret.data "license" | b64dec -}}
-      {{- $usedSecret = true -}}
-    {{- end -}}
-  {{- end -}}
+{{- $secretName := .Values.kineticacluster.gpudbCluster.licenseSecretName | default "" -}}
+{{- if eq $secretName "" -}}
+  {{- fail "kineticacluster.gpudbCluster.licenseSecretName is required. Create a secret with a 'license' key and set this value to the secret name. Example: kubectl create secret generic my-license-secret --from-literal=license=YOUR_LICENSE -n gpudb" -}}
 {{- end -}}
-{{/* Fall back to direct value if secret not used */}}
-{{- if not $usedSecret -}}
-  {{- if and .Values.kineticacluster.gpudbCluster.license (ne .Values.kineticacluster.gpudbCluster.license "") -}}
-    {{- $license = .Values.kineticacluster.gpudbCluster.license -}}
+{{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
+{{- if $secret -}}
+  {{- if hasKey $secret.data "license" -}}
+    {{- index $secret.data "license" | b64dec -}}
   {{- else -}}
-    {{- fail "A valid license is required. Provide kineticacluster.gpudbCluster.license or a valid kineticacluster.gpudbCluster.licenseSecretName (secret must have 'license' key)" -}}
+    {{- fail (printf "Secret '%s' in namespace '%s' exists but does not contain a 'license' key" $secretName $namespace) -}}
   {{- end -}}
+{{- else -}}
+  {{/* lookup returned empty — likely helm template/dry-run; use placeholder; post-install hook will patch */}}
+  {{- printf "PLACEHOLDER_LICENSE" -}}
 {{- end -}}
-{{- $license -}}
-{{- end -}}
-
-{{/*
-Resolve admin username from secret (preferred) or direct value (fallback).
-Priority: 1) adminUserSecretName if secret exists and has 'username' key, 2) direct name value
-Usage: {{ include "kinetica-operators.resolveAdminUsername" (dict "Values" .Values "Release" .Release) }}
-*/}}
-{{- define "kinetica-operators.resolveAdminUsername" -}}
-{{- $username := .Values.dbAdminUser.name -}}
-{{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
-{{- if and .Values.dbAdminUser.adminUserSecretName (ne .Values.dbAdminUser.adminUserSecretName "") -}}
-  {{- $secretName := .Values.dbAdminUser.adminUserSecretName -}}
-  {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
-  {{- if $secret -}}
-    {{- if hasKey $secret.data "username" -}}
-      {{- $username = index $secret.data "username" | b64dec -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-{{- $username -}}
-{{- end -}}
-
-{{/*
-Resolve admin password from secret (preferred) or direct value (fallback).
-Priority: 1) adminUserSecretName if secret exists and has 'password' key, 2) direct password value
-If adminUserSecretName is configured but lookup fails (e.g. helm template), skip validation
-as the post-install hook will patch the real value from the mounted secret.
-Usage: {{ include "kinetica-operators.resolveAdminPassword" (dict "Values" .Values "Release" .Release) }}
-*/}}
-{{- define "kinetica-operators.resolveAdminPassword" -}}
-{{- $password := .Values.dbAdminUser.password -}}
-{{- $namespace := .Values.kineticacluster.namespace | default .Release.Namespace -}}
-{{- $hasSecretName := and .Values.dbAdminUser.adminUserSecretName (ne .Values.dbAdminUser.adminUserSecretName "") -}}
-{{- if $hasSecretName -}}
-  {{- $secretName := .Values.dbAdminUser.adminUserSecretName -}}
-  {{- $secret := lookup "v1" "Secret" $namespace $secretName -}}
-  {{- if $secret -}}
-    {{- if hasKey $secret.data "password" -}}
-      {{- $password = index $secret.data "password" | b64dec -}}
-    {{- end -}}
-  {{- end -}}
-{{- end -}}
-{{- if and (eq $password "") (not $hasSecretName) -}}
-  {{- fail "Password for Admin User is required. Provide dbAdminUser.password or a valid dbAdminUser.adminUserSecretName (secret must have 'password' key)" -}}
-{{- end -}}
-{{- $password -}}
 {{- end -}}
 

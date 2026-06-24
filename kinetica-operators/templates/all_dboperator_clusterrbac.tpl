@@ -190,13 +190,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticaclusterelasticity-editor-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -221,13 +221,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticaclusterelasticity-viewer-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -248,13 +248,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticaclusterresourcegroup-editor-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -279,13 +279,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticaclusterresourcegroup-viewer-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -422,13 +422,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticaclusterschema-editor-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -453,13 +453,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticaclusterschema-viewer-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -654,13 +654,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticareleaseversion-editor-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com
@@ -685,13 +685,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  labels:
-    app.kubernetes.io/name: dboperator
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/instance: '{{ .Release.Name }}'
-    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   name: kineticareleaseversion-viewer-role
   namespace: '{{ .Values.kineticacluster.namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
 rules:
 - apiGroups:
   - app.kinetica.com

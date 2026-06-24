@@ -12,10 +12,10 @@ cert-manager:
     nodeSelector:
       app.kinetica.com/pool: infra
 
-certManager:
-  install: false
-
 environment: onPrem
+
+global:
+  defaultStorageClass: managed-premium
 
 gpu-operator:
   driver:
@@ -34,6 +34,10 @@ ingress-nginx:
   controller:
     nodeSelector:
       app.kinetica.com/pool: infra
+    service:
+      annotations:
+        #service.beta.kubernetes.io/azure-dns-label-name: my-kinetica-cluster-dns-prefix
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
   defaultBackend:
     nodeSelector:
       app.kinetica.com/pool: infra
@@ -48,6 +52,14 @@ kineticacluster:
         persistTier:
           default:
             limit: 50Gi
+            parameters:
+              cachingmode: ReadOnly
+              kind: Managed
+              storageaccounttype: Premium_LRS
+            provisioner: disk.csi.azure.com
+            volumeClaim:
+              spec:
+                storageClassName: managed-premium
     hasPools: true
   install: true
   name: cluster0
@@ -64,6 +76,8 @@ openldap:
   nodeSelector:
     app.kinetica.com/pool: infra
 
+provider: eks
+
 support-bundle:
   configMap:
     cluster: cluster0
@@ -79,3 +93,4 @@ upsertKineticaCrds:
 workbench:
   nodeSelector:
     app.kinetica.com/pool: infra
+  storageClass: managed-premium

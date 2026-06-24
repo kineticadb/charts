@@ -28,7 +28,8 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: '{{ .Values.kubeRbacProxy.image.repository }}:{{ .Values.kubeRbacProxy.image.tag
+        image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
+          "repository" .Values.kubeRbacProxy.image.repository "tag" .Values.kubeRbacProxy.image.tag)
           }}'
         name: kube-rbac-proxy
         ports:

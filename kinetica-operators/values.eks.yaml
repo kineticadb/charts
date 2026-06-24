@@ -93,7 +93,7 @@ supportBundle:
   install: true
 
 upsertKineticaCrds:
-  enable: false
+  enabled: false
 
 workbench:
   nodeSelector:
