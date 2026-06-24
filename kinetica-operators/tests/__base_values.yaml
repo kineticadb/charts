@@ -184,14 +184,16 @@ kineticacluster:
     livenessProbe:
       failureThreshold: 30
   ingressController: nginx
-  ldap:
-    baseDN: dc=kinetica,dc=com
-    bindDN: cn=admin,dc=kinetica,dc=com
-    host: openldap
-    isInLocalK8S: true
-    isLDAPS: false
-    namespace: gpudb
-    port: 1389
+  authentication:
+    type: LDAP
+    ldap:
+      baseDN: dc=kinetica,dc=com
+      bindDN: cn=admin,dc=kinetica,dc=com
+      host: openldap
+      isInLocalK8S: true
+      isLDAPS: false
+      namespace: gpudb
+      port: 1389
   supportingImages:
     busybox:
       registry: "test.registry.io"

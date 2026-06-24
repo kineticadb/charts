@@ -277,14 +277,16 @@ kineticacluster:
   # This is needed now as the operator as of now, looks for its nginx in the nginx namespace
   # if you enable ingress-nginx and install the operators, it will install all in the kinetica-system namespace
   ingressController: nginx
-  ldap:
-    baseDN: dc=kinetica,dc=com
-    bindDN: cn=admin,dc=kinetica,dc=com
-    host: openldap
-    isInLocalK8S: true
-    isLDAPS: false
-    namespace: gpudb
-    port: 1389
+  authentication:
+    type: LDAP
+    ldap:
+      baseDN: dc=kinetica,dc=com
+      bindDN: cn=admin,dc=kinetica,dc=com
+      host: openldap
+      isInLocalK8S: true
+      isLDAPS: false
+      namespace: gpudb
+      port: 1389
   supportingImages:
     busybox:
       registry: *imageRegistry

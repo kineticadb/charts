@@ -881,7 +881,9 @@ gpudb_conf.tmpl: |
   #       "/opt/gpudb/httpd/conf/httpd.conf" and setup HTTPS as per the Apache
   #       httpd documentation at https://httpd.apache.org/docs/2.2/
   # enable_httpd_proxy = true
-  enable_httpd_proxy = {{ .Cluster.Spec.GPUDBCluster.Config.Network.EnableHTTPDProxy }}
+  # Internal auth provider: gpudb authenticates natively, so the httpd LDAP auth
+  # proxy is not run.
+  enable_httpd_proxy = {{ if .Cluster.IsInternalAuth }}false{{ else }}{{ .Cluster.Spec.GPUDBCluster.Config.Network.EnableHTTPDProxy }}{{ end }}
 
   # TCP port that the httpd auth proxy server will listen on if
   # 'enable_httpd_proxy' is "true".
@@ -991,7 +993,10 @@ gpudb_conf.tmpl: |
   # IMPORTANT: DO NOT ENABLE unless external access to Kinetica ports
   # has been blocked via firewall AND the authentication proxy is
   # configured to block "REMOTE_USER" HTTP headers passed in from clients.
-  enable_external_authentication = {{ .Cluster.Spec.GPUDBCluster.Config.Security.EnableExternalAuthentication }}
+  # Internal auth provider: there is no external auth proxy to trust REMOTE_USER
+  # from, so external authentication is forced off (gpudb authenticates users
+  # against its own internal user store).
+  enable_external_authentication = {{ if .Cluster.IsInternalAuth }}false{{ else }}{{ .Cluster.Spec.GPUDBCluster.Config.Security.EnableExternalAuthentication }}{{ end }}
   #enable_external_authentication = true
 
   # Encrypted key that, if specified, must be passed in unencrypted via the

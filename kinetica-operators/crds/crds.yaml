@@ -1723,6 +1723,100 @@ spec:
             description: KineticaClusterSpec defines the configuration for KineticaCluster
               DB
             properties:
+              authentication:
+                default:
+                  ldap:
+                    baseDN: dc=kinetica,dc=com
+                    bindDN: cn=admin,dc=kinetica,dc=com
+                    host: openldap
+                    isInLocalK8S: true
+                    isLDAPS: false
+                    port: 389
+                  type: LDAP
+                description: |-
+                  Authentication selects and configures the identity provider used for the
+                  cluster's users, roles and grants. Defaults to the LDAP provider with the
+                  historical in-cluster openldap configuration.
+                properties:
+                  ldap:
+                    description: |-
+                      LDAP configures the LDAP identity provider; used when Type is "LDAP". When
+                      omitted the historical in-cluster openldap defaults apply. The Internal
+                      provider does not use this block.
+                    properties:
+                      baseDN:
+                        default: dc=kinetica,dc=com
+                        description: BaseDN - The root base LDAP Distinguished Name
+                          to use as the base for the LDAP usage
+                        type: string
+                      bindDN:
+                        default: cn=admin,dc=kinetica,dc=com
+                        description: BindDN - The LDAP Distinguished Name to use for
+                          the LDAP connectivity/data connectivity/bind
+                        type: string
+                      bindPasswordSecret:
+                        description: |-
+                          BindPasswordSecret - The name of a Secret, in the same namespace as the
+                          KineticaCluster, containing the LDAP bind password. When empty, the
+                          operator falls back to the Secret named after Host (legacy in-cluster
+                          openldap convention).
+                        type: string
+                      bindPasswordSecretKey:
+                        default: LDAP_ADMIN_PASSWORD
+                        description: |-
+                          BindPasswordSecretKey - The key within BindPasswordSecret holding the
+                          bind password.
+                            Default: LDAP_ADMIN_PASSWORD
+                        type: string
+                      host:
+                        default: openldap
+                        description: |-
+                          Host - The name of the host to connect to. If IsInLocalK8S=true then supply only the name e.g. `openldap`,
+                          otherwise supply the full external hostname or IP address.
+                            Default: openldap
+                        type: string
+                      isInLocalK8S:
+                        default: true
+                        description: |-
+                          IsInLocalK8S - Is the LDAP server co-located in the same K8s cluster the operator is running in.
+                          When true, Host is treated as a Service name and expanded to
+                          `<host>.<namespace>.svc.cluster.local`. When false, Host is used verbatim
+                          (an external FQDN or IP address).
+                            Default: true
+                        type: boolean
+                      isLDAPS:
+                        default: false
+                        description: |-
+                          IsLDAPS - Use LDAPS instead of LDAP. NOT YET SUPPORTED - setting this to
+                          true is rejected at reconcile time.
+                            Default: false
+                        type: boolean
+                      namespace:
+                        default: ''
+                        description: |-
+                          Namespace - The namespace of the in-cluster LDAP Service (only used when
+                          IsInLocalK8S=true). Defaults to the namespace of the KineticaCluster.
+                        type: string
+                      port:
+                        default: 389
+                        description: |-
+                          Port - Defaults to LDAP Port 389
+                            Default: 389
+                        format: int32
+                        type: integer
+                    type: object
+                  type:
+                    default: LDAP
+                    description: |-
+                      Type selects the identity provider backing this cluster. Defaults to LDAP,
+                      reproducing the historical behaviour.
+                    enum:
+                    - LDAP
+                    - Internal
+                    type: string
+                required:
+                - type
+                type: object
               autoSuspend:
                 default:
                   enabled: false
@@ -23962,77 +24056,6 @@ spec:
                 description: The Kubernetes Ingress Controller will be running on
                   e.g. ingress-nginx, Traefik, Ambassador, Gloo, Kong etc.
                 type: string
-              ldap:
-                default:
-                  baseDN: dc=kinetica,dc=com
-                  bindDN: cn=admin,dc=kinetica,dc=com
-                  host: openldap
-                  isInLocalK8S: true
-                  isLDAPS: false
-                  port: 389
-                description: The LDAP server to connect to.
-                properties:
-                  baseDN:
-                    default: dc=kinetica,dc=com
-                    description: BaseDN - The root base LDAP Distinguished Name to
-                      use as the base for the LDAP usage
-                    type: string
-                  bindDN:
-                    default: cn=admin,dc=kinetica,dc=com
-                    description: BindDN - The LDAP Distinguished Name to use for the
-                      LDAP connectivity/data connectivity/bind
-                    type: string
-                  bindPasswordSecret:
-                    description: |-
-                      BindPasswordSecret - The name of a Secret, in the same namespace as the
-                      KineticaCluster, containing the LDAP bind password. When empty, the
-                      operator falls back to the Secret named after Host (legacy in-cluster
-                      openldap convention).
-                    type: string
-                  bindPasswordSecretKey:
-                    default: LDAP_ADMIN_PASSWORD
-                    description: |-
-                      BindPasswordSecretKey - The key within BindPasswordSecret holding the
-                      bind password.
-                        Default: LDAP_ADMIN_PASSWORD
-                    type: string
-                  host:
-                    default: openldap
-                    description: |-
-                      Host - The name of the host to connect to. If IsInLocalK8S=true then supply only the name e.g. `openldap`,
-                      otherwise supply the full external hostname or IP address.
-                        Default: openldap
-                    type: string
-                  isInLocalK8S:
-                    default: true
-                    description: |-
-                      IsInLocalK8S - Is the LDAP server co-located in the same K8s cluster the operator is running in.
-                      When true, Host is treated as a Service name and expanded to
-                      `<host>.<namespace>.svc.cluster.local`. When false, Host is used verbatim
-                      (an external FQDN or IP address).
-                        Default: true
-                    type: boolean
-                  isLDAPS:
-                    default: false
-                    description: |-
-                      IsLDAPS - Use LDAPS instead of LDAP. NOT YET SUPPORTED - setting this to
-                      true is rejected at reconcile time.
-                        Default: false
-                    type: boolean
-                  namespace:
-                    default: ''
-                    description: |-
-                      Namespace - The namespace of the in-cluster LDAP Service (only used when
-                      IsInLocalK8S=true). Defaults to the namespace of the KineticaCluster.
-                    type: string
-                  port:
-                    default: 389
-                    description: |-
-                      Port - Defaults to LDAP Port 389
-                        Default: 389
-                    format: int32
-                    type: integer
-                type: object
               monitoring:
                 default:
                   syslog:
