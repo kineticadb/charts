@@ -1,0 +1,39 @@
+suite: CRD upsert Job toggle
+values:
+  - __base_values.yaml
+
+tests:
+  - it: no CRD upsert Job when disabled
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: false
+    asserts:
+      - not: true
+        containsDocument:
+          kind: Job
+          apiVersion: batch/v1
+          name: RELEASE-NAME-upsert-kinetica-crds
+          any: true
+
+  - it: creates CRD upsert Job when enabled
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: true
+    asserts:
+      - containsDocument:
+          kind: Job
+          apiVersion: batch/v1
+          name: RELEASE-NAME-upsert-kinetica-crds
+          any: true
+
+  - it: Job uses correct image
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: true
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "test\\.registry\\.io/upsert-kinetica-crds"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds

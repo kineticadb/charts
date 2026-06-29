@@ -429,11 +429,7 @@ gadmin_settings_js.tmpl: |
   var APPLICATION_NAME = "Kinetica"; // change this to gaia if you want to show gaia instead of GPUdb and viceversa
   var APPLICATION_FULL_NAME = APPLICATION_NAME  + (HA_ENABLED ? "-HA" : "");
   var COLORING_LEGEND = true; // determines whether coloring legends are used for fields depending on where the fields are stored
-  {{- if .PathPrefix }}
-  var WEBAPP_CONTEXT = "{{ .PathPrefix }}/gadmin";
-  {{- else }}
   var WEBAPP_CONTEXT = "gadmin";
-  {{- end }}
 
   // URL to Kinetica proxy servlet
   // Change this if you want to access gadmin from a reverse proxy that uses a different URL
@@ -725,15 +721,6 @@ gadmin_settings_js.tmpl: |
 
   var ENABLE_LOGIN_ANIMATION = true;
 
-  // Global variables consumed by login.html and init.js before the full
-  // initialization completes. init.js overwrites these after the API responds.
-  // Without these defaults, document.ready and loadClusterInfo callbacks crash
-  // on undefined references.
-  var isTrialEditionEnabled = false;
-  var isDevEditionEnabled = false;
-  var isLoginAnimationEnabled = ENABLE_LOGIN_ANIMATION;
-  var hostname = "";
-
   // KiSQL related parameters
   var KISQL_RESPONSE_SIZE_LIMIT = 10485760; // bytes
   var KISQL_ENABLE_MUTATE_CONFIRMATION = false;
@@ -894,7 +881,9 @@ gpudb_conf.tmpl: |
   #       "/opt/gpudb/httpd/conf/httpd.conf" and setup HTTPS as per the Apache
   #       httpd documentation at https://httpd.apache.org/docs/2.2/
   # enable_httpd_proxy = true
-  enable_httpd_proxy = {{ .Cluster.Spec.GPUDBCluster.Config.Network.EnableHTTPDProxy }}
+  # Internal auth provider: gpudb authenticates natively, so the httpd LDAP auth
+  # proxy is not run.
+  enable_httpd_proxy = {{ if .Cluster.IsInternalAuth }}false{{ else }}{{ .Cluster.Spec.GPUDBCluster.Config.Network.EnableHTTPDProxy }}{{ end }}
 
   # TCP port that the httpd auth proxy server will listen on if
   # 'enable_httpd_proxy' is "true".
@@ -1004,7 +993,10 @@ gpudb_conf.tmpl: |
   # IMPORTANT: DO NOT ENABLE unless external access to Kinetica ports
   # has been blocked via firewall AND the authentication proxy is
   # configured to block "REMOTE_USER" HTTP headers passed in from clients.
-  enable_external_authentication = {{ .Cluster.Spec.GPUDBCluster.Config.Security.EnableExternalAuthentication }}
+  # Internal auth provider: there is no external auth proxy to trust REMOTE_USER
+  # from, so external authentication is forced off (gpudb authenticates users
+  # against its own internal user store).
+  enable_external_authentication = {{ if .Cluster.IsInternalAuth }}false{{ else }}{{ .Cluster.Spec.GPUDBCluster.Config.Security.EnableExternalAuthentication }}{{ end }}
   #enable_external_authentication = true
 
   # Encrypted key that, if specified, must be passed in unencrypted via the
@@ -1711,7 +1703,7 @@ gpudb_conf.tmpl: |
   event_server_port = {{ if .Cluster.Spec.GPUDBCluster.Config.Events.Port }}{{ .Cluster.Spec.GPUDBCluster.Config.Events.Port }}{{ else }}2003{{ end }}
 
   # Enable running promtail to parse and send logs to the event_server_address.
-  enable_promtail = {{ .Cluster.Spec.GPUDBCluster.Config.Events.EnablePromtail }}
+  enable_promtail = false
 
   # Alertmanager server address and port.
   alertmanager_address = {{ .Cluster.Spec.GPUDBCluster.Config.AlertManager.IPAddress }}
