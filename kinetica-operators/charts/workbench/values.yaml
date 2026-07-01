@@ -7,6 +7,23 @@
   # -- Annotations - Annotations labels to be applied to the Statefulset DB pods.
   # Type: object
 
+  # clusterRef: (required: true)
+  # -- ClusterRef identifies the KineticaCluster this Workbench serves. The
+  # operator reads the cluster's authentication provider and connection
+  # settings (Spec.Authentication) from it and propagates them to the
+  # workbench pod. This is also the definitive cluster the workbench tracks.
+  # Type: object
+  clusterRef: 
+    # name: (required: true)
+    # -- Name of the KineticaCluster.
+    # Required: true
+    # Type: string
+
+    # namespace: (required: false)
+    # -- Namespace of the KineticaCluster. Defaults to the Workbench's own
+    # namespace when empty.
+    # Type: string
+
   # dedicatedSaaS: (required: false)
   # -- Identify if DedicatedSaaS environment or not.
   # Type: boolean
@@ -40,6 +57,15 @@
   # Type: string
   # Default: "kinetica/workbench:latest"
   image: "kinetica/workbench:latest"
+
+  # imagePullPolicy: (required: true)
+  # -- ImagePullPolicy for the workbench container. Defaults to IfNotPresent so
+  # pre-loaded images (e.g. a kind cluster with no registry access) are used
+  # as-is. Set to Always to always re-pull a mutable tag.
+  # Required: true
+  # Type: string
+  # Default: "IfNotPresent"
+  imagePullPolicy: "IfNotPresent"
 
   # ingressClassName: (required: false)
   # -- Override the IngressClass name on created Ingress resources.

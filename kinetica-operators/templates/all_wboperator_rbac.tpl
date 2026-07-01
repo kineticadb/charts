@@ -51,6 +51,14 @@ rules:
   - patch
   - update
 - apiGroups:
+  - app.kinetica.com
+  resources:
+  - kineticaclusters
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - apps
   resources:
   - statefulsets

@@ -29458,7 +29458,6 @@ spec:
                                     pod labels will be ignored. The default value is empty.
                                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                   items:
                                     type: string
                                   type: array
@@ -29473,7 +29472,6 @@ spec:
                                     pod labels will be ignored. The default value is empty.
                                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                   items:
                                     type: string
                                   type: array
@@ -29639,7 +29637,6 @@ spec:
                                 pod labels will be ignored. The default value is empty.
                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                               items:
                                 type: string
                               type: array
@@ -29654,7 +29651,6 @@ spec:
                                 pod labels will be ignored. The default value is empty.
                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                               items:
                                 type: string
                               type: array
@@ -29747,8 +29743,8 @@ spec:
                           most preferred is the one with the greatest sum of weights, i.e.
                           for each node that meets all of the scheduling requirements (resource
                           request, requiredDuringScheduling anti-affinity expressions, etc.),
-                          compute a sum by iterating through the elements of this field and adding
-                          "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
+                          compute a sum by iterating through the elements of this field and subtracting
+                          "weight" from the sum if the node has pods which matches the corresponding podAffinityTerm; the
                           node(s) with the highest sum are the most preferred.
                         items:
                           description: The weights of all of the matched WeightedPodAffinityTerm
@@ -29817,7 +29813,6 @@ spec:
                                     pod labels will be ignored. The default value is empty.
                                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                   items:
                                     type: string
                                   type: array
@@ -29832,7 +29827,6 @@ spec:
                                     pod labels will be ignored. The default value is empty.
                                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                   items:
                                     type: string
                                   type: array
@@ -29998,7 +29992,6 @@ spec:
                                 pod labels will be ignored. The default value is empty.
                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                               items:
                                 type: string
                               type: array
@@ -30013,7 +30006,6 @@ spec:
                                 pod labels will be ignored. The default value is empty.
                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                               items:
                                 type: string
                               type: array
@@ -30100,6 +30092,24 @@ spec:
                 description: Annotations - Annotations labels to be applied to the
                   Statefulset DB pods.
                 type: object
+              clusterRef:
+                description: |-
+                  ClusterRef identifies the KineticaCluster this Workbench serves. The
+                  operator reads the cluster's authentication provider and connection
+                  settings (Spec.Authentication) from it and propagates them to the
+                  workbench pod. This is also the definitive cluster the workbench tracks.
+                properties:
+                  name:
+                    description: Name of the KineticaCluster.
+                    type: string
+                  namespace:
+                    description: |-
+                      Namespace of the KineticaCluster. Defaults to the Workbench's own
+                      namespace when empty.
+                    type: string
+                required:
+                - name
+                type: object
               dedicatedSaaS:
                 default: false
                 description: Identify if DedicatedSaaS environment or not.
@@ -30124,6 +30134,17 @@ spec:
               image:
                 default: kinetica/workbench:latest
                 description: Image corresponds to the workbench image
+                type: string
+              imagePullPolicy:
+                default: IfNotPresent
+                description: |-
+                  ImagePullPolicy for the workbench container. Defaults to IfNotPresent so
+                  pre-loaded images (e.g. a kind cluster with no registry access) are used
+                  as-is. Set to Always to always re-pull a mutable tag.
+                enum:
+                - Always
+                - IfNotPresent
+                - Never
                 type: string
               ingressClassName:
                 description: |-
@@ -30180,7 +30201,9 @@ spec:
                   alive without activity
                 type: integer
             required:
+            - clusterRef
             - fqdn
+            - imagePullPolicy
             - useHttps
             type: object
           status:
