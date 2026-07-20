@@ -165,33 +165,34 @@ tests:
           name: gpudb
           any: true
 
-  # ----- Admin user -----
-  - it: creates admin-pwd Secret
+  # ----- Admin user (provisioned by the post-install hook, not static docs) -----
+  - it: creates post-install secret-patch Job
     template: kinetica_operators.yaml
     asserts:
       - containsDocument:
-          kind: Secret
+          kind: Job
+          apiVersion: batch/v1
+          name: RELEASE-NAME-post-install-secret-patch
+          any: true
+
+  - it: creates post-install patch-secrets script ConfigMap
+    template: kinetica_operators.yaml
+    asserts:
+      - containsDocument:
+          kind: ConfigMap
           apiVersion: v1
-          name: admin-pwd
+          name: RELEASE-NAME-patch-secrets-script
           any: true
 
-  - it: creates KineticaUser for admin
+  - it: hook script provisions the admin KineticaUser
     template: kinetica_operators.yaml
     asserts:
-      - containsDocument:
-          kind: KineticaUser
-          apiVersion: app.kinetica.com/v1
-          name: kadmin
-          any: true
-
-  - it: creates global-admin KineticaGrant
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: KineticaGrant
-          apiVersion: app.kinetica.com/v1
-          name: global-admin-system-admin
-          any: true
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "kind: KineticaUser"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
 
   # ----- Ingress RBAC -----
   - it: creates ingress-nginx Role

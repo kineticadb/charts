@@ -13,10 +13,11 @@ metadata:
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: '-5'
 spec:
-  ttlSecondsAfterFinished: 300
+  # 20-minute log-inspection window, then K8s TTL controller deletes the Job.
+  ttlSecondsAfterFinished: 1200
   backoffLimit: 3
   template:
     metadata:
@@ -55,10 +56,10 @@ spec:
                   continue
                 fi
                 echo "Processing: $F"
-                if kubectl replace -f "$F"; then
-                  echo "  SUCCESS: $F"
+                if ERR="$(kubectl replace -f "$F" 2>&1)"; then
+                  echo "  SUCCESS: $F - ${CRD_NAME}"
                 else
-                  echo "  FAILED: $F"
+                  printf 'FAILED %s: %s\n' "$CRD" "$(printf '%s' "$ERR" | head -1)"
                   FAILED=$((FAILED + 1))
                 fi
               fi
@@ -70,6 +71,6 @@ spec:
               exit 1
             fi
             echo "All CRDs updated successfully"
-      restartPolicy: Never
+      restartPolicy: OnFailure
 
 {{- end }}

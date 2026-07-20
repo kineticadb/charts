@@ -91,6 +91,15 @@
   # -- NodeSelector - NodeSelector to be applied to the DB Pods
   # Type: object
 
+  # pathPrefix: (required: false)
+  # -- Path prefix for sub-path multi-tenancy routing.
+  # When set, workbench ingress paths are prefixed with /{PathPrefix}/workbench.
+  # Populated via Helm values from the parent KineticaCluster name.
+  # When empty, workbench uses root-level paths (backward compatible).
+  # Type: string
+  # Default: ""
+  pathPrefix: ""
+
   # secureNetwork: (required: false)
   # -- Enable secure network mode for the workbench.
   # Type: boolean
@@ -100,6 +109,12 @@
   # storageClass: (required: false)
   # -- Specify the storage class to use on the Workbench stateful set
   # Type: string
+
+  # telemetry: (required: false)
+  # -- Telemetry holds third-party analytics configuration consumed by the
+  # workbench frontend and server. Defaults to disabled (no Segment SDK,
+  # no Intercom widget) — set Telemetry.Enabled to true to opt in.
+  # Type: object
 
   # useHttps: (required: true)
   # -- When not using LetsEncrypt, whether the workbench is secured behind SSL or

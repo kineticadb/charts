@@ -223,7 +223,7 @@ kineticacluster:
       enabled: false
       environment: "staging"
     license: "FAKE-LICENSE-KEY-FOR-TESTING"
-    licenseSecretName: ""
+    licenseSecretName: "kinetica-license"
     dbRegistryRepositoryTag:
       registry: "kinetica.azurecr.io/dev"
       repository: kinetica-k8s-cpu
@@ -261,12 +261,15 @@ dbAdminUser:
   create: true
   name: "kadmin"
   password: "TestP@ssw0rd123"
-  adminUserSecretName: ""
+  adminUserSecretName: "kinetica-admin-creds"
 
 workbench:
   install: true
   name: workbench
   namespace: gpudb
+  # Must match kineticacluster.name above (the KineticaCluster metadata.name).
+  clusterRef:
+    name: "test-kc"
   fqdn: "local.kinetica"
   letsEncrypt:
     enabled: false

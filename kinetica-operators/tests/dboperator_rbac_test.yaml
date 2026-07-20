@@ -12,68 +12,27 @@ tests:
           name: controller-manager
           any: true
 
-  # ----- ClusterRole triads -----
-  - it: creates kineticacluster admin ClusterRole
+  # ----- Operator Roles -----
+  # The dboperator ships namespaced Role/RoleBinding pairs (from config/rbac).
+  # The per-CRD editor/viewer/admin ClusterRoles are kubebuilder scaffolding
+  # and are not wired into the chart, so they are not asserted here.
+  - it: creates manager Role in cluster namespace
     template: kinetica_operators.yaml
     asserts:
       - containsDocument:
-          kind: ClusterRole
+          kind: Role
           apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticacluster-admin-role
+          name: manager-role
+          namespace: gpudb
           any: true
 
-  - it: creates kineticacluster editor ClusterRole
+  - it: creates leader-election Role
     template: kinetica_operators.yaml
     asserts:
       - containsDocument:
-          kind: ClusterRole
+          kind: Role
           apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticacluster-editor-role
-          any: true
-
-  - it: creates kineticacluster viewer ClusterRole
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticacluster-viewer-role
-          any: true
-
-  - it: creates kineticauser admin ClusterRole
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticauser-admin-role
-          any: true
-
-  - it: creates kineticauser editor ClusterRole
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticauser-editor-role
-          any: true
-
-  - it: creates kineticauser viewer ClusterRole
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticauser-viewer-role
-          any: true
-
-  - it: creates metrics-auth-role ClusterRole
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-role
+          name: leader-election-role
           any: true
 
   # ----- RoleBindings -----
@@ -96,15 +55,6 @@ tests:
           name: leader-election-rolebinding
           any: true
 
-  - it: creates metrics-auth-rolebinding
-    template: kinetica_operators.yaml
-    asserts:
-      - containsDocument:
-          kind: RoleBinding
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-rolebinding
-          any: true
-
   # ----- Suppression -----
   - it: suppresses all RBAC when dbOperator disabled
     template: kinetica_operators.yaml
@@ -119,13 +69,13 @@ tests:
           any: true
       - not: true
         containsDocument:
-          kind: ClusterRole
+          kind: Role
           apiVersion: rbac.authorization.k8s.io/v1
-          name: kineticacluster-admin-role
+          name: manager-role
           any: true
       - not: true
         containsDocument:
-          kind: ClusterRole
+          kind: RoleBinding
           apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-role
+          name: manager-rolebinding
           any: true

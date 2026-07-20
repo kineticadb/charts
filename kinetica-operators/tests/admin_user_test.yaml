@@ -2,46 +2,69 @@ suite: DB admin user resources
 values:
   - __base_values.yaml
 
+# The admin user, its password secret (admin-pwd), the global-admins
+# KineticaRole and the admin KineticaGrants are no longer rendered as static
+# chart documents. They are provisioned at runtime by the post-install hook
+# (see templates/post.install.secret.patch.tpl), which reads the admin
+# username/password from the pre-created admin credentials secret. These tests
+# therefore assert the provisioning logic embedded in the hook's script
+# ConfigMap rather than fully-rendered custom resources.
 tests:
-  - it: creates admin-pwd Secret when create is true
+  - it: hook script provisions the admin-pwd Secret
     template: kinetica_operators.yaml
     asserts:
-      - containsDocument:
-          kind: Secret
-          apiVersion: v1
-          name: admin-pwd
-          namespace: gpudb
-          any: true
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "name: admin-pwd"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
 
-  - it: creates KineticaUser with default admin name
+  - it: hook script creates the global-admins KineticaRole
     template: kinetica_operators.yaml
     asserts:
-      - containsDocument:
-          kind: KineticaUser
-          apiVersion: app.kinetica.com/v1
-          name: kadmin
-          namespace: gpudb
-          any: true
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "kind: KineticaRole"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "global_admins"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
 
-  - it: creates global-admin-system-admin KineticaGrant
+  - it: hook script creates the admin KineticaUser from the secret
     template: kinetica_operators.yaml
     asserts:
-      - containsDocument:
-          kind: KineticaGrant
-          apiVersion: app.kinetica.com/v1
-          name: global-admin-system-admin
-          namespace: gpudb
-          any: true
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "kind: KineticaUser"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
 
-  - it: creates user-specific KineticaGrant
+  - it: hook script creates the global-admin-system-admin KineticaGrant
     template: kinetica_operators.yaml
     asserts:
-      - containsDocument:
-          kind: KineticaGrant
-          apiVersion: app.kinetica.com/v1
-          name: kadmin-global-admin-create
-          namespace: gpudb
-          any: true
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "global-admin-system-admin"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
+
+  - it: hook script creates the user-specific admin KineticaGrant
+    template: kinetica_operators.yaml
+    asserts:
+      - matchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "global-admin-create"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script
 
   - it: creates pre-delete Job
     template: kinetica_operators.yaml
@@ -61,50 +84,22 @@ tests:
           name: RELEASE-NAME-delete-script
           any: true
 
-  - it: suppresses all admin resources when create is false
+  - it: suppresses admin provisioning and pre-delete Job when create is false
     template: kinetica_operators.yaml
     set:
       dbAdminUser.create: false
     asserts:
       - not: true
         containsDocument:
-          kind: Secret
-          apiVersion: v1
-          name: admin-pwd
-          any: true
-      - not: true
-        containsDocument:
-          kind: KineticaUser
-          apiVersion: app.kinetica.com/v1
-          name: kadmin
-          any: true
-      - not: true
-        containsDocument:
-          kind: KineticaGrant
-          apiVersion: app.kinetica.com/v1
-          name: global-admin-system-admin
-          any: true
-      - not: true
-        containsDocument:
           kind: Job
           apiVersion: batch/v1
           name: RELEASE-NAME-pre-delete-job
           any: true
-
-  - it: uses custom admin username
-    template: kinetica_operators.yaml
-    set:
-      dbAdminUser.name: "myadmin"
-    asserts:
-      - containsDocument:
-          kind: KineticaUser
-          apiVersion: app.kinetica.com/v1
-          name: myadmin
-          namespace: gpudb
-          any: true
-      - containsDocument:
-          kind: KineticaGrant
-          apiVersion: app.kinetica.com/v1
-          name: myadmin-global-admin-create
-          namespace: gpudb
-          any: true
+      # The post-install patch Job still runs for the license, but the admin
+      # provisioning block must not be present in its script.
+      - notMatchRegex:
+          path: data["patch-secrets.sh"]
+          pattern: "kind: KineticaUser"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-patch-secrets-script

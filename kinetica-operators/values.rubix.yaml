@@ -31,7 +31,7 @@ ingress-nginx:
             "endpoints": [
               {
                 "name": "https",
-                "prefix": "/",
+                "prefix": "{{ $n := .Values.global.kineticaClusterName }}{{ if and $n (ne $n "kineticacluster") }}/{{ $n }}{{ else }}/{{ end }}",
                 "domain-aliases": ["DEFAULT"]
               }
             ]
@@ -65,13 +65,11 @@ kineticacluster:
     syslog:
       enabled: false
   name: kinetica-apollo-entity
-  stats:
-    isEnabled: false
 
 kubeRbacProxy:
   image:
-    repository: kineticastagingcloud/kube-rbac-proxy
-    tag: v0.20.0
+    repository: kube-rbac-proxy
+    tag: v0.22.0
 
 kubeStateMetrics:
   install: false
@@ -105,9 +103,12 @@ supportBundle:
   install: false
 
 upsertKineticaCrds:
-  enable: false
+  enabled: true
 
 workbench:
+  # Must match kineticacluster.name above (the KineticaCluster metadata.name).
+  clusterRef:
+    name: kinetica-apollo-entity
   letsEncrypt:
     enabled: false
   secureNetwork: true

@@ -2,6 +2,9 @@ suite: OpenShift SCC resources
 values:
   - __base_values.yaml
 
+# OpenShift (oscp) SecurityContextConstraints support was removed as part of
+# the on-prem security hardening (rubix security item 2). The chart no longer
+# emits any SecurityContextConstraints, regardless of the openshift flag.
 tests:
   - it: no SCCs when openshift is false
     template: kinetica_operators.yaml
@@ -27,44 +30,10 @@ tests:
           name: kinetica-ingress-nginx-scc
           any: true
 
-  - it: creates dboperator SCC when openshift true and dbOperator installed
+  - it: still no SCCs when openshift is true
     template: kinetica_operators.yaml
     set:
       openshift: true
-    asserts:
-      - containsDocument:
-          kind: SecurityContextConstraints
-          apiVersion: security.openshift.io/v1
-          name: kinetica-dboperator-scc
-          any: true
-
-  - it: creates otel SCC when openshift true and otelCollector installed
-    template: kinetica_operators.yaml
-    set:
-      openshift: true
-    asserts:
-      - containsDocument:
-          kind: SecurityContextConstraints
-          apiVersion: security.openshift.io/v1
-          name: kinetica-otel-scc
-          any: true
-
-  - it: creates ingress-nginx SCC when openshift true and ingressNginx installed
-    template: kinetica_operators.yaml
-    set:
-      openshift: true
-    asserts:
-      - containsDocument:
-          kind: SecurityContextConstraints
-          apiVersion: security.openshift.io/v1
-          name: kinetica-ingress-nginx-scc
-          any: true
-
-  - it: no dboperator SCC when openshift true but dbOperator disabled
-    template: kinetica_operators.yaml
-    set:
-      openshift: true
-      dbOperator.install: false
     asserts:
       - not: true
         containsDocument:
@@ -72,26 +41,12 @@ tests:
           apiVersion: security.openshift.io/v1
           name: kinetica-dboperator-scc
           any: true
-
-  - it: no otel SCC when openshift true but otelCollector disabled
-    template: kinetica_operators.yaml
-    set:
-      openshift: true
-      otelCollector.install: false
-    asserts:
       - not: true
         containsDocument:
           kind: SecurityContextConstraints
           apiVersion: security.openshift.io/v1
           name: kinetica-otel-scc
           any: true
-
-  - it: no ingress SCC when openshift true but ingressNginx disabled
-    template: kinetica_operators.yaml
-    set:
-      openshift: true
-      ingressNginx.install: false
-    asserts:
       - not: true
         containsDocument:
           kind: SecurityContextConstraints

@@ -15,7 +15,7 @@ cert-manager:
 environment: onPrem
 
 global:
-  defaultStorageClass: premium-rwo
+  defaultStorageClass: managed-premium
 
 gpu-operator:
   driver:
@@ -34,6 +34,10 @@ ingress-nginx:
   controller:
     nodeSelector:
       app.kinetica.com/pool: infra
+    service:
+      annotations:
+        #service.beta.kubernetes.io/azure-dns-label-name: my-kinetica-cluster-dns-prefix
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
   defaultBackend:
     nodeSelector:
       app.kinetica.com/pool: infra
@@ -49,11 +53,13 @@ kineticacluster:
           default:
             limit: 50Gi
             parameters:
-              type: pd-ssd
-            provisioner: pd.csi.storage.gke.io
+              cachingmode: ReadOnly
+              kind: Managed
+              storageaccounttype: Premium_LRS
+            provisioner: disk.csi.azure.com
             volumeClaim:
               spec:
-                storageClassName: premium-rwo
+                storageClassName: managed-premium
     hasPools: true
   install: true
   name: cluster0
@@ -70,7 +76,7 @@ openldap:
   nodeSelector:
     app.kinetica.com/pool: infra
 
-provider: gke
+provider: eks
 
 support-bundle:
   configMap:
@@ -85,9 +91,6 @@ upsertKineticaCrds:
   enabled: false
 
 workbench:
-  # Must match kineticacluster.name above (the KineticaCluster metadata.name).
-  clusterRef:
-    name: cluster0
   nodeSelector:
     app.kinetica.com/pool: infra
-  storageClass: premium-rwo
+  storageClass: managed-premium

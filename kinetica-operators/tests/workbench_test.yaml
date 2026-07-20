@@ -53,29 +53,6 @@ tests:
           namespace: gpudb
           any: true
 
-  - it: creates workbench-tls Secret for localhost with letsEncrypt
-    template: kinetica_operators.yaml
-    set:
-      workbench.fqdn: "localhost"
-      workbench.letsEncrypt.enabled: true
-    asserts:
-      - containsDocument:
-          kind: Secret
-          apiVersion: v1
-          name: workbench-tls
-          namespace: gpudb
-          any: true
-
-  - it: no workbench-tls Secret when fqdn is not localhost
-    template: kinetica_operators.yaml
-    set:
-      workbench.fqdn: "my.domain.com"
-      workbench.letsEncrypt.enabled: true
-    asserts:
-      - not: true
-        containsDocument:
-          kind: Secret
-          apiVersion: v1
-          name: workbench-tls
-          namespace: gpudb
-          any: true
+  # NOTE: the localhost self-signed "workbench-tls" secret was removed
+  # (rubix security item 7a — dead TLS key used only for localhost testing),
+  # so there is no longer any workbench-tls Secret assertion here.

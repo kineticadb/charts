@@ -5,7 +5,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusteradmins.app.kinetica.com
 spec:
   conversion:
@@ -207,7 +207,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterbackups.app.kinetica.com
 spec:
   conversion:
@@ -971,7 +971,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterelasticities.app.kinetica.com
 spec:
   conversion:
@@ -1174,7 +1174,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterresourcegroups.app.kinetica.com
 spec:
   conversion:
@@ -1291,7 +1291,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterrestores.app.kinetica.com
 spec:
   conversion:
@@ -1604,7 +1604,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusters.app.kinetica.com
 spec:
   conversion:
@@ -3797,6 +3797,11 @@ spec:
                           port: 9080
                         description: EventConfig
                         properties:
+                          enablePromtail:
+                            default: false
+                            description: Enable running promtail to parse and send
+                              logs to the event_server_address.
+                            type: boolean
                           internal:
                             default: true
                             description: |-
@@ -5664,6 +5669,9 @@ spec:
                                       ExtURL - URL of Ranger REST API.  E.g., https://localhost:6080/
                                       Leave blank for no Ranger Server
                                       security.external.ranger.url =
+                                      omitempty is required: without it a nil pointer serializes to `"url": null`,
+                                      and the CRD schema declares url as a non-nullable string, so the mutating
+                                      webhook's re-serialization of a Ranger-less cluster would fail validation.
                                     type: string
                                 required:
                                 - authorizerAddress
@@ -24097,6 +24105,16 @@ spec:
                 required:
                 - syslog
                 type: object
+              pathPrefix:
+                default: ''
+                description: |-
+                  Path prefix for sub-path multi-tenancy routing.
+                  When set, all ingress paths are prefixed with /{PathPrefix}/service.
+                  Set by the operator to metadata.name during reconciliation.
+                  When empty, services use root-level paths (backward compatible).
+                  Uses metadata.name (K8s identity, external routing), not spec.gpudbCluster.clusterName
+                  (Kinetica DB internal identity). Consistent with existing rank ingress pattern.
+                type: string
               payAsYouGo:
                 default: false
                 description: Tells the operator to use Cloud Provider Pay As You Go
@@ -28234,7 +28252,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterschemas.app.kinetica.com
 spec:
   conversion:
@@ -28333,7 +28351,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticagrants.app.kinetica.com
 spec:
   conversion:
@@ -28598,7 +28616,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticareleaseversions.app.kinetica.com
 spec:
   conversion:
@@ -28739,7 +28757,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaroles.app.kinetica.com
 spec:
   conversion:
@@ -28909,7 +28927,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticausers.app.kinetica.com
 spec:
   conversion:
@@ -29129,7 +29147,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: workbenches.workbench.com.kinetica
 spec:
   group: workbench.com.kinetica
@@ -30182,6 +30200,14 @@ spec:
                   type: string
                 description: NodeSelector - NodeSelector to be applied to the DB Pods
                 type: object
+              pathPrefix:
+                default: ''
+                description: |-
+                  Path prefix for sub-path multi-tenancy routing.
+                  When set, workbench ingress paths are prefixed with /{PathPrefix}/workbench.
+                  Populated via Helm values from the parent KineticaCluster name.
+                  When empty, workbench uses root-level paths (backward compatible).
+                type: string
               secureNetwork:
                 default: false
                 description: Enable secure network mode for the workbench.
@@ -30190,6 +30216,34 @@ spec:
                 description: Specify the storage class to use on the Workbench stateful
                   set
                 type: string
+              telemetry:
+                description: |-
+                  Telemetry holds third-party analytics configuration consumed by the
+                  workbench frontend and server. Defaults to disabled (no Segment SDK,
+                  no Intercom widget) — set Telemetry.Enabled to true to opt in.
+                properties:
+                  enabled:
+                    default: false
+                    description: |-
+                      Enabled is the master gate for all telemetry destinations. When
+                      false (default), no SDK keys are emitted into the workbench
+                      frontend or server regardless of SegmentApiKey / IntercomAppId
+                      values. Set true to opt in, then populate per-destination fields
+                      for granular control (e.g., Segment on, Intercom off).
+                    type: boolean
+                  intercomAppId:
+                    description: |-
+                      IntercomAppId is the Intercom workspace App ID for the support
+                      widget. Only consulted when Enabled is true; an empty value
+                      disables Intercom even when Enabled is true.
+                    type: string
+                  segmentApiKey:
+                    description: |-
+                      SegmentApiKey is the Segment.io write key for analytics events.
+                      Only consulted when Enabled is true; an empty value disables
+                      Segment even when Enabled is true.
+                    type: string
+                type: object
               useHttps:
                 default: false
                 description: When not using LetsEncrypt, whether the workbench is
@@ -30219,7 +30273,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: workbenchupgrades.workbench.com.kinetica
 spec:
   group: workbench.com.kinetica

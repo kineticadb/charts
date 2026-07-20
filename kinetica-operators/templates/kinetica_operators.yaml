@@ -14,7 +14,7 @@
 
 {{- /* validate common values  environment and providers */ -}}
 {{- $allowedEnvironments := list "onPrem" "saas" "marketPlace" }}
-{{- $allowedOnPremProviders := list "k3s" "kind" "eks" "aks" "okd" "other" }}
+{{- $allowedOnPremProviders := list "k3s" "kind" "eks" "aks" "other" }}
 {{- $allowedSaasProviders := list "eks"  }}
 {{- $allowedMarketPlaceProviders := list "aks" "eks" }}
 
@@ -187,20 +187,6 @@
   {{- include "kinetica-operators.db-workbench" $data}}
 {{- end }}
 
----
-{{- if ($values.openshift) }}
-  {{- if $dbOperator.install }}
-    {{- include "kinetica-operators.oscp-dbopr-scc" $data }}
-  {{- end}}
-
-  {{- if ($values.otelCollector.install) }}
-    {{- include "kinetica-operators.oscp-otel-scc" $data }}
-  {{- end}}
-
-  {{- if ($values.ingressNginx.install) }}
-    {{- include "kinetica-operators.oscp-ingress-nginx-scc" $data }}
-  {{- end}}
-{{- end}}
 ---
 {{- if eq $defaultDbOperatorEnvironment "saas-eks"}}
 {{- include "kinetica-operators.all-dboperator-productionIssuer" $data}}

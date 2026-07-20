@@ -52,7 +52,10 @@ supportBundle:
   install: true
 
 upsertKineticaCrds:
-  enable: false
+  enabled: false
 
 workbench:
+  # Must match kineticacluster.name above (the KineticaCluster metadata.name).
+  clusterRef:
+    name: cluster0
   storageClass: local-path

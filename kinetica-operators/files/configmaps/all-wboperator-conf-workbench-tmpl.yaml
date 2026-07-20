@@ -1,5 +1,13 @@
 config_production_js.tmpl: |
   window.WORKBENCH_ENV = {
+  {{- if .Spec.PathPrefix }}
+    REACT_APP_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/{{ .Spec.PathPrefix }}/workbench',
+    REACT_APP_CONTEXT: '{{ .Spec.PathPrefix }}/workbench',
+    REACT_APP_API_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/{{ .Spec.PathPrefix }}',
+    REACT_APP_GRAPHQL_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/{{ .Spec.PathPrefix }}/graphql',
+    REACT_APP_KYTARO_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/{{ .Spec.PathPrefix }}/kytaro',
+    API_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/{{ .Spec.PathPrefix }}',
+  {{- else }}
     REACT_APP_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/workbench',
     REACT_APP_CONTEXT: 'workbench',
     REACT_APP_API_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}',
@@ -11,8 +19,8 @@ config_production_js.tmpl: |
     K8S_EXTERNAL_USERNAME_PREFIX: '',
     EXECUTE_SQL_LIMIT: {{.Spec.ExecuteSqlLimit}},
     USER_IDLE_TIMEOUT: {{.Spec.UserIdleTimeout}},
-    INTERCOM_APP_ID: 'ucm1jxpa',
-    SEGMENT_API_KEY: 'faZJGnKjzhDKja1139YvTMw53BJ16Wvw',
+    INTERCOM_APP_ID: '{{ if .Spec.Telemetry.Enabled }}{{ .Spec.Telemetry.IntercomAppId }}{{ end }}',
+    SEGMENT_API_KEY: '{{ if .Spec.Telemetry.Enabled }}{{ .Spec.Telemetry.SegmentApiKey }}{{ end }}',
     CUSTOMER_INFO_JSON: '{{.Spec.DeploymentInfo}}',
     FREE_SAAS: {{.Spec.FreeSaaS}},
     DEDICATED_SAAS: {{.Spec.DedicatedSaaS}},

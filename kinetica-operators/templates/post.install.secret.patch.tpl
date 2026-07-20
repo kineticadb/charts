@@ -2,7 +2,11 @@
 {{- define "kinetica-operators.post-install-secret-patch" }}
 {{- $licenseSecretName := .Values.kineticacluster.gpudbCluster.licenseSecretName | default "" -}}
 {{- $adminUserSecretName := .Values.dbAdminUser.adminUserSecretName | default "" -}}
-{{- if or (ne $licenseSecretName "") (ne $adminUserSecretName "") }}
+{{- $adminCreate := .Values.dbAdminUser.create -}}
+{{- if and $adminCreate (eq $adminUserSecretName "") -}}
+  {{- fail "dbAdminUser.adminUserSecretName is required when dbAdminUser.create is true. Create a secret with 'username' and 'password' keys. Example: kubectl create secret generic my-admin-secret --from-literal=username=kadmin --from-literal=password=YOUR_PASSWORD -n gpudb" -}}
+{{- end -}}
+{{- if or (ne $licenseSecretName "") (and $adminCreate (ne $adminUserSecretName "")) }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -20,8 +24,6 @@ data:
 
     CLUSTER_NAME="{{ .Values.kineticacluster.name }}"
     CLUSTER_NS="{{ .Values.kineticacluster.namespace }}"
-    ADMIN_PLACEHOLDER="{{ .Values.dbAdminUser.name }}"
-    RING_NAME="{{ .Values.kineticacluster.name }}"
 
     # Helper: escape a value for safe embedding in JSON strings
     # Strip wrapping double quotes from a value (platform may store values quoted)
@@ -29,78 +31,243 @@ data:
       printf '%s' "$1" | sed -e 's/^"//' -e 's/"$//'
     }
 
+    RING_NAME="{{ .Values.kineticacluster.name }}"
+    LICENSE_SECRET_NAME="{{ $licenseSecretName }}"
+    ADMIN_SECRET_NAME="{{ $adminUserSecretName }}"
+
+    # Read a key from the secret. Prefers a volume-mounted file at
+    # /mnt/secrets/<mount_type>/<key> (populated by kubelet when the Job
+    # references the secret in its pod spec — also the hook that signals
+    # secret-distribution platforms like Palantir Rubix to auto-provision
+    # the secret into the release namespace). Falls back to kubectl lookup
+    # in the cluster namespace, then the release namespace.
+    read_secret_key() {
+      _secret_name="$1"
+      _key="$2"
+      _mount_type="$3"
+      _val=""
+      # Prefer volume-mounted secret
+      if [ -n "$_mount_type" ] && [ -f "/mnt/secrets/$_mount_type/$_key" ]; then
+        _val="$(cat "/mnt/secrets/$_mount_type/$_key" 2>/dev/null || true)"
+        # Strip wrapping double quotes (some platforms serialize secret values
+        # with surrounding quotes; this is format normalization, not
+        # sanitization — callers MUST validate the result before interpolating
+        # it into YAML/shell contexts).
+        _val="$(printf '%s' "$_val" | sed -e 's/^"//' -e 's/"$//')"
+        if [ -n "$_val" ]; then
+          printf '%s' "$_val"
+          return 0
+        fi
+      fi
+      # Fall back to kubectl lookup in cluster namespace, then release namespace
+      for _ns in "$CLUSTER_NS" "{{ .Release.Namespace }}"; do
+        _val="$(kubectl get secret "$_secret_name" -n "$_ns" -o jsonpath="{.data.$_key}" 2>/dev/null || true)"
+        if [ -n "$_val" ]; then
+          printf '%s' "$_val" | base64 -d
+          return 0
+        fi
+      done
+      return 1
+    }
+
+    # Wait briefly for a secret to become available. If the Job's pod has
+    # the secret volume-mounted (Rubix / kubelet path), the expected key
+    # file is present at pod start — skip polling entirely. Otherwise poll
+    # kubectl for a short window to cover kubelet mount races and pre-
+    # install-hook namespace rebuilds.
+    #
+    # The polling budget is intentionally short (30s) because if Apollo's
+    # secret distribution isn't configured for this namespace, the secret
+    # is never going to appear — long polling just consumes the Helm hook
+    # timeout (default 300s) and turns "missing secret" into "Helm timed
+    # out waiting for the condition", obscuring the real cause. Two waits
+    # at 30s fit comfortably under the 300s Helm window with room left
+    # for the rest of the script.
+    wait_for_secret() {
+      _secret_name="$1"
+      _mount_type="$2"
+      _expect_key="$3"
+      # Short-circuit when the secret is already volume-mounted
+      if [ -n "$_mount_type" ] && [ -f "/mnt/secrets/$_mount_type/$_expect_key" ]; then
+        echo "Secret '$_secret_name' available via mounted volume at /mnt/secrets/$_mount_type"
+        return 0
+      fi
+      _max_wait=30
+      _elapsed=0
+      while [ $_elapsed -lt $_max_wait ]; do
+        for _ns in "$CLUSTER_NS" "{{ .Release.Namespace }}"; do
+          if kubectl get secret "$_secret_name" -n "$_ns" >/dev/null 2>&1; then
+            echo "Found secret '$_secret_name' in namespace '$_ns'"
+            return 0
+          fi
+        done
+        sleep 5
+        _elapsed=$((_elapsed + 5))
+      done
+      echo "ERROR: secret '$_secret_name' not present in '$CLUSTER_NS' or '{{ .Release.Namespace }}', and not volume-mounted at /mnt/secrets/$_mount_type. Likely cause: Apollo secret distribution is not configured for this namespace, or the configured secret name does not match the chart value."
+      return 1
+    }
+
     json_escape() {
       printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
     }
 
-    # 1. Patch license from mounted secret
-    if [ -f /mnt/secrets/license/license ]; then
-      LICENSE=$(strip_quotes "$(cat /mnt/secrets/license/license)")
-      LICENSE=$(json_escape "$LICENSE")
+    # Validate that a value is a safe identifier for use in YAML manifests
+    # interpolated below. Pattern: 1-63 chars, alphanumeric/underscore/hyphen,
+    # must start and end with an alphanumeric (so the lowercased+hyphenated
+    # variant used for metadata.name is RFC1123-compliant). Returns 0 if
+    # valid, non-zero otherwise.
+    #
+    # Implementation note: uses POSIX 'case' rather than 'grep -E'. grep is
+    # line-oriented — its ^ and $ anchors match line-start/line-end, so a
+    # value like "admin\nmaliciousField: x" would have its first line match
+    # the regex and grep -q would return success, defeating the validator.
+    # 'case' patterns operate on the entire string as one unit and treat
+    # newline as just another character (correctly excluded by the bracket
+    # expression below).
+    validate_identifier() {
+      case "$1" in
+        '' | *[!a-zA-Z0-9_-]* ) return 1 ;;
+        [-_]* | *[-_] ) return 1 ;;
+      esac
+      _len=${#1}
+      [ "$_len" -ge 1 ] && [ "$_len" -le 63 ]
+    }
+
+    # Lowercase + translate underscores to hyphens for k8s metadata.name use.
+    # Safe to apply only after validate_identifier has accepted the input.
+    to_k8s_name() {
+      printf '%s' "$1" | tr 'A-Z_' 'a-z-'
+    }
+
+    # 1. Patch license from secret
+    if [ -n "$LICENSE_SECRET_NAME" ]; then
+      wait_for_secret "$LICENSE_SECRET_NAME" "license" "license" || true
+      LICENSE="$(read_secret_key "$LICENSE_SECRET_NAME" "license" "license" || true)"
       if [ -n "$LICENSE" ]; then
+        LICENSE="$(json_escape "$LICENSE")"
         echo "Patching KineticaCluster with license from secret..."
         kubectl patch kineticacluster "$CLUSTER_NAME" -n "$CLUSTER_NS" --type=merge \
           -p "{\"spec\":{\"gpudbCluster\":{\"license\":\"$LICENSE\"}}}"
+      else
+        echo "WARNING: Could not read 'license' key from secret '$LICENSE_SECRET_NAME'"
       fi
     fi
 
-    # 2. Patch admin password from mounted secret (use base64 to avoid JSON escaping issues)
-    if [ -f /mnt/secrets/admin/password ]; then
-      PASSWORD=$(strip_quotes "$(cat /mnt/secrets/admin/password)")
-      PASSWORD_B64=$(printf '%s' "$PASSWORD" | base64 | tr -d '\n')
-      if [ -n "$PASSWORD_B64" ]; then
-        echo "Patching admin-pwd secret with password..."
-        kubectl patch secret admin-pwd -n "$CLUSTER_NS" --type=merge \
-          -p "{\"data\":{\"password\":\"$PASSWORD_B64\"}}"
+{{- if and $adminCreate (ne $adminUserSecretName "") }}
+    # 2. Create admin-pwd secret from admin credentials secret
+    if [ -n "$ADMIN_SECRET_NAME" ]; then
+      wait_for_secret "$ADMIN_SECRET_NAME" "admin" "password" || true
+      PASSWORD="$(read_secret_key "$ADMIN_SECRET_NAME" "password" "admin" || true)"
+      if [ -n "$PASSWORD" ]; then
+        PASSWORD_B64=$(printf '%s' "$PASSWORD" | base64 | tr -d '\n')
+        echo "Creating/updating admin-pwd secret..."
+        cat <<EOSECRET | kubectl apply -f -
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: admin-pwd
+      namespace: $CLUSTER_NS
+      labels:
+        app.kubernetes.io/name: kinetica-operators
+        app.kubernetes.io/managed-by: kinetica-operators-hook
+    type: Opaque
+    data:
+      password: $PASSWORD_B64
+    EOSECRET
+      else
+        echo "WARNING: Could not read 'password' key from secret '$ADMIN_SECRET_NAME'"
       fi
-    fi
 
-    # 3. Handle admin username from mounted secret
-    if [ -f /mnt/secrets/admin/username ]; then
-      USERNAME=$(strip_quotes "$(cat /mnt/secrets/admin/username)")
-      if [ -n "$USERNAME" ] && [ "$USERNAME" != "$ADMIN_PLACEHOLDER" ]; then
-        echo "Admin username differs from placeholder, recreating user resources..."
-        # Delete placeholder KineticaUser and user-specific KineticaGrant
-        if [ -n "$ADMIN_PLACEHOLDER" ]; then
-          kubectl delete kineticauser "$ADMIN_PLACEHOLDER" -n "$CLUSTER_NS" --ignore-not-found --wait=false
-          kubectl delete kineticagrant "${ADMIN_PLACEHOLDER}-global-admin-create" -n "$CLUSTER_NS" --ignore-not-found --wait=false
+      # 3. Create global-admins KineticaRole
+      echo "Creating/updating global-admins KineticaRole..."
+      cat <<EOROLE | kubectl apply -f -
+    apiVersion: app.kinetica.com/v1
+    kind: KineticaRole
+    metadata:
+      name: global-admins
+      namespace: $CLUSTER_NS
+      labels:
+        app.kubernetes.io/name: kinetica-operators
+        app.kubernetes.io/managed-by: kinetica-operators-hook
+    spec:
+      ringName: $RING_NAME
+      role:
+        name: "global_admins"
+    EOROLE
+
+      # 4. Create global-admin-system-admin KineticaGrant
+      echo "Creating/updating global-admin-system-admin KineticaGrant..."
+      cat <<EOGRANT_SYS | kubectl apply -f -
+    apiVersion: app.kinetica.com/v1
+    kind: KineticaGrant
+    metadata:
+      name: global-admin-system-admin
+      namespace: $CLUSTER_NS
+      labels:
+        app.kubernetes.io/name: kinetica-operators
+        app.kubernetes.io/managed-by: kinetica-operators-hook
+    spec:
+      ringName: $RING_NAME
+      addGrantPermissionRequest:
+        systemPermission:
+          name: "global_admins"
+          permission: "system_admin"
+    EOGRANT_SYS
+
+      # 5. Create admin KineticaUser
+      USERNAME="$(read_secret_key "$ADMIN_SECRET_NAME" "username" "admin" || true)"
+      if [ -n "$USERNAME" ]; then
+        if ! validate_identifier "$USERNAME"; then
+          echo "ERROR: USERNAME from secret '$ADMIN_SECRET_NAME' is not a valid identifier (must match [A-Za-z0-9][A-Za-z0-9_-]{0,61}[A-Za-z0-9]); refusing to create admin KineticaUser/Grant" >&2
+          exit 1
         fi
-        # Create KineticaUser with real username
-        printf '%s\n' \
-          "apiVersion: app.kinetica.com/v1" \
-          "kind: KineticaUser" \
-          "metadata:" \
-          "  name: $USERNAME" \
-          "  namespace: $CLUSTER_NS" \
-          "spec:" \
-          "  ringName: $RING_NAME" \
-          "  uid: $USERNAME" \
-          "  action: upsert" \
-          "  reveal: true" \
-          "  upsert:" \
-          "    givenName: Admin" \
-          '    displayName: "Admin Account"' \
-          "    lastName: Account" \
-          "    passwordSecret: admin-pwd" \
-          "    userPrincipalName: admin@acct.com" \
-          > /tmp/kineticauser.yaml
-        kubectl apply -f /tmp/kineticauser.yaml
-        # Create user-specific KineticaGrant
-        printf '%s\n' \
-          "apiVersion: app.kinetica.com/v1" \
-          "kind: KineticaGrant" \
-          "metadata:" \
-          "  name: ${USERNAME}-global-admin-create" \
-          "  namespace: $CLUSTER_NS" \
-          "spec:" \
-          "  ringName: $RING_NAME" \
-          "  addGrantRoleRequest:" \
-          "    role: global_admins" \
-          "    member: $USERNAME" \
-          > /tmp/kineticagrant.yaml
-        kubectl apply -f /tmp/kineticagrant.yaml
+        USER_K8S_NAME="$(to_k8s_name "$USERNAME")"
+        echo "Creating/updating admin KineticaUser '$USERNAME' (k8s name: '$USER_K8S_NAME')..."
+        cat <<EOUSER | kubectl apply -f -
+    apiVersion: app.kinetica.com/v1
+    kind: KineticaUser
+    metadata:
+      name: $USER_K8S_NAME
+      namespace: $CLUSTER_NS
+      labels:
+        app.kubernetes.io/name: kinetica-operators
+        app.kubernetes.io/managed-by: kinetica-operators-hook
+    spec:
+      ringName: $RING_NAME
+      uid: $USERNAME
+      action: upsert
+      reveal: true
+      upsert:
+        givenName: Admin
+        displayName: "Admin Account"
+        lastName: Account
+        passwordSecret: admin-pwd
+        userPrincipalName: admin@acct.com
+    EOUSER
+
+        # 6. Create user-specific KineticaGrant
+        echo "Creating/updating admin KineticaGrant for '$USERNAME'..."
+        cat <<EOGRANT | kubectl apply -f -
+    apiVersion: app.kinetica.com/v1
+    kind: KineticaGrant
+    metadata:
+      name: ${USER_K8S_NAME}-global-admin-create
+      namespace: $CLUSTER_NS
+      labels:
+        app.kubernetes.io/name: kinetica-operators
+        app.kubernetes.io/managed-by: kinetica-operators-hook
+    spec:
+      ringName: $RING_NAME
+      addGrantRoleRequest:
+        role: global_admins
+        member: $USERNAME
+    EOGRANT
+      else
+        echo "WARNING: Could not read 'username' key from secret '$ADMIN_SECRET_NAME'"
       fi
     fi
+{{- end }}
 
     echo "Post-install secret patching complete."
 ---
@@ -133,14 +300,21 @@ spec:
         configMap:
           name: {{ .Release.Name }}-patch-secrets-script
 {{- if ne $licenseSecretName "" }}
+      # Referencing secretName here causes kubelet to mount the pre-created
+      # secret into the pod at start, and signals secret-distribution
+      # platforms (e.g. Palantir Rubix) to auto-provision the named secret
+      # into the release namespace. optional: true lets the pod start even
+      # if the secret is absent, so the script can fall back to kubectl.
       - name: license-secret
         secret:
           secretName: {{ $licenseSecretName }}
+          optional: true
 {{- end }}
-{{- if ne $adminUserSecretName "" }}
+{{- if and $adminCreate (ne $adminUserSecretName "") }}
       - name: admin-secret
         secret:
           secretName: {{ $adminUserSecretName }}
+          optional: true
 {{- end }}
       - name: tmp
         emptyDir: {}
@@ -169,7 +343,7 @@ spec:
           mountPath: /mnt/secrets/license
           readOnly: true
 {{- end }}
-{{- if ne $adminUserSecretName "" }}
+{{- if and $adminCreate (ne $adminUserSecretName "") }}
         - name: admin-secret
           mountPath: /mnt/secrets/admin
           readOnly: true

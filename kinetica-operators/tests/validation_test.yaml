@@ -101,15 +101,17 @@ tests:
   # override from taking effect. Verified via `helm template --set` which
   # correctly triggers the fail.
 
-  # ---------- admin password validation ----------
-  - it: rejects empty password with no secret
+  # ---------- admin credentials secret validation ----------
+  # Plaintext admin credentials were removed (rubix security item 1); a
+  # pre-created secret is now required when dbAdminUser.create is true.
+  - it: rejects create with no adminUserSecretName
     template: kinetica_operators.yaml
     set:
-      dbAdminUser.password: ""
+      dbAdminUser.create: true
       dbAdminUser.adminUserSecretName: ""
     asserts:
       - failedTemplate:
-          errorPattern: "Password for Admin User is required"
+          errorPattern: "adminUserSecretName is required"
 
   # ---------- storage class validation ----------
   - it: rejects no storage class when generateStorageClasses is false

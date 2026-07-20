@@ -3,11 +3,14 @@ values:
   - __base_values.yaml
 
 tests:
-  - it: no post-install Job when no secret names
+  # With kineticacluster.install true a license secret is required (rubix
+  # security item 1), so the post-install patch Job is always emitted in that
+  # path. The only "nothing to patch" case is when the cluster is not being
+  # installed at all.
+  - it: no post-install Job when kineticacluster is not installed
     template: kinetica_operators.yaml
     set:
-      kineticacluster.gpudbCluster.licenseSecretName: ""
-      dbAdminUser.adminUserSecretName: ""
+      kineticacluster.install: false
     asserts:
       - not: true
         containsDocument:
@@ -77,6 +80,7 @@ tests:
             name: license-secret
             secret:
               secretName: my-license-secret
+              optional: true
         documentSelector:
           path: metadata.name
           value: RELEASE-NAME-post-install-secret-patch

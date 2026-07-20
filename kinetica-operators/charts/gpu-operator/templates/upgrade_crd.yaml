@@ -76,7 +76,7 @@ spec:
       {{- end }}
       containers:
         - name: upgrade-crd
-          image: {{ include "gpu-operator.fullimage" . }}
+          image: '{{ include "gpu-operator.fullimage" . }}'
           imagePullPolicy: {{ .Values.operator.imagePullPolicy }}
           command:
           - /bin/sh

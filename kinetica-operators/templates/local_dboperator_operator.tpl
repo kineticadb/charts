@@ -77,9 +77,10 @@ spec:
         - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
         command:
         - /manager
-        image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
-          "repository" .Values.dbOperator.image.repository "tag" .Values.dbOperator.image.tag
-          "digest" .Values.dbOperator.image.digest) }}'
+        image: '{{ include "kinetica-operators.image" (dict "registry" (.Values.dbOperator.image.registry
+          | default .Values.global.image.registry) "repository" .Values.dbOperator.image.repository
+          "tag" .Values.dbOperator.image.tag "digest" .Values.dbOperator.image.digest)
+          }}'
         livenessProbe:
           httpGet:
             path: /healthz
