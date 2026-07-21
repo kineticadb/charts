@@ -5,7 +5,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/name: wboperator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
@@ -16,10 +16,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
+      app.kubernetes.io/name: wboperator
       control-plane: controller-manager
   template:
     metadata:
       labels:
+        app.kubernetes.io/name: wboperator
         control-plane: controller-manager
     spec:
       containers:

@@ -252,7 +252,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/name: wboperator
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
@@ -265,6 +265,7 @@ spec:
     port: 8443
     targetPort: https
   selector:
+    app.kubernetes.io/name: wboperator
     control-plane: controller-manager
 
 {{- end }}

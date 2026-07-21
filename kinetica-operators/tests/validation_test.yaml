@@ -150,3 +150,117 @@ tests:
       global.defaultStorageClass: "standard"
     asserts:
       - notFailedTemplate: {}
+
+  # ---------- workbench clusterRef <-> kineticacluster consistency ----------
+  # The base values already set matching kineticacluster.name / workbench.clusterRef.name
+  # ("test-kc") and matching namespaces ("gpudb"), so the happy path is covered by the
+  # many notFailedTemplate assertions above; these tests target the mismatch cases.
+
+  - it: accepts matching clusterRef.name (base values)
+    template: kinetica_operators.yaml
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: rejects mismatched clusterRef.name when both installed
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.name: "cluster-a"
+      workbench.clusterRef.name: "cluster-b"
+    asserts:
+      - failedTemplate:
+          errorPattern: "workbench.clusterRef.name .* must match kineticacluster.name"
+
+  - it: accepts realigned clusterRef.name when both installed
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.name: "cluster-a"
+      workbench.clusterRef.name: "cluster-a"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: matches the KineticaCluster default name when kineticacluster.name is empty
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.name: ""
+      workbench.clusterRef.name: "kineticacluster"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: rejects clusterRef.name that ignores the empty-name default
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.name: ""
+      workbench.clusterRef.name: "something-else"
+    asserts:
+      - failedTemplate:
+          errorPattern: "must match kineticacluster.name .*kineticacluster"
+
+  - it: skips the check when the workbench is not installed
+    template: kinetica_operators.yaml
+    set:
+      workbench.install: false
+      kineticacluster.name: "cluster-a"
+      workbench.clusterRef.name: "cluster-b"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: skips the check when the kineticacluster is not installed
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.install: false
+      kineticacluster.name: "cluster-a"
+      workbench.clusterRef.name: "cluster-b"
+    asserts:
+      - notFailedTemplate: {}
+
+  # ---- namespace consistency ----
+  # When clusterRef.namespace is unset the operator resolves the KineticaCluster in the
+  # Workbench's own namespace, so the Workbench and KineticaCluster namespaces must agree.
+  # When clusterRef.namespace is set it must point at the KineticaCluster's namespace.
+
+  - it: accepts an unset clusterRef.namespace when WB and KC share a namespace
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.namespace: "gpudb"
+      workbench.namespace: "gpudb"
+      # workbench.clusterRef.namespace intentionally left unset
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: rejects an unset clusterRef.namespace when WB and KC namespaces differ
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.namespace: "gpudb"
+      workbench.namespace: "other-ns"
+      # workbench.clusterRef.namespace intentionally left unset
+    asserts:
+      - failedTemplate:
+          errorPattern: "the Workbench namespace .* must match the KineticaCluster's namespace"
+
+  - it: accepts an explicit clusterRef.namespace that matches the KC even if WB differs
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.namespace: "gpudb"
+      workbench.namespace: "other-ns"
+      workbench.clusterRef.namespace: "gpudb"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: accepts a matching explicit clusterRef.namespace
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.namespace: "gpudb"
+      workbench.namespace: "gpudb"
+      workbench.clusterRef.namespace: "gpudb"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: rejects a mismatched explicit clusterRef.namespace
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster.namespace: "gpudb"
+      workbench.namespace: "gpudb"
+      workbench.clusterRef.namespace: "other-ns"
+    asserts:
+      - failedTemplate:
+          errorPattern: "workbench.clusterRef.namespace .* must match the KineticaCluster's namespace"

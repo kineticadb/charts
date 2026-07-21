@@ -13,6 +13,7 @@ config_production_js.tmpl: |
     REACT_APP_API_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}',
     REACT_APP_GRAPHQL_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}/graphql',
     API_URL: 'http{{ if or .Spec.LetsEncrypt.Enabled .Spec.UseHttps }}s{{ end }}://{{ .Spec.FQDN }}',
+  {{- end }}
     USER_CREATE_TYPE: '{{ .Conn.UserCreateType }}',
     K8S_STATUS_POLL_INTERVAL: 10000,
     K8S_BACKUPS_POLL_INTERVAL: 10000,

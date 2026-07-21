@@ -70,6 +70,57 @@
   {{- fail "No Configuration found for .Values.wbOperator" }}
 {{- end }}
 
+{{- /* validate that when both the KineticaCluster and Workbench are installed the
+       Workbench's spec.clusterRef points at the KineticaCluster the chart creates.
+       - clusterRef.name must match the KineticaCluster's metadata.name. That name
+         defaults to "kineticacluster" when kineticacluster.name is empty, so mirror
+         the subchart default here.
+       - The namespace the Workbench resolves the KineticaCluster in must match the
+         KineticaCluster's own namespace. When clusterRef.namespace is set explicitly
+         we use it; when it is empty the operator defaults it to the Workbench's own
+         namespace, so we compare against that instead. Both the KineticaCluster and
+         Workbench namespaces fall back to the release namespace when unset. */ -}}
+{{- if and (eq (kindOf $values.kineticacluster) "map") (eq (kindOf $values.workbench) "map") }}
+  {{- if and $values.kineticacluster.install $values.workbench.install }}
+    {{- $kcName := $values.kineticacluster.name | default "kineticacluster" }}
+    {{- $kcNamespace := $release.Namespace }}
+    {{- if eq (kindOf $values.kineticacluster.namespace) "string" }}
+      {{- if ne $values.kineticacluster.namespace "" }}
+        {{- $kcNamespace = $values.kineticacluster.namespace }}
+      {{- end }}
+    {{- end }}
+    {{- /* the Workbench's own namespace — the fallback for an unset clusterRef.namespace */ -}}
+    {{- $wbNamespace := $release.Namespace }}
+    {{- if eq (kindOf $values.workbench.namespace) "string" }}
+      {{- if ne $values.workbench.namespace "" }}
+        {{- $wbNamespace = $values.workbench.namespace }}
+      {{- end }}
+    {{- end }}
+    {{- $wbClusterRefName := "" }}
+    {{- $wbClusterRefNsExplicit := false }}
+    {{- $wbClusterRefNamespace := $wbNamespace }}
+    {{- if eq (kindOf $values.workbench.clusterRef) "map" }}
+      {{- $wbClusterRefName = $values.workbench.clusterRef.name | default "" }}
+      {{- if eq (kindOf $values.workbench.clusterRef.namespace) "string" }}
+        {{- if ne $values.workbench.clusterRef.namespace "" }}
+          {{- $wbClusterRefNamespace = $values.workbench.clusterRef.namespace }}
+          {{- $wbClusterRefNsExplicit = true }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if ne $kcName $wbClusterRefName }}
+      {{- fail (printf "workbench.clusterRef.name (%q) must match kineticacluster.name (%q) when both kineticacluster.install and workbench.install are true. The Workbench references its KineticaCluster by metadata.name; note kineticacluster.name defaults to \"kineticacluster\" when left empty." $wbClusterRefName $kcName) }}
+    {{- end }}
+    {{- if ne $wbClusterRefNamespace $kcNamespace }}
+      {{- if $wbClusterRefNsExplicit }}
+        {{- fail (printf "workbench.clusterRef.namespace (%q) must match the KineticaCluster's namespace (%q) when both are installed." $wbClusterRefNamespace $kcNamespace) }}
+      {{- else }}
+        {{- fail (printf "the Workbench namespace (%q) must match the KineticaCluster's namespace (%q) when both are installed and workbench.clusterRef.namespace is unset, since the operator then resolves the KineticaCluster in the Workbench's own namespace. Either install both into the same namespace, or set workbench.clusterRef.namespace to %q." $wbNamespace $kcNamespace $kcNamespace) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
 
 {{- if $values.certManager.install }}
   {{- $webhook := (dict "url" dict) }}
