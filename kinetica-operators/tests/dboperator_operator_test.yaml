@@ -28,6 +28,38 @@ tests:
           path: metadata.name
           value: kineticaoperator-controller-manager
 
+  - it: pins numeric runAsUser so runAsNonRoot is verifiable against symbolic image USER
+    template: kinetica_operators.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext
+          value:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            fsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+      - equal:
+          path: spec.template.spec.containers[0].securityContext
+          value:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+
   - it: creates webhook Service on port 443
     template: kinetica_operators.yaml
     asserts:

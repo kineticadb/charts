@@ -110,6 +110,12 @@ spec:
           capabilities:
             drop:
             - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /tmp/k8s-metrics-server/metrics-certs
           name: metrics-certs
@@ -118,7 +124,10 @@ spec:
           name: webhook-certs
           readOnly: true
       securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
         runAsNonRoot: true
+        runAsUser: 65532
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: controller-manager
