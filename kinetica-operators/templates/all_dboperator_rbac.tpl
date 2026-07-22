@@ -131,25 +131,6 @@ rules:
   - apps
   resources:
   - deployments
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-- apiGroups:
-  - apps
-  resources:
-  - deployments/status
-  - statefulsets/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - apps
-  resources:
   - statefulsets
   verbs:
   - create
@@ -159,6 +140,15 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments/status
+  - statefulsets/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - batch
   resources:
@@ -241,6 +231,7 @@ rules:
   - list
   - patch
   - update
+  - watch
 - apiGroups:
   - apps
   resources:
