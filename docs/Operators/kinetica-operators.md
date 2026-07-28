@@ -3,7 +3,7 @@
 To install all the required operators in a single command perform the following: -
 
 ```shell
-helm install -n kinetica-system \
+helm upgrade --install -n kinetica-system \
 kinetica-operators kinetica-operators/kinetica-operators --create-namespace
 ```
 
@@ -15,7 +15,7 @@ if it is not currently present.
     pointing to a values file to successfully provision the DB.
 
 ```shell
-helm install -n kinetica-system -f values.yaml --set provider=aks \
+helm upgrade --install -n kinetica-system -f values.yaml --set provider=aks \
 kinetica-operators kinetica-operators/kinetica-operators --create-namespace
 ```
 
@@ -230,7 +230,7 @@ spec:
 ## Overriding Images Tags
 
 ```shell linenums="1" hl_lines="3 4 5 6 7"
-helm install -n kinetica-system kinetica-operators kinetica-operators/kinetica-operators \
+helm upgrade --install -n kinetica-system kinetica-operators kinetica-operators/kinetica-operators \
 --create-namespace \
 --set provider=aks  
 --set dbOperator.image.tag=v7.1.9-7.rc3 \
