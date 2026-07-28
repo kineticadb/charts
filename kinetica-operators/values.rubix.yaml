@@ -9,38 +9,59 @@ controller:
 
 createNamespaces: false
 
+doorman:
+  # Hard anti-affinity + replica spread: Rubix is multi-node, so keep doorman
+  # replicas off DB nodes and never co-located with each other.
+  avoidDBNodes: true
+  # Tier-3 probe shielding on: survive DB outages longer than the JDBC
+  # driver's probe patience — proven necessary by the 2026-07-15 controlled
+  # suspend/resume tests (10-13 min outages survive on holds alone; ~20 min
+  # kills the ingest via GPUdbExitException from failed status probes).
+  holdShield:
+    enabled: true
+  install: true
+  listener:
+    # Parity with the previous ingress-nginx posture: no default-ssl-certificate
+    # was configured, so nginx served its built-in self-signed cert and the
+    # platform Envoy accepted it. selfSigned reproduces that with a chart-
+    # generated cert; set tlsSecretName (e.g. the Rubix pod-cert secret
+    # cert-<cluster>-doorman) to serve a managed certificate instead.
+    selfSigned: true
+  requireReplicaSpread: true
+  service:
+    annotations:
+      com.palantir.rubix.service.spp/v3: |
+        {
+
+          "endpoints": [
+            {
+              "name": "https",
+              "prefix": "{{ $n := .Values.global.kineticaClusterName }}{{ if and $n (ne $n "kineticacluster") }}/{{ $n }}{{ else }}/{{ end }}",
+              "domain-aliases": ["DEFAULT"]
+            }
+          ]
+        }
+      com.palantir.rubix.service/pod-cert: '{}'
+
 environment: onPrem
 
 gpuOperator:
   install: false
 
-ingress-nginx:
-  controller:
-    admissionWebhooks:
-      enabled: false
-    ingressClassResource:
-      enabled: false
-    rbac:
-      create: false
-      scope: true
-    service:
-      annotations:
-        com.palantir.rubix.service.spp/v3: |
-          {
+# ingress-nginx is replaced by the static circuit-breaker "doorman" proxy
 
-            "endpoints": [
-              {
-                "name": "https",
-                "prefix": "{{ $n := .Values.global.kineticaClusterName }}{{ if and $n (ne $n "kineticacluster") }}/{{ $n }}{{ else }}/{{ end }}",
-                "domain-aliases": ["DEFAULT"]
-              }
-            ]
-          }
-        com.palantir.rubix.service/pod-cert: '{}'
-      type: ClusterIP
-    watchIngressWithoutClass: true
-  defaultBackend:
-    enabled: false
+# (below). The Rubix SPP / pod-cert service annotations move to
+
+# doorman.service.annotations so the platform Envoy routes to the proxy's
+
+# Service instead. Gateway API mode and the circuit-breaker operator are NOT
+
+# used on Rubix: cluster-wide RBAC is disallowed and the gateway-api CRDs on
+
+# the cluster are platform-owned (helm may only create CRDs, never update).
+
+ingressNginx:
+  install: false
 
 kineticacluster:
   gpudbCluster:

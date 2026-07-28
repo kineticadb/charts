@@ -217,6 +217,9 @@
   {{- if ($values.ingressNginx.install) }}
     {{- include "kinetica-operators.ingress" $data }}
   {{- end}}
+  {{- if ($values.doorman.install) }}
+    {{- include "kinetica-operators.doorman" $data }}
+  {{- end}}
   {{- if $values.dbAdminUser.create }}
     {{- include "kinetica-operators.db-admin-user" $data}}
   {{- end }}

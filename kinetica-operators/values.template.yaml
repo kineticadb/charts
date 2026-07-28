@@ -179,6 +179,65 @@ ingressNginx:
     create: false
     scope: true
 
+# Static circuit-breaker ingress proxy ("doorman") — the ingress-nginx
+# replacement for environments that disallow cluster-wide RBAC and Gateway API
+# objects (e.g. Palantir Rubix). Renders only namespaced resources: Deployment +
+# Service (carrying any platform annotations) + ConfigMap with the proxy's
+# static routing table. No operator, no CRDs, no Kubernetes API access.
+doorman:
+  install: false
+  # Tier-3 probe shielding: while the DB is down and client connections are
+  # parked (upstream holds), answer the Kinetica clients' liveness probes from
+  # a cached copy of the last healthy response. Lets JDBC/Python drivers
+  # survive outages longer than their hard-coded ~5s probe timeout allows
+  # (~20 min of failed probes kills an ingest via GPUdbExitException).
+  holdShield:
+    enabled: false
+    # paths: []          # defaults to the two Kinetica probe endpoints
+    # maxResponseBytes: 65536
+  image:
+    # registry overrides global.image.registry for this image only; the
+    # circuit-breaker image is published to Docker Hub, not ACR. Tag is
+    # pinned: circuit-breaker rides its own branch, not the monorepo release
+    # lockstep.
+    registry: "docker.io/kinetica"
+    repository: circuit-breaker
+    tag: "doorman-20260716"
+    pullPolicy: IfNotPresent
+  imagePullSecrets: []
+  # HA default: two replicas behind the one Service, spread across nodes when
+  # possible (soft anti-affinity) and protected by a PodDisruptionBudget
+  # (minAvailable 1, rendered whenever replicas > 1). Holds and resilience
+  # counters are per-replica; front-proxy connection pooling may distribute
+  # traffic unevenly — that is expected and harmless.
+  replicas: 2
+  # External listener. Port must be >=1024 (proxy runs non-root). The Service
+  # port is named "https" — SPP-style endpoint discovery matches on it.
+  listener:
+    port: 8443
+    # TLS secret (type kubernetes.io/tls) in the DB namespace. Empty +
+    # selfSigned generates a chart self-signed cert (parity with
+    # ingress-nginx's built-in fake default cert).
+    tlsSecretName: ""
+    selfSigned: false
+  # Annotations for the doorman Service; values are rendered with tpl, same as
+  # the ingress-nginx service annotations.
+  service:
+    annotations: {}
+  # Number of gpudb rank routes to render (rank0..rankN). Empty computes
+  # replicas+1 from kineticacluster.gpudbCluster.replicas.
+  ranks: ""
+  resources: {}
+  # Hard anti-affinity: keep doorman replicas off nodes running Kinetica DB
+  # (gpudb) pods, so a DB-node drain/restart cannot evict a doorman replica
+  # with the database. Requires >=1 node without a DB pod. Leave false on
+  # single-node k3s/kind or the doorman stays Pending.
+  avoidDBNodes: false
+  # Hard replica spread: never co-locate two doorman replicas on one node, so
+  # a single node loss cannot take out both. Leave false on single-node
+  # clusters or the doorman stays Pending.
+  requireReplicaSpread: false
+
 gpuOperator:
   install: false
 "gpu-operator":
