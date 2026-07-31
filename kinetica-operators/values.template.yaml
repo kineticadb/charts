@@ -25,6 +25,13 @@ global:
 upsertKineticaCrds:
   enabled: false
   installRbac: false
+  # serviceAccountName: run the upsert Job as this ServiceAccount instead of the
+  # operator's (controller-manager). When set, the chart also creates the SA as a
+  # pre-install hook (weight -10) so fresh installs work; upgrades never touch an
+  # SA already on the cluster. Set on Rubix to kineticacluster-operator so the
+  # platform-provisioned CRD-update ClusterRoleBinding subject keeps matching
+  # across the controller-manager rename.
+  serviceAccountName: ""
   image:
     repository: "upsert-kinetica-crds"
     tag: *imageTag
@@ -89,6 +96,16 @@ dbOperator:
     type: "otel"
     otel:
       url: "otel-collector.kinetica-system.svc.cluster.local:4317"
+  webhooks:
+    # Deploy the operator's admission webhooks and their cert-manager objects
+    # (Issuer + Certificates + webhook Service + Mutating/Validating configs).
+    # Requires cert-manager on the cluster (certManager.install or platform-
+    # provided) AND an installer allowed to write cert-manager.io and
+    # admissionregistration.k8s.io objects. Set false where that RBAC is
+    # unavailable (e.g. Palantir Rubix): the operator then runs with
+    # ENABLE_WEBHOOKS=false. All webhook handlers are currently scaffold stubs,
+    # so disabling loses no validation — CRD schema validation is unaffected.
+    install: true
   rbac:
     installRoles:
       velero: false
@@ -249,6 +266,11 @@ gpuOperator:
       enabled: true
 
 openldap:
+  # Deploy the bundled OpenLDAP server (the default LDAP identity provider —
+  # see kineticacluster.authentication). Set false together with
+  # kineticacluster.authentication.type=Internal on clusters that manage
+  # users/roles natively in the database (e.g. Palantir Rubix).
+  install: true
   strategy:
     type: Recreate
   containerSecurityContext:

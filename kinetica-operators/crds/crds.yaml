@@ -4,20 +4,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusteradmins.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaClusterAdmin
@@ -206,20 +195,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterbackups.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaClusterBackup
@@ -970,20 +948,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterelasticities.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaClusterElasticity
@@ -1173,20 +1140,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterresourcegroups.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaClusterResourceGroup
@@ -1290,20 +1246,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterrestores.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaClusterRestore
@@ -1603,20 +1548,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusters.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaCluster
@@ -28251,20 +28185,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaclusterschemas.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaClusterSchema
@@ -28350,20 +28273,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticagrants.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaGrant
@@ -28615,20 +28527,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticareleaseversions.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaReleaseVersion
@@ -28756,20 +28657,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticaroles.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaRole
@@ -28926,20 +28816,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kinetica-system/kineticaoperator-serving-cert
     controller-gen.kubebuilder.io/version: v0.18.0
   name: kineticausers.app.kinetica.com
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kineticaoperator-webhook-service
-          namespace: kinetica-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: app.kinetica.com
   names:
     kind: KineticaUser

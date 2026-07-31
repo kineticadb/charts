@@ -2,12 +2,16 @@
 certManager:
   install: false
 
-controller:
-  metricsService:
-    annotations:
-      com.palantir.rubix.service/pod-cert: '{}'
-
 createNamespaces: false
+
+dbOperator:
+  webhooks:
+    # No admission webhooks on Rubix: the helm-chart-operator SA has no
+    # cert-manager.io or admissionregistration.k8s.io RBAC, so the webhook
+    # stack (Issuer/Certificates/webhook configs) fails at apply. The operator
+    # runs with ENABLE_WEBHOOKS=false; all handlers are scaffold stubs today,
+    # so nothing is lost — CRD schema validation is unaffected.
+    install: false
 
 doorman:
   # Hard anti-affinity + replica spread: Rubix is multi-node, so keep doorman
@@ -64,6 +68,13 @@ ingressNginx:
   install: false
 
 kineticacluster:
+  # Internal identity provider: gpudb owns the credentials
+  # (enable_httpd_proxy=false, enable_external_authentication=false — set by
+  # the operator). No LDAP server is involved; ldap: null drops the inherited
+  # in-cluster openldap connection block from the KineticaCluster CR.
+  authentication:
+    ldap: null
+    type: Internal
   gpudbCluster:
     clusterName: kinetica-apollo-entity
     config:
@@ -98,17 +109,14 @@ kubeStateMetrics:
 networkPolicies:
   install: true
 
+# No OpenLDAP on Rubix: users, roles and grants are managed natively in the
+
+# database (kineticacluster.authentication.type=Internal below), so the bundled
+
+# LDAP server and its pod-cert/persistence decoration are not deployed.
+
 openldap:
-  initTLSSecret:
-    image:
-      registry: docker.io
-      repository: alpine/openssl
-      tag: 3.5.3
-  persistence:
-    storageClass: null
-  service:
-    annotations:
-      com.palantir.rubix.service/pod-cert: '{}'
+  install: false
 
 otelCollector:
   install: false
@@ -125,6 +133,11 @@ supportBundle:
 
 upsertKineticaCrds:
   enabled: true
+  # Run the upsert Job as the pre-rename SA name: the platform-provisioned
+  # CRD-update ClusterRoleBinding on Rubix names kineticacluster-operator as its
+  # subject, and existing 1.0.179/1.0.180 installs already have the SA. The chart
+  # creates it on fresh installs (pre-install hook in crds.upsert.tpl).
+  serviceAccountName: kineticacluster-operator
 
 workbench:
   # Must match kineticacluster.name above (the KineticaCluster metadata.name).

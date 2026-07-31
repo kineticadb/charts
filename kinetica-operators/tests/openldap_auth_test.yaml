@@ -1,0 +1,38 @@
+suite: OpenLDAP toggle and identity provider selection
+values:
+  - __base_values.yaml
+
+tests:
+  - it: deploys the bundled OpenLDAP and defaults to the LDAP provider
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: charts/openldap/templates/deployment.yaml
+      - equal:
+          path: spec.authentication.type
+          value: LDAP
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.authentication.ldap.host
+          value: openldap
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+
+  - it: openldap.install=false + Internal provider drops LDAP everywhere
+    set:
+      openldap:
+        install: false
+      kineticacluster:
+        authentication:
+          type: Internal
+          ldap: null
+    asserts:
+      # (openldap sub-chart absence is enforced by the Chart.yaml dependency
+      # `condition: openldap.install` — helm-unittest cannot select templates of
+      # a condition-disabled sub-chart, so only the CR effects are asserted here)
+      - equal:
+          path: spec.authentication.type
+          value: Internal
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - notExists:
+          path: spec.authentication.ldap
+        template: charts/kineticacluster/templates/kineticacluster.yaml

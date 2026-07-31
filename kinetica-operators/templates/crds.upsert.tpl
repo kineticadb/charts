@@ -1,4 +1,28 @@
 {{- define "kinetica-operators.crds" }}
+{{- if .Values.upsertKineticaCrds.serviceAccountName }}
+
+---
+# Dedicated ServiceAccount for the upsert Job (rendered only when
+# upsertKineticaCrds.serviceAccountName is set). pre-install-only + weight -10
+# mirrors the proven operator-SA hook pattern: fresh installs create it before
+# the Job (-5) runs; upgrades never touch it, so an SA already on the cluster
+# (e.g. kineticacluster-operator from a pre-rename release, still named by the
+# platform-provisioned CRD-update ClusterRoleBinding on Rubix) is left alone.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: '{{ .Values.upsertKineticaCrds.serviceAccountName }}'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: '-10'
+{{- end }}
 
 ---
 apiVersion: batch/v1
@@ -25,7 +49,7 @@ spec:
         app.kubernetes.io/name: kinetica-operators
         app.kubernetes.io/instance: '{{ .Release.Name }}'
     spec:
-      serviceAccountName: controller-manager
+      serviceAccountName: '{{ .Values.upsertKineticaCrds.serviceAccountName | default "controller-manager" }}'
       securityContext:
         runAsNonRoot: true
         runAsUser: 65432

@@ -190,9 +190,16 @@
       {{- include "kinetica-operators.saas-eks-dboperator-metering" $data }}
   {{- else }}
       {{- include "kinetica-operators.local-dboperator-namespaces" $data }}
+      {{- if $values.dbOperator.webhooks.install }}
       {{- include "kinetica-operators.local-dboperator-operator" $data -}}
+      {{- else }}
+      {{- /* Webhook-free variant: no cert-manager / admissionregistration objects,
+             ENABLE_WEBHOOKS=false. For clusters whose installer lacks that RBAC
+             (Palantir Rubix) — see dbOperator.webhooks.install in values. */ -}}
+      {{- include "kinetica-operators.local-dboperator-operatornowebhook" $data -}}
+      {{- end }}
       {{- include "kinetica-operators.local-dboperator-monitoring" $data }}
-      {{- include "kinetica-operators.local-dboperator-metering" $data }}       
+      {{- include "kinetica-operators.local-dboperator-metering" $data }}
   {{- end }}
 
   {{- if $values.dbOperator.rbac.installClusterRoles.nodes }}

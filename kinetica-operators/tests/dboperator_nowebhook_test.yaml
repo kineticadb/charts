@@ -1,0 +1,63 @@
+suite: DB operator webhook-free variant (dbOperator.webhooks.install=false)
+values:
+  - __base_values.yaml
+set:
+  dbOperator:
+    webhooks:
+      install: false
+
+tests:
+  - it: renders no cert-manager or admissionregistration objects
+    template: kinetica_operators.yaml
+    asserts:
+      - not: true
+        containsDocument:
+          kind: Certificate
+          apiVersion: cert-manager.io/v1
+          any: true
+      - not: true
+        containsDocument:
+          kind: Issuer
+          apiVersion: cert-manager.io/v1
+          any: true
+      - not: true
+        containsDocument:
+          kind: MutatingWebhookConfiguration
+          apiVersion: admissionregistration.k8s.io/v1
+          any: true
+      - not: true
+        containsDocument:
+          kind: ValidatingWebhookConfiguration
+          apiVersion: admissionregistration.k8s.io/v1
+          any: true
+
+  - it: still creates the operator Deployment, with ENABLE_WEBHOOKS=false
+    template: kinetica_operators.yaml
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: kineticaoperator-controller-manager
+          any: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ENABLE_WEBHOOKS
+            value: "false"
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+
+  - it: mounts no webhook or metrics cert volumes and exposes no webhook port
+    template: kinetica_operators.yaml
+    asserts:
+      - isEmpty:
+          path: spec.template.spec.volumes
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+      - isEmpty:
+          path: spec.template.spec.containers[0].ports
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
