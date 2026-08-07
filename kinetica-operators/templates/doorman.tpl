@@ -205,8 +205,13 @@ bindings:
                 backendPort: http
                 target: strip-workbench
 {{- else }}
+              # Root-path mode: workbench is the CATCH-ALL, mirroring the
+              # wboperator's nginx root-mode Ingress (empty path + app-root
+              # annotation = `/` prefix). The app calls /graphql, /api, ...
+              # at the HOST ROOT (config_production.js API_URL), so routing
+              # only /workbench blank-screens the UI. Must stay the LAST rule.
               - matches:
-                  - path: {type: PathPrefix, value: /workbench}
+                  - path: {type: PathPrefix, value: /}
                 backendRef: workbench
                 backendPort: http
 {{- end }}

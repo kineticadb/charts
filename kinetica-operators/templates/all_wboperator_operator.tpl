@@ -16,7 +16,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: wboperator
       control-plane: controller-manager
   template:
     metadata:

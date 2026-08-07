@@ -65,8 +65,8 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccount: controller-manager
-      serviceAccountName: controller-manager
+      serviceAccount: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
+      serviceAccountName: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
       securityContext:
         fsGroup: 2000
         runAsGroup: 3000

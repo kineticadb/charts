@@ -37,3 +37,90 @@ tests:
         documentSelector:
           path: metadata.name
           value: RELEASE-NAME-upsert-kinetica-crds
+
+  # The Job runs as the operator SA by default. An upsert-specific SA override
+  # that differs from the operator's is created by crds.upsert.tpl so the knob
+  # stays self-sufficient; when both knobs resolve to the same name, the single
+  # definition in all_dboperator_rbac.tpl is used (no duplicate document).
+  - it: creates the upsert SA when it differs from the operator SA
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: true
+      upsertKineticaCrds.serviceAccountName: crd-refresh-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: crd-refresh-sa
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+      - containsDocument:
+          kind: ServiceAccount
+          apiVersion: v1
+          name: crd-refresh-sa
+          any: true
+
+  - it: renders a single SA document when both knobs name the same SA (Rubix shape)
+    template: kinetica_operators.yaml
+    set:
+      dbOperator.serviceAccountName: kineticacluster-operator
+      upsertKineticaCrds.enabled: true
+      upsertKineticaCrds.serviceAccountName: kineticacluster-operator
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: kineticacluster-operator
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+      - containsDocument:
+          kind: ServiceAccount
+          apiVersion: v1
+          name: kineticacluster-operator
+          any: true
+
+  - it: follows dbOperator.serviceAccountName when no upsert override is set
+    template: kinetica_operators.yaml
+    set:
+      dbOperator.serviceAccountName: kineticacluster-operator
+      upsertKineticaCrds.enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: kineticacluster-operator
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+
+  # failOnError gates only the script's exit code: strict (default/absent or
+  # true) aborts the release on any CRD failure; false logs and continues.
+  - it: upsert script is strict by default and tolerant when failOnError=false
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: true
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: "exit 1"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+
+  - it: upsert script tolerates failures when failOnError=false
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: true
+      upsertKineticaCrds.failOnError: false
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: "continuing despite failures \\(sandbox tolerance\\)"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+      - notMatchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: "exit 1"
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds

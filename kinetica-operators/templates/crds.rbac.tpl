@@ -45,7 +45,7 @@ roleRef:
   name: upsert-crds-clusterrole
 subjects:
 - kind: ServiceAccount
-  name: '{{ .Values.upsertKineticaCrds.serviceAccountName | default "controller-manager" }}'
+  name: '{{ .Values.upsertKineticaCrds.serviceAccountName | default .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
   namespace: {{ .Release.Namespace }}
 
 {{- end }}

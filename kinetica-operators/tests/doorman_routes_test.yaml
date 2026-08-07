@@ -1,0 +1,45 @@
+suite: Doorman gateway-router route table
+values:
+  - __base_values.yaml
+set:
+  doorman:
+    install: true
+
+tests:
+  # Root-path mode: the workbench app calls /graphql, /api, ... at the HOST
+  # ROOT, so workbench must be the `/` catch-all (nginx root-mode parity) and
+  # the LAST rule in the table.
+  - it: root-path mode routes workbench as the trailing / catch-all
+    template: kinetica_operators.yaml
+    asserts:
+      - matchRegex:
+          path: data["circuitbreaker.yaml"]
+          pattern: "path: \\{type: PathPrefix, value: /\\}\\n\\s*backendRef: workbench"
+        documentSelector:
+          path: metadata.name
+          value: test-kc-doorman-config
+      - notMatchRegex:
+          path: data["circuitbreaker.yaml"]
+          pattern: "value: /workbench\\}"
+        documentSelector:
+          path: metadata.name
+          value: test-kc-doorman-config
+
+  - it: sub-path mode routes workbench under the prefix, no bare / catch-all
+    template: kinetica_operators.yaml
+    set:
+      kineticacluster:
+        pathPrefix: pelennor
+    asserts:
+      - matchRegex:
+          path: data["circuitbreaker.yaml"]
+          pattern: "path: \\{type: PathPrefix, value: /pelennor\\}\\n\\s*backendRef: workbench"
+        documentSelector:
+          path: metadata.name
+          value: test-kc-doorman-config
+      - notMatchRegex:
+          path: data["circuitbreaker.yaml"]
+          pattern: "path: \\{type: PathPrefix, value: /\\}"
+        documentSelector:
+          path: metadata.name
+          value: test-kc-doorman-config

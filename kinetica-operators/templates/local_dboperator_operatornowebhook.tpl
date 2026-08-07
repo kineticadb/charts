@@ -2,6 +2,20 @@
 
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kineticaoperator-config-map
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+data:
+  {{- (tpl (.Files.Get "files/configmaps/local-dboperator-operatornowebhook-kineticaoperator-config-map.yaml") . | nindent 2)  }}
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -38,7 +52,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: dboperator
       control-plane: controller-manager
   template:
     metadata:
@@ -56,6 +69,26 @@ spec:
         command:
         - /manager
         env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
         - name: ENABLE_WEBHOOKS
           value: 'false'
         image: '{{ include "kinetica-operators.image" (dict "registry" (.Values.dbOperator.image.registry
@@ -94,7 +127,11 @@ spec:
           runAsUser: 65532
           seccompProfile:
             type: RuntimeDefault
-        volumeMounts: []
+        volumeMounts:
+        - mountPath: /etc/config/
+          name: gpudb-tmpl
+        - mountPath: /etc/manager/manager-config
+          name: kineticaoperator-config-map
       securityContext:
         fsGroup: 65532
         runAsGroup: 65532
@@ -102,9 +139,16 @@ spec:
         runAsUser: 65532
         seccompProfile:
           type: RuntimeDefault
-      serviceAccountName: controller-manager
+      serviceAccountName: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager"
+        }}'
       terminationGracePeriodSeconds: 10
-      volumes: []
+      volumes:
+      - configMap:
+          name: gpudb-tmpl
+        name: gpudb-tmpl
+      - configMap:
+          name: kineticaoperator-config-map
+        name: kineticaoperator-config-map
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,0 +1,66 @@
+suite: PVC cleanup pre-install hook (pvcCleanup)
+values:
+  - __base_values.yaml
+
+tests:
+  - it: renders nothing by default (enabled=false)
+    template: pvc-cleanup.tpl
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders SA, Role, RoleBinding and Job as pre-install hooks when enabled
+    template: pvc-cleanup.tpl
+    set:
+      pvcCleanup:
+        enabled: true
+        pvcNames:
+          - stale-pvc-0
+          - stale-pvc-1
+    asserts:
+      - hasDocuments:
+          count: 4
+      - containsDocument:
+          kind: ServiceAccount
+          apiVersion: v1
+          name: pvc-cleanup
+          any: true
+      - containsDocument:
+          kind: Role
+          apiVersion: rbac.authorization.k8s.io/v1
+          name: pvc-cleanup
+          any: true
+      - containsDocument:
+          kind: RoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          name: pvc-cleanup
+          any: true
+      - containsDocument:
+          kind: Job
+          apiVersion: batch/v1
+          name: pvc-cleanup
+          any: true
+      # pre-install ONLY — a pre-upgrade run would wedge on the
+      # kubernetes.io/pvc-protection finalizer of in-use PVCs.
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: pre-install
+        documentSelector:
+          path: metadata.name
+          value: pvc-cleanup
+          matchMany: true
+      - matchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: "stale-pvc-0"
+        documentSelector:
+          path: kind
+          value: Job
+
+  - it: fails the render when enabled without an explicit pvcNames list
+    template: pvc-cleanup.tpl
+    set:
+      pvcCleanup:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "pvcNames is empty"

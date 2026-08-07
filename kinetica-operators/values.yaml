@@ -19,19 +19,26 @@ global:
   defaultStorageClass: ""
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-18.rc-4"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-18.dev-5"
 
 upsertKineticaCrds:
   enabled: false
   installRbac: false
   # serviceAccountName: run the upsert Job as this ServiceAccount instead of the
-  # operator's (controller-manager). When set, the chart also creates the SA as a
-  # pre-install hook (weight -10) so fresh installs work; upgrades never touch an
-  # SA already on the cluster. Set on Rubix to kineticacluster-operator so the
+  # operator's (dbOperator.serviceAccountName, default controller-manager). When
+  # set to a name that differs from the operator's SA, the chart also creates it
+  # as a pre-install hook (weight -10) so the knob is self-sufficient on fresh
+  # installs; when the two resolve to the same name the operator RBAC already
+  # defines it. Set on Rubix to kineticacluster-operator so the
   # platform-provisioned CRD-update ClusterRoleBinding subject keeps matching
   # across the controller-manager rename.
   serviceAccountName: ""
+  # failOnError: strict by default — any CRD check/replace failure (including
+  # Forbidden) fails the install/upgrade. Set false only where partial failures
+  # are expected and tolerated (e.g. the Rubix sandbox, whose platform CRD grant
+  # is a resourceNames allow-list bound to the original install namespace).
+  failOnError: true
   image:
     repository: "upsert-kinetica-crds"
     tag: *imageTag
@@ -49,6 +56,16 @@ upsertKineticaCrds:
 #   # size: "150Gi"                  # defaults to persistTier.default.limit
 #   # pvcNames: []                   # defaults to <clusterName>-persist-gpudb-<N>
 #   # dbPodNames: []                 # defaults to gpudb-<N>
+
+# One-shot deletion of explicitly named PVCs before a fresh install (e.g. stale
+# StatefulSet PVCs surviving a previous uninstall that a reinstall would rebind).
+# Deliberately OFF here — enable ONLY in a per-install deployment overlay with
+# an explicit pvcNames list. See templates/pvc-cleanup.tpl.
+# NOTE: deletions run sequentially at up to 120s each — with more than 2 PVCs,
+# raise helm's --timeout above pvcNames-count × 120s or the release aborts while
+# the hook Job keeps deleting.
+pvcCleanup:
+  enabled: false
 
 kubeRbacProxy:
   image:

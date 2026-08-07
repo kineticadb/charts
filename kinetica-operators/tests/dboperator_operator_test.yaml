@@ -28,6 +28,70 @@ tests:
           path: metadata.name
           value: kineticaoperator-controller-manager
 
+  - it: honors dbOperator.serviceAccountName override on the Deployment
+    template: kinetica_operators.yaml
+    set:
+      dbOperator:
+        serviceAccountName: kineticacluster-operator
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: kineticacluster-operator
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+
+  - it: keeps the immutable selector at control-plane only (upgrade compatibility)
+    template: kinetica_operators.yaml
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            control-plane: controller-manager
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+
+  - it: wires the operator runtime — downward-API env, config mounts, config-map
+    template: kinetica_operators.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/config/
+            name: gpudb-tmpl
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/manager/manager-config
+            name: kineticaoperator-config-map
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-controller-manager
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+          name: kineticaoperator-config-map
+          any: true
+      - isNotEmpty:
+          path: data["kinetica_cluster_reconciler.yaml"]
+        documentSelector:
+          path: metadata.name
+          value: kineticaoperator-config-map
+
   - it: pins numeric runAsUser so runAsNonRoot is verifiable against symbolic image USER
     template: kinetica_operators.yaml
     asserts:

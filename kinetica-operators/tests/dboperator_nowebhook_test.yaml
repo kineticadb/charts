@@ -51,8 +51,16 @@ tests:
   - it: mounts no webhook or metrics cert volumes and exposes no webhook port
     template: kinetica_operators.yaml
     asserts:
-      - isEmpty:
+      # Only the runtime config volumes — no webhook-certs / metrics-certs.
+      - equal:
           path: spec.template.spec.volumes
+          value:
+            - configMap:
+                name: gpudb-tmpl
+              name: gpudb-tmpl
+            - configMap:
+                name: kineticaoperator-config-map
+              name: kineticaoperator-config-map
         documentSelector:
           path: metadata.name
           value: kineticaoperator-controller-manager

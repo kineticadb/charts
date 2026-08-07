@@ -5,6 +5,12 @@ certManager:
 createNamespaces: false
 
 dbOperator:
+  # Run the operator (and the secret-patch/pre-delete hook Jobs, and the SA +
+  # RoleBinding subjects in the chart RBAC) as this ServiceAccount. Rubix keeps
+  # the pre-rename name: existing 1.0.179/1.0.180 installs already have the SA
+  # (pre-install hooks never re-fire on upgrades) and the platform-provisioned
+  # CRD-update ClusterRoleBinding names it as subject.
+  serviceAccountName: kineticacluster-operator
   webhooks:
     # No admission webhooks on Rubix: the helm-chart-operator SA has no
     # cert-manager.io or admissionregistration.k8s.io RBAC, so the webhook
@@ -124,6 +130,15 @@ otelCollector:
 
 provider: kind
 
+# Explicitly OFF for all rubix installs — pvc-cleanup deletes data volumes and
+
+# must only ever be enabled in a per-install deployment overlay with an explicit
+
+# pvcNames list (e.g. crd-update-overlay.yaml). See templates/pvc-cleanup.tpl.
+
+pvcCleanup:
+  enabled: false
+
 support-bundle:
   configMap:
     cluster: kinetica-apollo-entity
@@ -132,7 +147,21 @@ supportBundle:
   install: false
 
 upsertKineticaCrds:
+  # Keep enabled by default — the crd-refresh throwaway install (original
+  # namespaces) relies on this job to update the cluster-scoped CRDs. The
+  # pelennor-path installs (kinetica-system-1) disable it PER-INSTALL in
+  # their Apollo values: the platform CRD-grant CRB names the original
+  # namespace, so the job is Forbidden from -1 namespaces and the fail-loud
+  # script would abort every upgrade there.
   enabled: true
+  # failOnError false on this sandbox chart: the platform CRD grant is a
+  # resourceNames allow-list bound to the ORIGINAL install namespace, so the
+  # job inevitably reports failures here — Forbidden from -1 namespaces, and
+  # objectstores (baked in the image, absent from the grant) even from the
+  # original namespace. The job still runs and logs every failure; it just
+  # doesn't block installs/upgrades. Strict (true) remains the chart-template
+  # default for environments with a healthy grant (e.g. real Pelennor).
+  failOnError: false
   # Run the upsert Job as the pre-rename SA name: the platform-provisioned
   # CRD-update ClusterRoleBinding on Rubix names kineticacluster-operator as its
   # subject, and existing 1.0.179/1.0.180 installs already have the SA. The chart

@@ -44,7 +44,7 @@ roleRef:
   name: manager-role-nodes
 subjects:
 - kind: ServiceAccount
-  name: controller-manager
+  name: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
   namespace: '{{ .Release.Namespace }}'
 
 {{- end }}

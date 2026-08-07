@@ -2,6 +2,20 @@
 
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kineticaoperator-config-map
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    app.kubernetes.io/name: kinetica-operators
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: '{{ .Release.Name }}'
+    helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
+data:
+  {{- (tpl (.Files.Get "files/configmaps/local-dboperator-operator-kineticaoperator-config-map.yaml") . | nindent 2)  }}
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -58,7 +72,6 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: dboperator
       control-plane: controller-manager
   template:
     metadata:
@@ -77,6 +90,27 @@ spec:
         - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
         command:
         - /manager
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_SERVICE_ACCOUNT
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.serviceAccountName
         image: '{{ include "kinetica-operators.image" (dict "registry" (.Values.dbOperator.image.registry
           | default .Values.global.image.registry) "repository" .Values.dbOperator.image.repository
           "tag" .Values.dbOperator.image.tag "digest" .Values.dbOperator.image.digest)
@@ -117,6 +151,10 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
+        - mountPath: /etc/config/
+          name: gpudb-tmpl
+        - mountPath: /etc/manager/manager-config
+          name: kineticaoperator-config-map
         - mountPath: /tmp/k8s-metrics-server/metrics-certs
           name: metrics-certs
           readOnly: true
@@ -130,9 +168,16 @@ spec:
         runAsUser: 65532
         seccompProfile:
           type: RuntimeDefault
-      serviceAccountName: controller-manager
+      serviceAccountName: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager"
+        }}'
       terminationGracePeriodSeconds: 10
       volumes:
+      - configMap:
+          name: gpudb-tmpl
+        name: gpudb-tmpl
+      - configMap:
+          name: kineticaoperator-config-map
+        name: kineticaoperator-config-map
       - name: metrics-certs
         secret:
           items:

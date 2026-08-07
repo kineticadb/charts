@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
-  name: controller-manager
+  name: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
   namespace: '{{ .Release.Namespace }}'
   annotations:
     helm.sh/hook: pre-install
@@ -28,7 +28,7 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: '-10'
 rules:
@@ -194,7 +194,7 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: '-10'
 rules:
@@ -292,7 +292,7 @@ metadata:
     app.kubernetes.io/instance: '{{ .Release.Name }}'
     helm.sh/chart: '{{ include "kinetica-operators.chart" . }}'
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: '-10'
 roleRef:
@@ -301,7 +301,7 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: controller-manager
+  name: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
   namespace: '{{ .Release.Namespace }}'
 
 ---
@@ -321,7 +321,7 @@ roleRef:
   name: leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: controller-manager
+  name: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
   namespace: '{{ .Release.Namespace }}'
 
 ---
@@ -336,7 +336,7 @@ metadata:
   name: manager-rolebinding
   namespace: '{{ .Release.Namespace }}'
   annotations:
-    helm.sh/hook: pre-install
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: '-10'
 roleRef:
@@ -345,7 +345,7 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: controller-manager
+  name: '{{ .Values.dbOperator.serviceAccountName | default "controller-manager" }}'
   namespace: '{{ .Release.Namespace }}'
 
 {{- end }}
