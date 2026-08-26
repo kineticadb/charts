@@ -128,7 +128,7 @@ otelCollector:
   install: false
   installRbac: false
 
-provider: kind
+provider: other
 
 # Explicitly OFF for all rubix installs — pvc-cleanup deletes data volumes and
 
