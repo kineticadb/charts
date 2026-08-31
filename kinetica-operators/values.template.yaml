@@ -70,7 +70,7 @@ pvcCleanup:
 kubeRbacProxy:
   image:
     repository: "kube-rbac-proxy"
-    tag: "v0.22.0"
+    tag: "v0.22.1"
 
 kubeStateMetrics:
   install: false
@@ -360,7 +360,7 @@ openldap:
     image:
       registry: *imageRegistry
       repository: openssl
-      tag: 3.5.6
+      tag: 3.5.8
 
 supportBundle:
   install: true
