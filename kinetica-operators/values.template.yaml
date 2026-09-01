@@ -236,7 +236,7 @@ doorman:
     # lockstep.
     registry: "docker.io/kinetica"
     repository: circuit-breaker
-    tag: "doorman-20260716"
+    tag: "doorman-20260831"
     pullPolicy: IfNotPresent
   imagePullSecrets: []
   # HA default: two replicas behind the one Service, spread across nodes when

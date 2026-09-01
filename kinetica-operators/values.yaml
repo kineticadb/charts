@@ -20,7 +20,7 @@ global:
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-21.dev-4"
+    tag: &imageTag "v7.2.3-21.dev-5"
 
 upsertKineticaCrds:
   enabled: false
@@ -236,7 +236,7 @@ doorman:
     # lockstep.
     registry: "docker.io/kinetica"
     repository: circuit-breaker
-    tag: "doorman-20260716"
+    tag: "doorman-20260831"
     pullPolicy: IfNotPresent
   imagePullSecrets: []
   # HA default: two replicas behind the one Service, spread across nodes when
