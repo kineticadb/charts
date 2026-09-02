@@ -208,6 +208,9 @@
   {{- if $values.dbOperator.rbac.installClusterRoles.storageClasses }}
       {{- include "kinetica-operators.all-dboperator-scclusterrole" $data }}
   {{- end }}
+  {{- if $values.dbOperator.rbac.installClusterRoles.metricsAuth }}
+      {{- include "kinetica-operators.all-dboperator-metricsclusterrole" $data }}
+  {{- end }}
 {{- end }}
  
 ---
@@ -215,6 +218,9 @@
 {{- if $wbOperator.install }}
   {{- include "kinetica-operators.all-wboperator-conf" $data }}
   {{- include "kinetica-operators.all-wboperator-rbac" $data }}
+  {{- if $values.wbOperator.rbac.installClusterRoles.metricsAuth }}
+      {{- include "kinetica-operators.all-wboperator-metricsclusterrole" $data }}
+  {{- end }}
   {{- include "kinetica-operators.all-wboperator-operator" $data }}
 {{- end}}
 

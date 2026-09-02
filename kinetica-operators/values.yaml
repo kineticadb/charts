@@ -19,8 +19,8 @@ global:
   defaultStorageClass: ""
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-21.rc-7"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-21.dev-9"
 
 upsertKineticaCrds:
   enabled: false
@@ -93,6 +93,12 @@ wbOperator:
     repository: "workbench-operator"
     tag: *imageTag
     digest: ""
+  rbac:
+    installClusterRoles:
+      # TokenReview/SubjectAccessReview delegation so the operator can authenticate
+      # scrapers of its HTTPS metrics endpoint, plus a metrics-reader role to bind
+      # scrapers to. Only needed if something scrapes operator metrics.
+      metricsAuth: false
 
 dbOperator:
   install: true
@@ -126,6 +132,10 @@ dbOperator:
       nodes: false
       # Permission to get and create storage classes (auto-generate storage classes with best practice annotations)
       storageClasses: false
+      # TokenReview/SubjectAccessReview delegation so the operator can authenticate
+      # scrapers of its HTTPS metrics endpoint, plus a metrics-reader role to bind
+      # scrapers to. Only needed if something scrapes operator metrics.
+      metricsAuth: false
 
 nodeSelector: {}
 tolerations: []

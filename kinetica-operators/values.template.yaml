@@ -93,6 +93,12 @@ wbOperator:
     repository: "workbench-operator"
     tag: *imageTag
     digest: ""
+  rbac:
+    installClusterRoles:
+      # TokenReview/SubjectAccessReview delegation so the operator can authenticate
+      # scrapers of its HTTPS metrics endpoint, plus a metrics-reader role to bind
+      # scrapers to. Only needed if something scrapes operator metrics.
+      metricsAuth: false
 
 dbOperator:
   install: true
@@ -126,6 +132,10 @@ dbOperator:
       nodes: false
       # Permission to get and create storage classes (auto-generate storage classes with best practice annotations)
       storageClasses: false
+      # TokenReview/SubjectAccessReview delegation so the operator can authenticate
+      # scrapers of its HTTPS metrics endpoint, plus a metrics-reader role to bind
+      # scrapers to. Only needed if something scrapes operator metrics.
+      metricsAuth: false
 
 nodeSelector: {}
 tolerations: []
