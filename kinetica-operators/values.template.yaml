@@ -67,11 +67,6 @@ upsertKineticaCrds:
 pvcCleanup:
   enabled: false
 
-kubeRbacProxy:
-  image:
-    repository: "kube-rbac-proxy"
-    tag: "v0.22.1"
-
 kubeStateMetrics:
   install: false
   image:

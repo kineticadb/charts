@@ -30,6 +30,32 @@ tests:
           name: workbench-operator-controller-manager-metrics-service
           any: true
 
+  - it: WB metrics Service targets the manager metrics port
+    template: kinetica_operators.yaml
+    documentSelector:
+      path: metadata.name
+      value: workbench-operator-controller-manager-metrics-service
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 8443
+      - equal:
+          path: spec.ports[0].targetPort
+          value: 8443
+
+  - it: WB operator pod runs the manager alone (no kube-rbac-proxy sidecar)
+    template: kinetica_operators.yaml
+    documentSelector:
+      path: metadata.name
+      value: workbench-operator-controller-manager
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: manager
+
   - it: creates workbench-tmpl ConfigMap
     template: kinetica_operators.yaml
     asserts:
