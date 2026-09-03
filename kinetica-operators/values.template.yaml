@@ -67,11 +67,6 @@ upsertKineticaCrds:
 pvcCleanup:
   enabled: false
 
-kubeRbacProxy:
-  image:
-    repository: "kube-rbac-proxy"
-    tag: "v0.22.0"
-
 kubeStateMetrics:
   install: false
   image:
@@ -98,6 +93,12 @@ wbOperator:
     repository: "workbench-operator"
     tag: *imageTag
     digest: ""
+  rbac:
+    installClusterRoles:
+      # TokenReview/SubjectAccessReview delegation so the operator can authenticate
+      # scrapers of its HTTPS metrics endpoint, plus a metrics-reader role to bind
+      # scrapers to. Only needed if something scrapes operator metrics.
+      metricsAuth: false
 
 dbOperator:
   install: true
@@ -131,6 +132,10 @@ dbOperator:
       nodes: false
       # Permission to get and create storage classes (auto-generate storage classes with best practice annotations)
       storageClasses: false
+      # TokenReview/SubjectAccessReview delegation so the operator can authenticate
+      # scrapers of its HTTPS metrics endpoint, plus a metrics-reader role to bind
+      # scrapers to. Only needed if something scrapes operator metrics.
+      metricsAuth: false
 
 nodeSelector: {}
 tolerations: []
@@ -236,7 +241,7 @@ doorman:
     # lockstep.
     registry: "docker.io/kinetica"
     repository: circuit-breaker
-    tag: "doorman-20260716"
+    tag: "doorman-20260831"
     pullPolicy: IfNotPresent
   imagePullSecrets: []
   # HA default: two replicas behind the one Service, spread across nodes when
@@ -360,7 +365,7 @@ openldap:
     image:
       registry: *imageRegistry
       repository: openssl
-      tag: 3.5.6
+      tag: 3.5.8
 
 supportBundle:
   install: true

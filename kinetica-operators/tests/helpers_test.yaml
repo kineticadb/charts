@@ -46,7 +46,7 @@ tests:
     template: kinetica_operators.yaml
     asserts:
       - equal:
-          path: spec.template.spec.containers[1].image
+          path: spec.template.spec.containers[0].image
           value: "test.registry.io/workbench-operator:v0.0.1-test"
         documentSelector:
           path: metadata.name

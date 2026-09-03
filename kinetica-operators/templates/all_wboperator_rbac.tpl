@@ -263,7 +263,8 @@ spec:
   ports:
   - name: https
     port: 8443
-    targetPort: https
+    protocol: TCP
+    targetPort: 8443
   selector:
     app.kubernetes.io/name: wboperator
     control-plane: controller-manager
