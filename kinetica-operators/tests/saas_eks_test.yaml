@@ -1,11 +1,57 @@
 suite: saas/eks dispatch
-# NOTE: The chart references kinetica-operators.saas-eks-dboperator-operator
-# which has no corresponding template file yet. Tests disable dbOperator to
-# avoid that missing include and verify the resources that ARE testable.
 values:
   - __base_values.yaml
 
 tests:
+  - it: renders for saas/eks with dbOperator enabled
+    template: kinetica_operators.yaml
+    set:
+      environment: "saas"
+      provider: "eks"
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: creates the DB operator Deployment and its config for saas/eks
+    template: kinetica_operators.yaml
+    set:
+      environment: "saas"
+      provider: "eks"
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: kineticaoperator-controller-manager
+          any: true
+      - containsDocument:
+          kind: ConfigMap
+          apiVersion: v1
+          name: kineticaoperator-config-map
+          any: true
+      - containsDocument:
+          kind: MutatingWebhookConfiguration
+          apiVersion: admissionregistration.k8s.io/v1
+          any: true
+
+  - it: uses the webhook-free DB operator variant for saas/eks when webhooks are off
+    template: kinetica_operators.yaml
+    set:
+      environment: "saas"
+      provider: "eks"
+      dbOperator:
+        webhooks:
+          install: false
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: kineticaoperator-controller-manager
+          any: true
+      - not: true
+        containsDocument:
+          kind: MutatingWebhookConfiguration
+          apiVersion: admissionregistration.k8s.io/v1
+          any: true
+
   - it: renders for saas/eks with dbOperator disabled
     template: kinetica_operators.yaml
     set:

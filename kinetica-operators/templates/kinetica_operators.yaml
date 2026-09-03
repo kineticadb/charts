@@ -185,7 +185,14 @@
       {{- include "kinetica-operators.aks-dboperator-metering" $data }}    
   {{- else if and (eq $values.environment "saas") (eq $values.provider "eks") }}
       {{- include "kinetica-operators.saas-eks-dboperator-namespaces" $data }}
-      {{- include "kinetica-operators.saas-eks-dboperator-operator" $data }}
+      {{- /* The per-environment operator builds were retired (aadd95807); the saas-eks
+             operator variant was identical to the local one, which is now the single
+             operator Deployment template (webhook-free variant selected as below). */ -}}
+      {{- if $values.dbOperator.webhooks.install }}
+      {{- include "kinetica-operators.local-dboperator-operator" $data -}}
+      {{- else }}
+      {{- include "kinetica-operators.local-dboperator-operatornowebhook" $data -}}
+      {{- end }}
       {{- include "kinetica-operators.saas-eks-dboperator-monitoring" $data }}
       {{- include "kinetica-operators.saas-eks-dboperator-metering" $data }}
   {{- else }}
