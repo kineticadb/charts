@@ -25,7 +25,28 @@ spec:
     spec:
       containers:
       - args:
-        - --metrics-bind-address=:8443
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=10
+        image: '{{ include "kinetica-operators.image" (dict "registry" .Values.global.image.registry
+          "repository" .Values.kubeRbacProxy.image.repository "tag" .Values.kubeRbacProxy.image.tag)
+          }}'
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+      - args:
+        - --metrics-addr=127.0.0.1:8080
         - --enable-leader-election
         command:
         - /manager
@@ -48,6 +69,14 @@ spec:
           requests:
             cpu: 100m
             memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /etc/config/
           name: workbench-tmpl

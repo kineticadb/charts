@@ -67,7 +67,7 @@ spec:
           runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
-        command: ["/bin/sh", "-c"]
+        command: ["/bin/bash", "-c"]
         args:
           - |
             set -e

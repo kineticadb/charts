@@ -29,6 +29,11 @@ upsertKineticaCrds:
     repository: "upsert-kinetica-crds"
     tag: "v0.0.1-test"
 
+kubeRbacProxy:
+  image:
+    repository: "quay.io/brancz/kube-rbac-proxy"
+    tag: "v0.20.0"
+
 kubeStateMetrics:
   install: false
   image:

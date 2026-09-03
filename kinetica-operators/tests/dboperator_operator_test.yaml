@@ -154,38 +154,6 @@ tests:
           path: metadata.name
           value: kineticaoperator-controller-manager-metrics-service
 
-  - it: ships no cluster-scoped metrics RBAC by default (disallowed on Rubix)
-    template: kinetica_operators.yaml
-    asserts:
-      - not: true
-        containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-role
-          any: true
-      - not: true
-        containsDocument:
-          kind: ClusterRoleBinding
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-rolebinding
-          any: true
-
-  - it: ships cluster-scoped metrics RBAC when metricsAuth is enabled
-    template: kinetica_operators.yaml
-    set:
-      dbOperator.rbac.installClusterRoles.metricsAuth: true
-    asserts:
-      - containsDocument:
-          kind: ClusterRole
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-role
-          any: true
-      - containsDocument:
-          kind: ClusterRoleBinding
-          apiVersion: rbac.authorization.k8s.io/v1
-          name: metrics-auth-rolebinding
-          any: true
-
   - it: creates self-signed Issuer
     template: kinetica_operators.yaml
     asserts:

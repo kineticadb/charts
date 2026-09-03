@@ -185,14 +185,7 @@
       {{- include "kinetica-operators.aks-dboperator-metering" $data }}    
   {{- else if and (eq $values.environment "saas") (eq $values.provider "eks") }}
       {{- include "kinetica-operators.saas-eks-dboperator-namespaces" $data }}
-      {{- /* The per-environment operator builds were retired (aadd95807); the saas-eks
-             operator variant was identical to the local one, which is now the single
-             operator Deployment template (webhook-free variant selected as below). */ -}}
-      {{- if $values.dbOperator.webhooks.install }}
-      {{- include "kinetica-operators.local-dboperator-operator" $data -}}
-      {{- else }}
-      {{- include "kinetica-operators.local-dboperator-operatornowebhook" $data -}}
-      {{- end }}
+      {{- include "kinetica-operators.saas-eks-dboperator-operator" $data }}
       {{- include "kinetica-operators.saas-eks-dboperator-monitoring" $data }}
       {{- include "kinetica-operators.saas-eks-dboperator-metering" $data }}
   {{- else }}
@@ -215,9 +208,6 @@
   {{- if $values.dbOperator.rbac.installClusterRoles.storageClasses }}
       {{- include "kinetica-operators.all-dboperator-scclusterrole" $data }}
   {{- end }}
-  {{- if $values.dbOperator.rbac.installClusterRoles.metricsAuth }}
-      {{- include "kinetica-operators.all-dboperator-metricsclusterrole" $data }}
-  {{- end }}
 {{- end }}
  
 ---
@@ -225,9 +215,6 @@
 {{- if $wbOperator.install }}
   {{- include "kinetica-operators.all-wboperator-conf" $data }}
   {{- include "kinetica-operators.all-wboperator-rbac" $data }}
-  {{- if $values.wbOperator.rbac.installClusterRoles.metricsAuth }}
-      {{- include "kinetica-operators.all-wboperator-metricsclusterrole" $data }}
-  {{- end }}
   {{- include "kinetica-operators.all-wboperator-operator" $data }}
 {{- end}}
 
