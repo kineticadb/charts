@@ -40,6 +40,10 @@ Workbench remains prefix-aware via its BASE_PATH env.
 {{- $prefix := $values.kineticacluster.pathPrefix | default "" }}
 {{- $wbName := $values.workbench.name | default "workbench" }}
 {{- $wbNs := $values.workbench.namespace | default $ns }}
+{{- /* Fully-qualified with trailing dot: the doorman resolves upstreams on every
+       connection, and an unqualified name costs extra search-list queries and
+       20s stalls when cluster DNS drops a packet. */}}
+{{- $clusterDomain := $dm.clusterDomain | default "cluster.local" }}
 {{- $wbPrefix := $values.workbench.pathPrefix | default $prefix }}
 {{- /* dboperator creates rank ingresses for rank0..rank<replicas> INCLUSIVE */}}
 {{- $ranks := add1 (int (dig "gpudbCluster" "replicas" 1 $values.kineticacluster)) }}
@@ -69,7 +73,7 @@ facades:
 upstreams:
   gadmin:
     name: gadmin
-    host: {{ $clusterName }}-gadmin-service.{{ $ns }}.svc
+    host: {{ $clusterName }}-gadmin-service.{{ $ns }}.svc.{{ $clusterDomain }}.
     ports:
       - name: http
         port: 8080
@@ -77,7 +81,7 @@ upstreams:
 {{- range $i := until (int $ranks) }}
   rank{{ $i }}:
     name: rank{{ $i }}
-    host: {{ $clusterName }}-rank{{ $i }}-service.{{ $ns }}.svc
+    host: {{ $clusterName }}-rank{{ $i }}-service.{{ $ns }}.svc.{{ $clusterDomain }}.
     ports:
       - name: http
         port: 8082
@@ -88,7 +92,7 @@ upstreams:
 {{- end }}
   workbench:
     name: workbench
-    host: {{ $wbName }}-workbench-service.{{ $wbNs }}.svc
+    host: {{ $wbName }}-workbench-service.{{ $wbNs }}.svc.{{ $clusterDomain }}.
     ports:
       - name: http
         port: 8000
@@ -168,6 +172,18 @@ bindings:
         - stage: tls-termination
           direction: request
           config: {}
+        # Ask the upstream to close after every response. The proxy frames an
+        # upstream response that has neither Content-Length nor chunked
+        # encoding (e.g. 304 Not Modified) by reading until the server closes,
+        # so a keep-alive upstream stalls every 304 for its keep-alive timeout
+        # (Tomcat: 20s). One request per upstream connection also matches the
+        # Connection: close enforced on the response side below.
+        - stage: request-header-modify
+          direction: request
+          config:
+            set:
+              - name: Connection
+                value: close
         - stage: gateway-router
           direction: request
           config:
