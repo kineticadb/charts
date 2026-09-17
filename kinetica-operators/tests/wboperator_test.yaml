@@ -88,6 +88,25 @@ tests:
           path: spec.template.spec.containers[0].name
           value: manager
 
+  - it: WB manager container keeps its restricted-PodSecurity hardening
+    template: kinetica_operators.yaml
+    documentSelector:
+      path: metadata.name
+      value: workbench-operator-controller-manager
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.seccompProfile.type
+          value: RuntimeDefault
+      - contains:
+          path: spec.template.spec.containers[0].securityContext.capabilities.drop
+          content: ALL
+
   - it: creates workbench-tmpl ConfigMap
     template: kinetica_operators.yaml
     asserts:

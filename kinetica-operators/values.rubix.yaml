@@ -74,13 +74,17 @@ ingressNginx:
   install: false
 
 kineticacluster:
-  # Internal identity provider: gpudb owns the credentials
-  # (enable_httpd_proxy=false, enable_external_authentication=false — set by
-  # the operator). No LDAP server is involved; ldap: null drops the inherited
-  # in-cluster openldap connection block from the KineticaCluster CR.
+  # LDAP identity provider backed by the bundled in-cluster OpenLDAP
+  # (see openldap.install): existing Rubix installs manage their users in
+  # LDAP, and a rolling upgrade must not strand them by switching to the
+  # Internal provider. port matches the bundled Service (non-root OpenLDAP
+  # listens on 1389; the operators' CRD default is 389). The connection
+  # namespace comes from the base values (gpudb) — matches every Rubix
+  # install; a non-default-namespace sandbox overrides it in its own overlay.
   authentication:
-    ldap: null
-    type: Internal
+    ldap:
+      port: 1389
+    type: LDAP
   gpudbCluster:
     clusterName: kinetica-apollo-entity
     config:
@@ -104,25 +108,20 @@ kineticacluster:
       enabled: false
   name: kinetica-apollo-entity
 
-kubeRbacProxy:
-  image:
-    repository: kube-rbac-proxy
-    tag: v0.22.1
-
 kubeStateMetrics:
   install: false
 
 networkPolicies:
   install: true
 
-# No OpenLDAP on Rubix: users, roles and grants are managed natively in the
+# Bundled OpenLDAP stays deployed on Rubix: users, roles and grants live in
 
-# database (kineticacluster.authentication.type=Internal below), so the bundled
+# LDAP on existing installs (see kineticacluster.authentication.type=LDAP),
 
-# LDAP server and its pod-cert/persistence decoration are not deployed.
+# and rolling upgrades must keep serving them without overlay changes.
 
 openldap:
-  install: false
+  install: true
 
 otelCollector:
   install: false

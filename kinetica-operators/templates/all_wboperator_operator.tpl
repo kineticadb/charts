@@ -48,6 +48,14 @@ spec:
           requests:
             cpu: 100m
             memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /etc/config/
           name: workbench-tmpl

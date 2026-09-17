@@ -36,3 +36,20 @@ tests:
       - notExists:
           path: spec.authentication.ldap
         template: charts/kineticacluster/templates/kineticacluster.yaml
+
+  - it: Rubix overlay keeps the bundled OpenLDAP and the LDAP provider on port 1389
+    values:
+      - __base_values.yaml
+      - ../values.rubix.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: charts/openldap/templates/deployment.yaml
+      - equal:
+          path: spec.authentication.type
+          value: LDAP
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.authentication.ldap.port
+          value: 1389
+        template: charts/kineticacluster/templates/kineticacluster.yaml
