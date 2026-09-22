@@ -20,7 +20,7 @@ global:
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
     registry: &imageRegistry "kinetica.azurecr.io/dev"
-    tag: &imageTag "v7.2.3-22.dev-3"
+    tag: &imageTag "v7.2.3-22.dev-4"
 
 upsertKineticaCrds:
   enabled: false
@@ -459,6 +459,11 @@ kineticacluster:
     # The secret must contain a 'license' key with the license string
     # Create with: kubectl create secret generic <name> --from-literal=license=<your-license> -n <db-namespace>
     licenseSecretName: ""  # e.g., "kinetica-operators-kineticalicense"
+    # env: extra environment variables for the gpudb container, appended after
+    # the operator's own. Unset by default.
+    # env:
+    #   - name: HTTPS_PROXY
+    #     value: http://proxy.example.com:3128
     # image.repository is "kinetica-k8s-[cpu, cuda]"
     # use cuda image for NVIDIA GPU acceleration
     dbRegistryRepositoryTag:

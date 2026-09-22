@@ -342,6 +342,36 @@
     # -- Config Kinetica DB Configuration Object
     # Type: object
 
+    # env: (required: false)
+    # -- Env - Additional environment variables appended to the gpudb container of
+    # the DB StatefulSet, after the operator-managed variables. Unset = no change.
+    # Type: array of object
+
+    env: 
+      # name: (required: true)
+      # -- Name of the environment variable.
+      # May consist of any printable ASCII characters except '='.
+      # Required: true
+      # Type: string
+
+      # value: (required: false)
+      # -- Variable references $(VAR_NAME) are expanded
+      # using the previously defined environment variables in the container and
+      # any service environment variables. If a variable cannot be resolved,
+      # the reference in the input string will be unchanged. Double $$ are reduced
+      # to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+      # "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+      # Escaped references will never be expanded, regardless of whether the variable
+      # exists or not.
+      # Defaults to "".
+      # Type: string
+
+      # valueFrom: (required: false)
+      # -- Source for the environment variable's value. Cannot be used if value is not
+      # empty.
+      # Type: object
+
+
     # fqdn: (required: false)
     # -- The fully qualified URL used on the Ingress records for any exposed services.
     # Completed buy yth Operator. DO NOT POPULATE MANUALLY.

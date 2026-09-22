@@ -1,0 +1,19 @@
+suite: optional integer fields render when set
+values:
+  - __base_values.yaml
+
+tests:
+  - it: omits an optional integer field when unset
+    asserts:
+      - notExists:
+          path: spec.gadmin.containerPort.hostPort
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+
+  - it: renders an optional integer field set through values
+    set:
+      kineticacluster.gadmin.containerPort.hostPort: 18080
+    asserts:
+      - equal:
+          path: spec.gadmin.containerPort.hostPort
+          value: 18080
+        template: charts/kineticacluster/templates/kineticacluster.yaml
