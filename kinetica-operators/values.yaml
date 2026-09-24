@@ -19,8 +19,8 @@ global:
   defaultStorageClass: ""
   kineticaClusterName: ""  # Set to cluster name for sub-path multi-tenancy SPP routing
   image:
-    registry: &imageRegistry "docker.io/kineticastagingcloud"
-    tag: &imageTag "v7.2.3-22.rc-4"
+    registry: &imageRegistry "kinetica.azurecr.io/dev"
+    tag: &imageTag "v7.2.3-22.dev-5"
 
 upsertKineticaCrds:
   enabled: false
@@ -426,6 +426,14 @@ kineticacluster:
       registry: *imageRegistry
       repository: busybox
       tag: *imageTag
+  stats:
+    # kagent image for the external stats pod (Prometheus, Loki, Grafana, Alertmanager).
+    # kagent is versioned independently of the DB images. Per-component
+    # stats.<component>.image overrides this.
+    image:
+      registry: *imageRegistry
+      repository: kinetica/kagent
+      tag: "7.2.3.19.20260825012502.ga"
   gadmin:
     isEnabled: true
     containerPort:
