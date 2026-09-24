@@ -430,8 +430,10 @@ kineticacluster:
     # kagent image for the external stats pod (Prometheus, Loki, Grafana, Alertmanager).
     # kagent is versioned independently of the DB images. Per-component
     # stats.<component>.image overrides this.
+    # kagent is published to docker.io/kinetica/kagent by its own build, not by this
+    # pipeline, so its registry is fixed rather than following global.image.registry.
     image:
-      registry: *imageRegistry
+      registry: docker.io
       repository: kinetica/kagent
       tag: "7.2.3.19.20260825012502.ga"
   gadmin:
