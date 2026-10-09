@@ -235,11 +235,12 @@ doorman:
     # paths: []          # defaults to the two Kinetica probe endpoints
     # maxResponseBytes: 65536
   image:
-    # registry overrides global.image.registry for this image only; the
-    # circuit-breaker image is published to Docker Hub, not ACR. Tag is
+    # registry follows global.image.registry: circuit-breaker is mirrored to
+    # ACR dev and both Docker Hub orgs, so dev/rc/ga builds pull from the org
+    # that matches the release. Tag is
     # pinned: circuit-breaker rides its own branch, not the monorepo release
     # lockstep.
-    registry: "docker.io/kinetica"
+    registry: *imageRegistry
     repository: circuit-breaker
     tag: "doorman-20260831"
     pullPolicy: IfNotPresent

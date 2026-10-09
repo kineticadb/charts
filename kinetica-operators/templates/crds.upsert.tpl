@@ -7,6 +7,24 @@
        second document would collide. */}}
 {{- $operatorSA := .Values.dbOperator.serviceAccountName | default "controller-manager" }}
 {{- $upsertSA := .Values.upsertKineticaCrds.serviceAccountName | default $operatorSA }}
+{{- /* CRD names this chart ships, parsed from crds/crds.yaml at render time. The
+       upsert image carries every CRD the operator code generator emits
+       (config/crd/bases) — including types the chart's kustomization excludes
+       (objectstores, *upgrades, *schedules). The Job only touches names in this
+       list: on Rubix the CRD grant is a resourceNames allow-list, so a `get` on
+       an unshipped CRD comes back Forbidden (not NotFound) and would fail a
+       strict run. Parsing happens on the Helm client; the pod still only
+       issues per-name get/replace calls. */}}
+{{- $chartCrds := list }}
+{{- range $doc := splitList "\n---\n" (.Files.Get "crds/crds.yaml") }}
+{{- $obj := fromYaml $doc }}
+{{- if and (kindIs "map" $obj) (eq (get $obj "kind") "CustomResourceDefinition") }}
+{{- $chartCrds = append $chartCrds $obj.metadata.name }}
+{{- end }}
+{{- end }}
+{{- if not $chartCrds }}
+{{- fail "crds.upsert.tpl: crds/crds.yaml is missing or has no CustomResourceDefinition documents (run tools/build-chart.sh)" }}
+{{- end }}
 {{- if ne $upsertSA $operatorSA }}
 ---
 apiVersion: v1
@@ -71,13 +89,25 @@ spec:
         args:
           - |
             set -e
+            # CRDs shipped by chart {{ .Chart.Version }}; anything else baked into the
+            # image is left untouched (see template comment).
+            CHART_CRDS="{{ join " " $chartCrds }}"
             echo "=== Starting CRD replacements ==="
             FAILED=0
             REPLACED=0
             SKIPPED=0
+            NOT_IN_CHART=0
             for F in /crds/db-crds/* /crds/wb-crds/*; do
               if [ -f "$F" ]; then
                 CRD_NAME=$(grep -m1 '^  name:' "$F" | awk '{print $2}')
+                case " $CHART_CRDS " in
+                  *" $CRD_NAME "*) ;;
+                  *)
+                    echo "Skipping (not shipped by this chart): $F"
+                    NOT_IN_CHART=$((NOT_IN_CHART + 1))
+                    continue
+                    ;;
+                esac
                 # Only a genuine NotFound counts as absent; any other get failure
                 # (Forbidden, timeout, ...) must fail loudly, not masquerade as a skip.
                 if ! ERR="$(kubectl get crd "$CRD_NAME" 2>&1)"; then
@@ -110,7 +140,7 @@ spec:
               echo "upsertKineticaCrds.failOnError=false: continuing despite failures (sandbox tolerance)"
 {{- end }}
             fi
-            echo "Done: $REPLACED replaced, $SKIPPED skipped (not present), $FAILED failed"
+            echo "Done: $REPLACED replaced, $SKIPPED skipped (not present), $NOT_IN_CHART skipped (not in chart), $FAILED failed"
       restartPolicy: OnFailure
 
 {{- end }}

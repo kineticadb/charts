@@ -124,3 +124,39 @@ tests:
         documentSelector:
           path: metadata.name
           value: RELEASE-NAME-upsert-kinetica-crds
+
+  # The upsert image carries every CRD the operator's code generator emits
+  # (config/crd/bases), including types the chart's kustomization excludes
+  # (objectstores, *upgrades, *schedules). The script must only touch names
+  # the chart ships (parsed from crds/crds.yaml at render time): on Rubix the
+  # CRD grant is a resourceNames allow-list, so a `get` on an unshipped CRD
+  # is Forbidden (not NotFound) and would fail a strict run.
+  - it: upsert script only touches CRDs shipped in crds/crds.yaml
+    template: kinetica_operators.yaml
+    set:
+      upsertKineticaCrds.enabled: true
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: 'CHART_CRDS="[^"]*\bkineticaclusters\.app\.kinetica\.com\b[^"]*"'
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+      - matchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: 'CHART_CRDS="[^"]*\bworkbenches\.workbench\.com\.kinetica\b[^"]*"'
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+      - notMatchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: 'objectstores'
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds
+      - matchRegex:
+          path: spec.template.spec.containers[0].args[0]
+          pattern: 'not shipped by this chart'
+        documentSelector:
+          path: metadata.name
+          value: RELEASE-NAME-upsert-kinetica-crds

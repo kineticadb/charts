@@ -155,9 +155,9 @@ upsertKineticaCrds:
   enabled: true
   # failOnError false on this sandbox chart: the platform CRD grant is a
   # resourceNames allow-list bound to the ORIGINAL install namespace, so the
-  # job inevitably reports failures here — Forbidden from -1 namespaces, and
-  # objectstores (baked in the image, absent from the grant) even from the
-  # original namespace. The job still runs and logs every failure; it just
+  # job is Forbidden from -1 namespaces and would abort every upgrade there.
+  # (The job only touches CRDs the chart ships, so from the original namespace
+  # strict mode works.) The job still runs and logs every failure; it just
   # doesn't block installs/upgrades. Strict (true) remains the chart-template
   # default for environments with a healthy grant (e.g. real Pelennor).
   failOnError: false
