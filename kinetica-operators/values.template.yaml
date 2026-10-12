@@ -242,7 +242,7 @@ doorman:
     # lockstep.
     registry: *imageRegistry
     repository: circuit-breaker
-    tag: "doorman-20260831"
+    tag: "doorman-20261009"
     pullPolicy: IfNotPresent
   imagePullSecrets: []
   # HA default: two replicas behind the one Service, spread across nodes when
