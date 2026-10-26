@@ -13,6 +13,38 @@ entries:
     version: 72.2.3-dev.2
   kinetica-operators:
   - apiVersion: v2
+    appVersion: 7.2.3.23.20261014183705.ga
+    created: "2026-10-26T15:14:57.331700002Z"
+    dependencies:
+    - condition: openldap.install
+      name: openldap
+      repository: ""
+    - condition: certManager.install
+      name: cert-manager
+      repository: ""
+    - condition: ingressNginx.install
+      name: ingress-nginx
+      repository: ""
+    - condition: gpuOperator.install
+      name: gpu-operator
+      repository: ""
+    - condition: supportBundle.install
+      name: support-bundle
+      repository: ""
+    - condition: kineticacluster.install
+      name: kineticacluster
+      repository: ""
+    - condition: workbench.install
+      name: workbench
+      repository: ""
+    description: A Helm chart for deploying Kinetica Operators
+    digest: 97a56d12e9a0747d0596788db73c285d1f5a5f7ce84c3f31de9a99385247ae4a
+    name: kinetica-operators
+    type: application
+    urls:
+    - https://kineticadb.github.io/charts/7.2/kinetica-operators-72.3.23-dev.1.tgz
+    version: 72.3.23-dev.1
+  - apiVersion: v2
     appVersion: 7.2.3.22.20261006162252.ga
     created: "2026-10-12T17:14:14.120865183Z"
     dependencies:
@@ -8772,4 +8804,4 @@ entries:
     urls:
     - https://kineticadb.github.io/charts/7.2/kinetica-operators-0.0.0.tgz
     version: 0.0.0
-generated: "2026-10-12T17:14:14.016833098Z"
+generated: "2026-10-26T15:14:57.244239784Z"
