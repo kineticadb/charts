@@ -14,7 +14,8 @@ otel-collector-config: |
       protocol: rfc5424
   processors:
   extensions:
-    health_check: {}
+    health_check:
+      endpoint: "0.0.0.0:13133"
     zpages: {}
   exporters:
     otlphttp:
@@ -22,21 +23,21 @@ otel-collector-config: |
     prometheus:
       endpoint: 0.0.0.0:8889
       namespace: "{{ .Release.Namespace }}"
-    logging:
+    debug:
   service:
     extensions: [health_check, zpages]
     pipelines:
       traces:
         receivers: [otlp]
         processors: []
-        exporters: [otlphttp, logging]
+        exporters: [otlphttp, debug]
 
       metrics:
         receivers: [otlp]
         processors: []
-        exporters: [prometheus, logging]
+        exporters: [prometheus, debug]
 
       logs:
         receivers: [syslog]
         processors: []
-        exporters: [logging]
+        exporters: [debug]

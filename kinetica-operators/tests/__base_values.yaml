@@ -40,7 +40,7 @@ otelCollector:
   installRbac: false
   image:
     repository: "otel/opentelemetry-collector-contrib"
-    tag: "0.95.0"
+    tag: "0.163.2"
 
 fluentBit:
   image:
