@@ -48,6 +48,20 @@ Workbench remains prefix-aware via its BASE_PATH env.
 {{- /* dboperator creates rank ingresses for rank0..rank<replicas> INCLUSIVE */}}
 {{- $ranks := add1 (int (dig "gpudbCluster" "replicas" 1 $values.kineticacluster)) }}
 {{- if $dm.ranks }}{{- $ranks = int $dm.ranks }}{{- end }}
+{{- /* Ring failover (doorman.ha): when a peer head address is set, every rank
+       http route names it as backupRef so the proxy fails over to the ring peer
+       when the local rank is unreachable, instead of only holding. The peer is
+       used only while its readyCheck passes (ha_status drained), otherwise the
+       connection holds as before. Unset = exactly the pre-existing render. */}}
+{{- $ha := $dm.ha | default dict }}
+{{- $haEnabled := $ha.enabled | default false }}
+{{- $peer := $ha.peer | default dict }}
+{{- $peerHost := "" }}
+{{- if $haEnabled }}{{- $peerHost = $peer.host | default "" }}{{- end }}
+{{- $rc := $ha.readyCheck | default dict }}
+{{- $rcEnabled := false }}
+{{- if $peerHost }}{{- $rcEnabled = ternary $rc.enabled true (hasKey $rc "enabled") }}{{- end }}
+{{- $peerTransport := $peer.transport | default "HTTP" }}
 managementPort: 2222
 ha:
   enabled: false
@@ -97,6 +111,28 @@ upstreams:
       - name: http
         port: 8000
         transport: HTTP
+{{- if $peerHost }}
+  peer-rank0:
+    name: peer-rank0
+    host: {{ $peerHost }}
+    ports:
+      - name: http
+        port: {{ $peer.port | default 8082 }}
+        transport: {{ $peerTransport }}
+{{- if $rcEnabled }}
+    # Failover gate: the peer is dialled only while this probe passes. The
+    # response embeds ha_status as escaped JSON, hence the backslashes in match.
+    readyCheck:
+      path: {{ $rc.path | default "/gpudb-0/show/system/status" }}
+      method: POST
+      body: '{"options":{}}'
+      scheme: {{ ternary "https" "http" (eq (upper $peerTransport) "HTTPS") }}
+      authEnv: KINETICA_HA_PROBE_AUTH
+      match: {{ $rc.match | default "drained\\\\\\\":\\\\\\\"drained" | quote }}
+      timeoutSec: {{ $rc.timeoutSec | default 3 }}
+      cacheSec: {{ $rc.cacheSec | default 5 }}
+{{- end }}
+{{- end }}
 pipelines:
 {{- range $i := until (int $ranks) }}
   strip-rank{{ $i }}-hostmanager:
@@ -121,6 +157,21 @@ pipelines:
               type: ReplacePrefixMatch
               replacePrefixMatch: /{{ $clusterName }}/gpudb-{{ $i }}
               replacement: /gpudb-{{ $i }}
+{{- end }}
+{{- if $haEnabled }}
+{{- range $i := until (int $ranks) }}
+  strip-bare-rank{{ $i }}-hostmanager:
+    name: strip-bare-rank{{ $i }}-hostmanager
+    stages:
+      - stage: http-rewrite
+        direction: request
+        config:
+          requestRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /gpudb-{{ $i }}/hostmanager
+              replacement: /
+{{- end }}
 {{- end }}
 {{- if $prefix }}
   strip-gadmin:
@@ -195,12 +246,59 @@ bindings:
                 backendPort: hostmanager
                 target: strip-rank{{ $i }}-hostmanager
 {{- end }}
+{{- if $peerHost }}
+{{- /* The SDK discovery calls must be answered by this cluster or not at all:
+       answered by the peer they make this address look like the peer cluster,
+       and an auto-discovering client then never finishes connecting. Exact
+       rules outrank the rank prefix rules below and carry no backupRef. */}}
+{{- range $i := until (int $ranks) }}
+              - matches:
+                  - path: {type: Exact, value: /{{ $clusterName }}/gpudb-{{ $i }}/show/system/status}
+                  - path: {type: Exact, value: /{{ $clusterName }}/gpudb-{{ $i }}/show/system/properties}
+                backendRef: rank{{ $i }}
+                backendPort: http
+                target: strip-rank{{ $i }}-httpd
+              - matches:
+                  - path: {type: Exact, value: /gpudb-{{ $i }}/show/system/status}
+                  - path: {type: Exact, value: /gpudb-{{ $i }}/show/system/properties}
+                backendRef: rank{{ $i }}
+                backendPort: http
+{{- end }}
+{{- end }}
 {{- range $i := until (int $ranks) }}
               - matches:
                   - path: {type: PathPrefix, value: /{{ $clusterName }}/gpudb-{{ $i }}}
                 backendRef: rank{{ $i }}
                 backendPort: http
+{{- if $peerHost }}
+                backupRef: peer-rank0
+                backupPort: http
+{{- end }}
                 target: strip-rank{{ $i }}-httpd
+{{- end }}
+{{- if $haEnabled }}
+{{- /* Ring mode: members advertise rank 0 as <publicAddress>:<httpd port>/gpudb-0
+       and workers as <publicURLBase>/gpudb-N, i.e. the bare paths the rank
+       httpd serves natively. Route them here too (no prefix to strip) so the
+       advertised URLs resolve through this proxy; listener.port must then be
+       the DB httpd port (8082). */}}
+{{- range $i := until (int $ranks) }}
+              - matches:
+                  - path: {type: PathPrefix, value: /gpudb-{{ $i }}/hostmanager}
+                backendRef: rank{{ $i }}
+                backendPort: hostmanager
+                target: strip-bare-rank{{ $i }}-hostmanager
+{{- end }}
+{{- range $i := until (int $ranks) }}
+              - matches:
+                  - path: {type: PathPrefix, value: /gpudb-{{ $i }}}
+                backendRef: rank{{ $i }}
+                backendPort: http
+{{- if $peerHost }}
+                backupRef: peer-rank0
+                backupPort: http
+{{- end }}
+{{- end }}
 {{- end }}
 {{- if $prefix }}
               - matches:
@@ -484,6 +582,29 @@ spec:
               value: "none"
             - name: OTEL_TRACES_EXPORTER
               value: "none"
+{{- $ha := $dm.ha | default dict }}
+{{- $peerHost := dig "peer" "host" "" $ha }}
+{{- $rc := $ha.readyCheck | default dict }}
+{{- if and ($ha.enabled | default false) $peerHost (ternary $rc.enabled true (hasKey $rc "enabled")) }}
+{{- if not $rc.secretName }}
+{{- fail "doorman.ha.readyCheck.secretName is required when doorman.ha is enabled with a peer.host and readyCheck is enabled: a Secret in the DB namespace whose key holds \"user:password\" for the peer status probe" }}
+{{- end }}
+            # Credentials for the ring-peer readiness probe (doorman.ha.readyCheck),
+            # "user:password" from a pre-created Secret, never from values.
+            - name: KINETICA_HA_PROBE_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $rc.secretName }}
+                  key: {{ $rc.secretKey | default "auth" }}
+{{- end }}
+{{- $peerCA := and ($ha.enabled | default false) $peerHost }}
+{{- $caConfigMap := dig "gpudbCluster" "config" "ha" "caConfigMapName" "" ($root.Values.kineticacluster | default dict) }}
+{{- if $peerCA }}
+            # Extra certificate authorities for the ring peer's HTTPS address (a
+            # private CA), on top of the image's public ones.
+            - name: SSL_CERT_DIR
+              value: /etc/doorman-peer-ca:/etc/ssl/certs
+{{- end }}
           ports:
             - name: https
               containerPort: {{ $dm.listener.port }}
@@ -538,6 +659,11 @@ spec:
             - name: tls
               mountPath: /etc/doorman-tls
               readOnly: true
+{{- if $peerCA }}
+            - name: peer-ca
+              mountPath: /etc/doorman-peer-ca
+              readOnly: true
+{{- end }}
       volumes:
         - name: config
           configMap:
@@ -545,6 +671,26 @@ spec:
         - name: tls
           secret:
             secretName: {{ $tlsSecret }}
+{{- if $peerCA }}
+        # The CA that signed the peer's certificate: the ConfigMap named in
+        # kineticacluster config.ha.caConfigMapName, else the ca.crt shipped in
+        # this site's own TLS Secret (absent there: public authorities only).
+        - name: peer-ca
+{{- if $caConfigMap }}
+          configMap:
+            name: {{ $caConfigMap }}
+            items:
+              - key: ca.crt
+                path: ca.crt
+{{- else }}
+          secret:
+            secretName: {{ $tlsSecret }}
+            optional: true
+            items:
+              - key: ca.crt
+                path: ca.crt
+{{- end }}
+{{- end }}
 {{- if gt (int ($dm.replicas | default 2)) 1 }}
 ---
 # Keep at least one doorman serving through voluntary disruptions (node
@@ -583,7 +729,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  type: ClusterIP
+  type: {{ $dm.service.type | default "ClusterIP" }}
   selector:
     app.kubernetes.io/name: circuit-breaker-doorman
     app.kubernetes.io/instance: {{ $name }}

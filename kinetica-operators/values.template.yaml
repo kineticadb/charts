@@ -261,8 +261,10 @@ doorman:
     tlsSecretName: ""
     selfSigned: false
   # Annotations for the doorman Service; values are rendered with tpl, same as
-  # the ingress-nginx service annotations.
+  # the ingress-nginx service annotations. type LoadBalancer (plus the cloud's
+  # load balancer annotations) gives the proxy its own external address.
   service:
+    type: ClusterIP
     annotations: {}
   # Number of gpudb rank routes to render (rank0..rankN). Empty computes
   # replicas+1 from kineticacluster.gpudbCluster.replicas.
@@ -277,6 +279,30 @@ doorman:
   # a single node loss cannot take out both. Leave false on single-node
   # clusters or the doorman stays Pending.
   requireReplicaSpread: false
+  # Kafka HA ring mode (optional). enabled also routes the bare /gpudb-N paths
+  # that ring members advertise (<publicAddress>:8082/gpudb-N), so set
+  # listener.port to the DB httpd port (8082) and point
+  # kineticacluster config.network.publicAddress/publicURLBase at this proxy.
+  # With peer.host set, every rank route fails over to the ring peer's head
+  # when the local rank is unreachable, instead of only holding.
+  ha:
+    enabled: false
+    peer:
+      host: ""              # peer rank-0 address: its <clusterName>-ha-service load balancer or per-site proxy
+      port: 8082
+      transport: HTTP       # HTTPS when that address terminates TLS
+    # Before using the peer, probe its HA status and refuse a peer still
+    # replaying its backlog (not "drained"); the connection then holds.
+    readyCheck:
+      enabled: true
+      path: /gpudb-0/show/system/status
+      # Pre-created Secret in the DB namespace whose key holds "user:password"
+      # for the probe (any DB user). Required when enabled. Never put the
+      # value in values.
+      secretName: ""
+      secretKey: auth
+      timeoutSec: 3
+      cacheSec: 5
 
 gpuOperator:
   install: false
@@ -486,6 +512,36 @@ kineticacluster:
       repository: fluent-bit
       tag: ""
     config:
+      # Kafka HA ring (optional). Every ring member is its own helm install
+      # with an identical `clusters` list and identical pre-created
+      # `<clusterName>-internal-password-secret` (key PASSWORD) and
+      # `<clusterName>-crypto-secret` (key SECRET_KEY) Secrets, or references
+      # to existing Secrets below. Never put passwords or keys in values.
+      # gpudbCluster.haRingName (default "default") must also match on every member.
+      # ha:
+      #   enable: true
+      #   clusters:                          # every member, same order everywhere; url = how THIS operator reaches it
+      #     - name: ring-a                   # this cluster: no url needed
+      #     - name: ring-b
+      #       url: http://ring-b-ha.example.internal:9191
+      #   kafka:
+      #     brokers:
+      #       - host: kafka.example.com
+      #         port: 9092
+      #     securityProtocol: PLAINTEXT      # or SSL / SASL_PLAINTEXT / SASL_SSL
+      #     saslMechanism: ""                # e.g. SCRAM-SHA-512
+      #     credentialsSecretName: ""        # Secret with keys username/password
+      #   startupQueueLimit: 100000
+      #   enableWorkersConsumer: true        # worker ranks replicate too (needed for multi-head ingest)
+      #   service:                           # <clusterName>-ha-service (ports 9191, 8082)
+      #     type: ClusterIP                  # LoadBalancer when members are in different k8s clusters
+      #     annotations: {}
+      #   internalPasswordSecretName: ""     # existing Secret (key PASSWORD) shared by the ring
+      #   cryptoSecretName: ""               # existing Secret (key SECRET_KEY) shared by the ring
+      #   caConfigMapName: ""                # ConfigMap (key ca.crt) with the private CA of the members' HTTPS addresses
+      # network:
+      #   publicAddress: ""                  # scheme://host advertised to the ring as <publicAddress>:8082/gpudb-0
+      #   publicURLBase: ""                  # rank<N>.public_url = <publicURLBase>/gpudb-<N> (per-site proxy only)
       postgresProxy:
         enablePostgresProxy: true
       kifs:
