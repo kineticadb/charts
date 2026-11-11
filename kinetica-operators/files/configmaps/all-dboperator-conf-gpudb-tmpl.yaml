@@ -834,10 +834,7 @@ gpudb_conf.tmpl: |
   host0.gpus =
   host0.accepts_failover = false
   #host0.ha_address = {{ .Cluster.Spec.GPUDBCluster.Config.Network.HAAddress }}
-  {{- if .PublicAddress }}
-  host0.public_address = {{ .PublicAddress }}
-  {{- end }}
-  host0.ha_address ={{ if .HAAddress }} {{ .HAAddress }}{{ end }}
+  host0.ha_address =
 
   # ==============================================================================
   # Ranks
@@ -1813,7 +1810,7 @@ gpudb_conf.tmpl: |
   # address specified in the relevant section above.
 
   # Enable HA.
-  enable_ha = {{ .HAEnabled }}
+  enable_ha = false
 
   # ==============================================================================
   # Machine Learning (ML)

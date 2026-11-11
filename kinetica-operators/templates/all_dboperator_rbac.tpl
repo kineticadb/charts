@@ -70,12 +70,6 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - pods/exec
-  verbs:
-  - create
-- apiGroups:
-  - ''
-  resources:
   - pods/status
   - services/status
   verbs:

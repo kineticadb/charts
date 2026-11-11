@@ -3999,146 +3999,6 @@ spec:
                             format: int32
                             type: integer
                         type: object
-                      ha:
-                        description: HA - Kafka-based high availability ring settings.
-                        properties:
-                          caConfigMapName:
-                            description: |-
-                              CAConfigMapName - Optional ConfigMap (key `ca.crt`, PEM) in the cluster's
-                              namespace holding the CA that signed the other members' HTTPS
-                              addresses, for members whose certificates come from a private CA. Unset,
-                              the `ca.crt` of the site proxy's TLS Secret is used when it has one,
-                              otherwise only public certificate authorities are trusted.
-                            type: string
-                          clusters:
-                            description: |-
-                              Clusters - Every ring member, including this cluster, in the same
-                              order on every member (gpudb_ha_conf.json `ha_cluster`). The ring size
-                              cannot change while clusters are running.
-                            items:
-                              description: HAClusterMember - One ring member.
-                              properties:
-                                name:
-                                  description: Name - The member's `clusterName`.
-                                  minLength: 1
-                                  type: string
-                                url:
-                                  description: |-
-                                    URL - Base URL of the member's rank-0 API as reachable from this
-                                    operator, e.g. `http://<member ha address>:9191` or
-                                    `https://site-b.example.com/gpudb-0`. The operator fetches the member's
-                                    system status from it to link the ring. Optional for this cluster
-                                    itself (its in-cluster rank-0 Service is used); a peer without a URL is
-                                    not linked.
-                                  type: string
-                              required:
-                              - name
-                              type: object
-                            type: array
-                          cryptoSecretName:
-                            description: |-
-                              CryptoSecretName - Optional existing Secret (key `SECRET_KEY`) whose
-                              value seeds `<name>-crypto-secret` on first reconcile. Every ring member
-                              must share the same value.
-                            type: string
-                          enable:
-                            default: false
-                            description: Enable - Enable HA for this cluster (gpudb.conf
-                              `enable_ha`).
-                            type: boolean
-                          enableWorkersConsumer:
-                            description: |-
-                              EnableWorkersConsumer - Worker ranks consume the inserts topic and
-                              produce replication messages (MultiConsumer mode, required for
-                              multi-head ingest replication). Defaults to true.
-                            type: boolean
-                          internalPasswordSecretName:
-                            description: |-
-                              InternalPasswordSecretName - Optional existing Secret (key `PASSWORD`)
-                              whose value seeds `<name>-internal-password-secret` on first reconcile.
-                              Every ring member must share the same value.
-                            type: string
-                          kafka:
-                            description: |-
-                              Kafka - The Kafka brokers the ring replicates through. Kafka is
-                              customer-managed and must be reachable from every ring member.
-                            properties:
-                              brokers:
-                                description: Brokers - Bootstrap brokers (gpudb_ha_conf.json
-                                  `amqp_clients`).
-                                items:
-                                  description: HAKafkaBroker - One Kafka bootstrap
-                                    broker.
-                                  properties:
-                                    host:
-                                      description: Host - Broker hostname or IP.
-                                      type: string
-                                    port:
-                                      default: 9092
-                                      description: Port - Broker port.
-                                      format: int32
-                                      type: integer
-                                  required:
-                                  - host
-                                  type: object
-                                minItems: 1
-                                type: array
-                              credentialsSecretName:
-                                description: |-
-                                  CredentialsSecretName - Existing Secret with keys `username` and
-                                  `password` used for SASL authentication. Never put credentials in
-                                  chart values.
-                                type: string
-                              saslMechanism:
-                                description: SASLMechanism - SASL mechanism when SecurityProtocol
-                                  is SASL_*.
-                                type: string
-                              securityProtocol:
-                                default: PLAINTEXT
-                                description: SecurityProtocol - Kafka security protocol.
-                                enum:
-                                - PLAINTEXT
-                                - SSL
-                                - SASL_PLAINTEXT
-                                - SASL_SSL
-                                type: string
-                            required:
-                            - brokers
-                            type: object
-                          service:
-                            description: |-
-                              Service - Shape of the `<name>-ha-service` Service that exposes rank 0's
-                              HA port 9191 and head port 8082 to the other ring members. Use
-                              `LoadBalancer` when the members live in different Kubernetes clusters.
-                            properties:
-                              annotations:
-                                additionalProperties:
-                                  type: string
-                                description: |-
-                                  Annotations - Annotations for the Service, e.g. cloud load balancer
-                                  settings.
-                                type: object
-                              type:
-                                default: ClusterIP
-                                description: Type - Service type.
-                                enum:
-                                - ClusterIP
-                                - LoadBalancer
-                                - NodePort
-                                type: string
-                            type: object
-                          startupQueueLimit:
-                            default: 100000
-                            description: |-
-                              StartupQueueLimit - Backlog (messages) below which a starting cluster
-                              reports `drained` and accepts requests (gpudb_ha_conf.json
-                              `startup_queue_limit`).
-                            format: int64
-                            minimum: 1
-                            type: integer
-                        required:
-                        - enable
-                        type: object
                       hardware:
                         description: HardwareConfig
                         properties:
@@ -4290,9 +4150,8 @@ spec:
                       ml:
                         default:
                           enable: false
-                        description: 'Etcd *ETCDConfig `json:"etcd,omitempty"` (unused;
-                          its former default marker was { "urls": {}, "auth_user":
-                          {} })'
+                        description: "Etcd *ETCDConfig `json:\"etcd,omitempty\"`\n\
+                          \tHA        HAConfig            `json:\"ha,omitempty\"`"
                         properties:
                           enable:
                             default: false
@@ -4430,19 +4289,6 @@ spec:
 
                               openssl req -newkey rsa:2048 -new -nodes -x509 \
                                 -days 3650 -keyout key.pem -out cert.pem
-                            type: string
-                          publicAddress:
-                            description: |-
-                              PublicAddress - Optional scheme://host[:port] rendered as `host0.public_address`.
-                              The ring and SDK clients learn rank 0 as `<publicAddress>:<httpdProxyPort>/gpudb-0`,
-                              so it must reach rank 0's httpd from outside the cluster (the `<name>-ha-service`
-                              LoadBalancer or a per-site proxy). Unset keeps the pod IP stamped at start-up.
-                            type: string
-                          publicURLBase:
-                            description: |-
-                              PublicURLBase - Optional base for every `rank<N>.public_url`, rendered as
-                              `<publicURLBase>/gpudb-<N>`; `<publicURLBase>/gpudb-<N>` must route to rank N
-                              (a per-site proxy). Unset keeps `<scheme>://<fqdn>/<cluster name>/gpudb-<N>`.
                             type: string
                           rank0IPAddress:
                             default: ${gaia.rank0.host}
@@ -28240,50 +28086,6 @@ spec:
                 default: false
                 description: The first start of a new cluster has completed.
                 type: boolean
-              ha:
-                description: HA - HA ring link state written by the operator when
-                  config.ha is enabled.
-                properties:
-                  containers:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      Containers - gpudb container ID per pod the files were written to; a
-                      restarted container loses them and is re-linked.
-                    type: object
-                  fingerprint:
-                    description: |-
-                      Fingerprint - Hash of the linked members' stable address data; the
-                      operator re-links when it changes.
-                    type: string
-                  lastLinkTime:
-                    description: LastLinkTime - When the files were last written and
-                      HA refreshed.
-                    format: date-time
-                    type: string
-                  members:
-                    description: Members - Per ring member, whether its status file
-                      was delivered.
-                    items:
-                      description: HALinkMember - Link state of one ring member.
-                      properties:
-                        linked:
-                          description: Linked - Its system status file is present
-                            in this cluster's pods.
-                          type: boolean
-                        message:
-                          description: Message - Why it is not linked, when it is
-                            not.
-                          type: string
-                        name:
-                          description: Name - The member's clusterName.
-                          type: string
-                      required:
-                      - linked
-                      - name
-                      type: object
-                    type: array
-                type: object
               hmStatus:
                 description: |-
                   HostManagerStatusResponse - The contents of polling the HostManager on port 9300n are added to the BR status
