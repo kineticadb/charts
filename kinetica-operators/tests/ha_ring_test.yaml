@@ -1,0 +1,99 @@
+suite: Kafka HA ring settings on the KineticaCluster
+values:
+  - __base_values.yaml
+
+tests:
+  - it: renders no ha block when HA values are unset
+    asserts:
+      - notExists:
+          path: spec.gpudbCluster.config.ha
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+
+  - it: renders the ha block from values
+    set:
+      kineticacluster.gpudbCluster.config.ha.enable: true
+      kineticacluster.gpudbCluster.config.ha.clusters:
+        - name: ring-a
+        - name: ring-b
+          url: http://ring-b-ha.example.internal:9191
+      kineticacluster.gpudbCluster.config.ha.kafka.brokers:
+        - host: kafka.example.com
+          port: 9092
+      kineticacluster.gpudbCluster.config.ha.kafka.securityProtocol: SASL_SSL
+      kineticacluster.gpudbCluster.config.ha.kafka.credentialsSecretName: ring-kafka-creds
+      kineticacluster.gpudbCluster.config.ha.service.type: LoadBalancer
+      kineticacluster.gpudbCluster.config.ha.service.annotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+      kineticacluster.gpudbCluster.config.ha.internalPasswordSecretName: ring-admin-password
+      kineticacluster.gpudbCluster.config.ha.caConfigMapName: ring-ca
+    asserts:
+      - equal:
+          path: spec.gpudbCluster.config.ha.caConfigMapName
+          value: ring-ca
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.enable
+          value: true
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - lengthEqual:
+          path: spec.gpudbCluster.config.ha.clusters
+          count: 2
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.clusters[0].name
+          value: ring-a
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - notExists:
+          path: spec.gpudbCluster.config.ha.clusters[0].url
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.clusters[1].url
+          value: http://ring-b-ha.example.internal:9191
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.kafka.brokers[0].port
+          value: 9092
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.kafka.securityProtocol
+          value: SASL_SSL
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.kafka.credentialsSecretName
+          value: ring-kafka-creds
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.service.type
+          value: LoadBalancer
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.service.annotations["service.beta.kubernetes.io/aws-load-balancer-internal"]
+          value: "true"
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.ha.internalPasswordSecretName
+          value: ring-admin-password
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+
+  - it: renders the advertised address fields from values
+    set:
+      kineticacluster.gpudbCluster.config.network.publicAddress: https://ring-a.example.com
+      kineticacluster.gpudbCluster.config.network.publicURLBase: https://ring-a.example.com:8082
+    asserts:
+      - equal:
+          path: spec.gpudbCluster.config.network.publicAddress
+          value: https://ring-a.example.com
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - equal:
+          path: spec.gpudbCluster.config.network.publicURLBase
+          value: https://ring-a.example.com:8082
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+
+  - it: renders no advertised address fields when unset
+    asserts:
+      - notExists:
+          path: spec.gpudbCluster.config.network.publicAddress
+        template: charts/kineticacluster/templates/kineticacluster.yaml
+      - notExists:
+          path: spec.gpudbCluster.config.network.publicURLBase
+        template: charts/kineticacluster/templates/kineticacluster.yaml
