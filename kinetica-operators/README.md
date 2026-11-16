@@ -195,7 +195,8 @@ site. Each site is reached at its own name, served by that site's CB Proxy on po
    kubectl -n gpudb create secret generic ring-kafka-creds --from-literal=username='<user>' --from-literal=password='<password>'
    ```
 
-2. Install site A with these values on top of the usual ones for the platform. Site B uses the same file
+2. Install site A with these values (also shipped as `examples/ha-site-with-cb-proxy.yaml`) on top of the
+   usual ones for the platform. Site B uses the same file
    with `site-a` and `site-b` swapped in `kineticacluster.name`, `workbench.clusterRef.name`,
    `publicAddress`, `publicURLBase`, the `url` entry and `doorman.ha.peer.host`; the `clusters` list keeps
    the same order.
@@ -290,3 +291,93 @@ spec:
     restart: true
 ```
 
+
+### Enabling HA on installs that already exist
+
+Step 1 of the two-site example only fits new installs. An install made without HA already has
+`<clusterName>-internal-password-secret` and `<clusterName>-crypto-secret`, each with a value generated for
+that install alone, and the operator never overwrites them. Two such installs must be brought to the same
+two values before they are joined. Until they are:
+
+- different admin passwords: `status.ha` shows the other member `linked: false` with
+  `HTTP 401 Insufficient credentials`;
+- same password, different crypto keys: every member shows `linked: true`, yet nothing replicates and
+  nothing is logged.
+
+The crypto key encrypts the credentials stored in the database (`CREATE CREDENTIAL`). A credential stored
+under one key cannot be read, altered or dropped under another, so never invent a new key for a site that
+has credentials. Pick one site as the source of both values and change only the other site:
+
+1. On the site that will change, drop its credentials (`DROP CREDENTIAL`), and note how to recreate them.
+2. Set its admin password to the source site's, in the database first and then in the Secret, so the
+   operator is never locked out:
+
+   ```bash
+   # as admin on the site that changes
+   #   ALTER USER admin SET PASSWORD '<source site admin password>'
+   kubectl -n gpudb create secret generic <clusterName>-internal-password-secret \
+     --from-literal=PASSWORD='<source site admin password>' --dry-run=client -o yaml | kubectl apply -f -
+   ```
+
+3. Put the source site's key in its crypto Secret the same way (`<clusterName>-crypto-secret`, key
+   `SECRET_KEY`).
+4. Upgrade both installs with the HA values. The first time HA is switched on the operator restarts the
+   database; if the site that changed was not restarted by that, restart it with a
+   `KineticaClusterAdmin` as shown above, because the database reads both Secrets only when it starts.
+5. Recreate the dropped credentials, on one site only.
+
+Once the sites are linked, the admin password is replicated like any other user change: changing it with
+SQL on one site changes it on every site, and every site's `<clusterName>-internal-password-secret` must
+then be updated to the new value.
+
+Tables that existed before the ring was formed stay on their own site; only changes made after both sites
+are linked are replicated.
+
+### Users and roles in a ring
+
+Users, roles, grants and default schemas made with SQL on one site are replicated to the others, like any
+other change.
+
+`KineticaUser`, `KineticaRole` and `KineticaGrant` objects depend on the authentication type:
+
+- `authentication.type: Internal`: apply them on one site only. The login works on every site, and
+  deleting the object removes it everywhere.
+- `authentication.type: LDAP` (the default, with the chart's own OpenLDAP): the password is stored in the
+  directory of the site the object was applied to, so the login works only there. Apply the same objects
+  on every site.
+
+### How clients connect
+
+Every site accepts reads and writes; nothing is primary or standby. What a client does when its site goes
+down depends on the client and on whether the site has a CB Proxy.
+
+- **With the CB Proxy (the two-site example).** Any client can be given one site's address. While that
+  site's database is down its proxy serves the requests from the other site, so clients that cannot fail
+  over (plain REST callers, tools pinned to one URL, JDBC with `DisableFailover=1`) keep working, and new
+  clients can still start against that address.
+- **Without the CB Proxy** (`doorman.install: false`). Expose each site's `<clusterName>-ha-service` on
+  port 8082 (`config.ha.service.type: LoadBalancer`), set `publicAddress`, `publicURLBase` and the other
+  member's `url` to that address, and give every client all site addresses
+  (`http://site-a.example.com:8082/gpudb-0,http://site-b.example.com:8082/gpudb-0`); the values are
+  shipped as `examples/ha-site-without-cb-proxy.yaml`. The Kinetica SDKs
+  and the JDBC driver then fail over by themselves. A client given only one address learns the others
+  while that site is up, but cannot start while it is down, and a client with failover switched off fails
+  until its site returns. The service speaks plain HTTP: put TLS in front of it, or keep the CB Proxy.
+  Always use port 8082; with LDAP authentication never expose port 9191 to clients.
+- **One writing site.** To have a single site take all writes, give clients only that site's address
+  (with the CB Proxy), or list it first (without). This is a convention the clients keep, not something
+  the ring enforces.
+
+### Internal authentication and the httpd front end
+
+With `kineticacluster.authentication.type: Internal` the database checks logins itself, and its httpd
+front end (port 8082) only routes `/gpudb-N` to the ranks. The CB Proxy and ring members addressed on 8082
+need it; nothing else does. An Internal install that uses neither can switch it off:
+
+```yaml
+kineticacluster:
+  gpudbCluster:
+    config:
+      network:
+        enableHTTPDProxy: false
+```
