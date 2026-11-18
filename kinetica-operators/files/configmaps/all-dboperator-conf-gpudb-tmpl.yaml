@@ -834,10 +834,7 @@ gpudb_conf.tmpl: |
   host0.gpus =
   host0.accepts_failover = false
   #host0.ha_address = {{ .Cluster.Spec.GPUDBCluster.Config.Network.HAAddress }}
-  {{- if .PublicAddress }}
-  host0.public_address = {{ .PublicAddress }}
-  {{- end }}
-  host0.ha_address ={{ if .HAAddress }} {{ .HAAddress }}{{ end }}
+  host0.ha_address =
 
   # ==============================================================================
   # Ranks
@@ -897,9 +894,9 @@ gpudb_conf.tmpl: |
   #       "/opt/gpudb/httpd/conf/httpd.conf" and setup HTTPS as per the Apache
   #       httpd documentation at https://httpd.apache.org/docs/2.2/
   # enable_httpd_proxy = true
-  # Internal auth provider: gpudb authenticates natively and the httpd server
-  # only routes /gpudb-N to the ranks (see httpd_conf.tmpl).
-  enable_httpd_proxy = {{ .Cluster.Spec.GPUDBCluster.Config.Network.EnableHTTPDProxy }}
+  # Internal auth provider: gpudb authenticates natively, so the httpd LDAP auth
+  # proxy is not run.
+  enable_httpd_proxy = {{ if .Cluster.IsInternalAuth }}false{{ else }}{{ .Cluster.Spec.GPUDBCluster.Config.Network.EnableHTTPDProxy }}{{ end }}
 
   # TCP port that the httpd auth proxy server will listen on if
   # 'enable_httpd_proxy' is "true".
@@ -1813,7 +1810,7 @@ gpudb_conf.tmpl: |
   # address specified in the relevant section above.
 
   # Enable HA.
-  enable_ha = {{ .HAEnabled }}
+  enable_ha = false
 
   # ==============================================================================
   # Machine Learning (ML)
@@ -3195,14 +3192,14 @@ httpd_conf.tmpl: "# ------------------------------------------------------------
   \    # Use LDAP auth for all URLs \"/g*\"\n    # A /gpudb-ldap.html is available
   for testing the auth credentials.\n    #\n    # Configure the LDAP server variables
   as needed.\n\n    <Location />\n        Header set Access-Control-Allow-Origin \"\
-  *\"\n{{- if .Auth }}\n\n        # Clear the REMOTE_USER and KINETICA_ROLES headers,
-  so that they\n        # cannot be passed through by the client.\n        Header
-  unset REMOTE_USER\n        Header unset KINETICA_ROLES\n\n        AuthName \"Kinetica
-  Authentication\"\n        AuthType Basic\n        AuthBasicProvider ldap\n     \
-  \   AuthLDAPUrl {{ .URL }}\n        AuthLDAPBindDN {{ .BindDN }}\n        AuthLDAPBindPassword
-  {{ .Auth.AdminPassword }}\n        AuthBasicAllowAnonymous on\n\n        <LimitExcept
-  OPTIONS>\n            <RequireAll>\n#                Block commented as it disallows
-  none LDAP internal users e.g. kifs from accessing the APIs\n#                <RequireAny>\n\
+  *\"\n\n        # Clear the REMOTE_USER and KINETICA_ROLES headers, so that they\n\
+  \        # cannot be passed through by the client.\n        Header unset REMOTE_USER\n\
+  \        Header unset KINETICA_ROLES\n\n        AuthName \"Kinetica Authentication\"\
+  \n        AuthType Basic\n        AuthBasicProvider ldap\n        AuthLDAPUrl {{
+  .URL }}\n        AuthLDAPBindDN {{ .BindDN }}\n        AuthLDAPBindPassword {{ .Auth.AdminPassword
+  }}\n        AuthBasicAllowAnonymous on\n\n        <LimitExcept OPTIONS>\n      \
+  \      <RequireAll>\n#                Block commented as it disallows none LDAP
+  internal users e.g. kifs from accessing the APIs\n#                <RequireAny>\n\
   #                    Require ldap-group cn=db_users,ou=Groups, dc=kinetica,dc=com\n\
   #                    Require ldap-group cn=global_admins,ou=Groups, dc=kinetica,dc=com\n\
   #                </RequireAny>\n                <RequireAny>\n                 \
@@ -3217,15 +3214,10 @@ httpd_conf.tmpl: "# ------------------------------------------------------------
   \  RequestHeader set REMOTE_USER %{AUTHENTICATE_uid}e env=AUTHENTICATE_uid\n   \
   \     # RequestHeader set KINETICA_IMPERSONATE %{IMPERSONATE_uid}e env=IMPERSONATE_uid\n\
   \        RequestHeader set KINETICA_ROLES %{KINETICA_ROLES}e env=KINETICA_ROLES\n\
-  \        RequestHeader unset AUTHORIZATION env=AUTHENTICATE_uid\n{{- else }}\n\n\
-  \        # No authentication provider: gpudb checks the login itself, so this\n\
-  \        # server only routes. Drop the REMOTE_USER and KINETICA_ROLES request\n\
-  \        # headers so that a client cannot name its own user or roles.\n       \
-  \ RequestHeader unset REMOTE_USER\n        RequestHeader unset KINETICA_ROLES\n
-  {{- end }}\n    </Location>\n{{- if .Auth }}\n\n\n    # Info about ldap caching
-  at \"/server/ldap-info\"\n    <Location \"/server/ldap-info\">\n        SetHandler
-  ldap-status\n    </Location>\n{{- end }}\n\n    ProxyPreserveHost On\n\n    # The
-  placeholder (COMPONENTCONFIG) below is replaced when\n    # /opt/gpudb/core/bin/gpudb
+  \        RequestHeader unset AUTHORIZATION env=AUTHENTICATE_uid\n    </Location>\n\
+  \n\n    # Info about ldap caching at \"/server/ldap-info\"\n    <Location \"/server/ldap-info\"\
+  >\n        SetHandler ldap-status\n    </Location>\n\n    ProxyPreserveHost On\n\
+  \n    # The placeholder (COMPONENTCONFIG) below is replaced when\n    # /opt/gpudb/core/bin/gpudb
   copies httpd.conf to httpd_gpudb.conf and adds\n    # the correct ProxyPass lines
   below.\n    #\n    # httpd urls /gpudb-N -> http://gpudb_server_rank_N:port\n  \
   \  #\n    # The generated commands should look something like this.\n    #\n   \

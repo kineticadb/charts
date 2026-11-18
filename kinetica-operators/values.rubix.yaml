@@ -29,8 +29,6 @@ doorman:
   # kills the ingest via GPUdbExitException from failed status probes).
   holdShield:
     enabled: true
-  image:
-    tag: doorman-20261009
   install: true
   listener:
     # Parity with the previous ingress-nginx posture: no default-ssl-certificate
